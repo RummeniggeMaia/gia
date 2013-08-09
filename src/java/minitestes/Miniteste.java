@@ -2,8 +2,12 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.com.ufrn.gia.minitestes;
+package minitestes;
 
+import br.ufrn.cerescaico.labordoc.gia.modelo.Usuario;
+import br.ufrn.cerescaico.labordoc.gia.dao.UsuarioDao;
+import br.ufrn.cerescaico.labordoc.gia.util.MongoClientUtil;
+import com.mongodb.DB;
 import java.io.File;
 import java.io.FileReader;
 import java.io.PrintWriter;
@@ -104,9 +108,16 @@ public class Miniteste {
         //conectarPostgres();
         long fim = System.currentTimeMillis();
         System.out.println("Tempo: " + (fim - inicio) / 1000.0 + " s");*/
-        long i = System.currentTimeMillis();
+        /*long i = System.currentTimeMillis();
         for (int in = 0; in < 1000; in++);
         long f = System.currentTimeMillis();
-        System.out.println(i + " " + f);
+        System.out.println(i + " " + f);*/
+//        DB db = MongoClientUtil.MONGO_CLIENT.getDB("giaDB");
+//        System.out.println(db.collectionExists("usuarios"));
+        
+        Usuario u = new Usuario("A", "B", "C", "D", "E", "F");
+        UsuarioDao dao = new UsuarioDao();
+//        dao.criar(u);
+        
     }
 }

@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.com.ufrn.gia.modelo;
+package br.ufrn.cerescaico.labordoc.gia.modelo;
 
 import org.bson.types.ObjectId;
 
@@ -10,15 +10,15 @@ import org.bson.types.ObjectId;
  *
  * @author Rummenigge
  */
-public class Funcao {
-
+public class Executa {
+    
     private ObjectId id;
     private String nome;
 
-    public Funcao() {
+    public Executa() {
     }
 
-    public Funcao(String nome) {
+    public Executa(String nome) {
         this.nome = nome;
     }
 
