@@ -56,4 +56,9 @@ public class Visita {
     public void setTotalDeVisitas(int totalDeVisitas) {
         this.totalDeVisitas = totalDeVisitas;
     }
+
+    @Override
+    public String toString() {
+        return "Visita{" + "id=" + id + ", documento=" + documento + ", usuario=" + usuario + ", totalDeVisitas=" + totalDeVisitas + '}';
+    }
 }

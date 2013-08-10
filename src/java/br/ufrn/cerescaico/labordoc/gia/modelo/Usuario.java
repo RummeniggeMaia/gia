@@ -87,4 +87,9 @@ public class Usuario {
     public void setMatricula(String matricula) {
         this.matricula = matricula;
     }
+
+    @Override
+    public String toString() {
+        return "Usuario{" + "id=" + id + ", login=" + login + ", senha=" + senha + ", nome=" + nome + ", email=" + email + ", cpf=" + cpf + ", matricula=" + matricula + '}';
+    }
 }

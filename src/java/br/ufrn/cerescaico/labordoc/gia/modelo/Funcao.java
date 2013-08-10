@@ -37,4 +37,9 @@ public class Funcao {
     public void setNome(String nome) {
         this.nome = nome;
     }
+
+    @Override
+    public String toString() {
+        return "Funcao{" + "id=" + id + ", nome=" + nome + '}';
+    }
 }

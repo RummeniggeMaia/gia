@@ -37,4 +37,9 @@ public class Executa {
     public void setNome(String nome) {
         this.nome = nome;
     }
+
+    @Override
+    public String toString() {
+        return "Executa{" + "id=" + id + ", nome=" + nome + '}';
+    }
 }

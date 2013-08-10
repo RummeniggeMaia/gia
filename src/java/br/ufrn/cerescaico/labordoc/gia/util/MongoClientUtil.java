@@ -17,7 +17,7 @@ public class MongoClientUtil {
         try {
             MONGO_CLIENT = new MongoClient("localhost");
         } catch (UnknownHostException ex) {
-            ex.printStackTrace(System.out);
+            ex.printStackTrace(System.err);
         }
     }
     public static MongoClient MONGO_CLIENT;

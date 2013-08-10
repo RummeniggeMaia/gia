@@ -4,10 +4,9 @@
  */
 package minitestes;
 
-import br.ufrn.cerescaico.labordoc.gia.modelo.Usuario;
 import br.ufrn.cerescaico.labordoc.gia.dao.UsuarioDao;
-import br.ufrn.cerescaico.labordoc.gia.util.MongoClientUtil;
-import com.mongodb.DB;
+import br.ufrn.cerescaico.labordoc.gia.modelo.Usuario;
+import br.ufrn.cerescaico.labordoc.gia.util.Util;
 import java.io.File;
 import java.io.FileReader;
 import java.io.PrintWriter;
@@ -115,9 +114,16 @@ public class Miniteste {
 //        DB db = MongoClientUtil.MONGO_CLIENT.getDB("giaDB");
 //        System.out.println(db.collectionExists("usuarios"));
         
-        Usuario u = new Usuario("A", "B", "C", "D", "E", "F");
+        //Usuario u = new Usuario("A", "B", "C", "D", "E", "F");
         UsuarioDao dao = new UsuarioDao();
+        Usuario u = new Usuario();
+        u.setNome("visitante");
+        Util.pf("%s\n", dao.pesquisar(u));
+//        u.setLogin("G");
+//        u.setId(dao.pesquisar(u).getId());
+//        dao.excluir(u);
 //        dao.criar(u);
-        
+//        Usuario u = new Usuario();
+//        System.out.println(u.getNome() == null);
     }
 }
