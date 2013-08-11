@@ -4,6 +4,7 @@
  */
 package br.ufrn.cerescaico.labordoc.gia.negocio;
 
+import br.ufrn.cerescaico.labordoc.gia.dao.UsuarioDao;
 import br.ufrn.cerescaico.labordoc.gia.modelo.Usuario;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -16,6 +17,7 @@ import javax.faces.bean.RequestScoped;
 @RequestScoped
 public class VisitanteMB {
 
+    private UsuarioDao usuarioDao;
     private Usuario visitante;
     private Usuario usuario;
     

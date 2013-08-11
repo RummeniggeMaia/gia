@@ -115,10 +115,10 @@ public class Miniteste {
 //        System.out.println(db.collectionExists("usuarios"));
         
         //Usuario u = new Usuario("A", "B", "C", "D", "E", "F");
-        UsuarioDao dao = new UsuarioDao();
-        Usuario u = new Usuario();
-        u.setNome("visitante");
-        Util.pf("%s\n", dao.pesquisar(u));
+//        UsuarioDao dao = new UsuarioDao();
+//        Usuario u = new Usuario();
+//        u.setNome("visitante");
+//        Util.pf("%s\n", dao.pesquisar(u));
 //        u.setLogin("G");
 //        u.setId(dao.pesquisar(u).getId());
 //        dao.excluir(u);

@@ -11,16 +11,16 @@ import org.bson.types.ObjectId;
  * @author Rummenigge
  */
 public class Visita {
-    
+
     private ObjectId id;
-    private ObjectId documento;
+    private Documento documento;
     private Usuario usuario;
     private int totalDeVisitas;
 
     public Visita() {
     }
 
-    public Visita(ObjectId documento, Usuario usuario) {
+    public Visita(Documento documento, Usuario usuario) {
         this.documento = documento;
         this.usuario = usuario;
     }
@@ -33,11 +33,11 @@ public class Visita {
         this.id = id;
     }
 
-    public ObjectId getDocumento() {
+    public Documento getDocumento() {
         return documento;
     }
 
-    public void setDocumento(ObjectId documento) {
+    public void setDocumento(Documento documento) {
         this.documento = documento;
     }
 

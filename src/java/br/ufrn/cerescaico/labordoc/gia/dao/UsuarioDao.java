@@ -8,8 +8,7 @@ import br.ufrn.cerescaico.labordoc.gia.modelo.Usuario;
 import br.ufrn.cerescaico.labordoc.gia.util.MongoClientUtil;
 import com.mongodb.*;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import org.bson.types.ObjectId;
 
 /**
@@ -49,10 +48,8 @@ public class UsuarioDao {
         colecaoUsuarios.update(query, update);
     }
 
-    public void excluir(Usuario u) {
-        BasicDBObject query = new BasicDBObject()
-                .append("_id", u.getId());
-        colecaoUsuarios.remove(query);
+    public void excluir(Usuario u) throws MongoException {
+        colecaoUsuarios.remove(new BasicDBObject("_id", u.getId()));
     }
 
     public List<Usuario> pesquisar(Usuario u) throws MongoException {
