@@ -10,19 +10,19 @@
             <h:panelGrid columns="2">
 
                 <h:outputLabel value="Login:"/>
-                <h:inputText/>
+                <h:inputText value="#{visitanteMB.usuario.login}"/>
                 <h:outputLabel value="Senha:"/>
-                <h:inputSecret/>
+                <h:inputSecret value="#{visitanteMB.usuario.senha}"/>
                 <h:outputLabel value="Nome:"/>
-                <h:inputText/>
+                <h:inputText value="#{visitanteMB.usuario.nome}"/>
                 <h:outputLabel value="E-mail:"/>
-                <h:inputText/>
+                <h:inputText value="#{visitanteMB.usuario.email}"/>
                 <h:outputLabel value="CPF:"/>
-                <h:inputText/>
+                <h:inputText value="#{visitanteMB.usuario.cpf}"/>
                 <h:outputLabel value="Matricula:"/>
-                <h:inputText/>
-                <h:commandButton value="Cadastrar usuário"/>
-                <h:commandButton value="Cancelar" action=""/>
+                <h:inputText value="#{visitanteMB.usuario.matricula}"/>
+                <h:commandButton value="Cadastrar usuário" action="#{visitanteMB.criarUsuario()}"/>
+                <h:commandButton value="Cancelar" action="home"/>
             </h:panelGrid>
         </h:form>
     </h:body>

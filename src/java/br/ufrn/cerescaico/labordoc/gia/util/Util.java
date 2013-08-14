@@ -4,6 +4,10 @@
  */
 package br.ufrn.cerescaico.labordoc.gia.util;
 
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 /**
  *
  * @author Rummenigge
@@ -19,5 +23,13 @@ public class Util {
      */
     public static void pf(String format, Object... args) {
         System.out.printf(format, args);
+    }
+
+    public static HttpSession getFacesSession() {
+        HttpServletRequest httpRequest = (HttpServletRequest) FacesContext
+                .getCurrentInstance()
+                .getExternalContext()
+                .getRequest();
+        return httpRequest.getSession();
     }
 }

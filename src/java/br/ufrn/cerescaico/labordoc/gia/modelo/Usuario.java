@@ -4,13 +4,14 @@
  */
 package br.ufrn.cerescaico.labordoc.gia.modelo;
 
+import java.io.Serializable;
 import org.bson.types.ObjectId;
 
 /**
  *
  * @author Rummenigge
  */
-public class Usuario {
+public class Usuario implements Serializable {
 
     private ObjectId id;
     private String login;

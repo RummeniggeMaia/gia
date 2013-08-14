@@ -103,21 +103,28 @@ public class Miniteste {
     public static void main(String[] asd) throws Exception {
         /*long inicio = System.currentTimeMillis();
 
-        extrairTiposDeDocumentos("D:\\Catalogação LABORDOC\\Catalogacao.txt");
-        //conectarPostgres();
-        long fim = System.currentTimeMillis();
-        System.out.println("Tempo: " + (fim - inicio) / 1000.0 + " s");*/
+         extrairTiposDeDocumentos("D:\\Catalogação LABORDOC\\Catalogacao.txt");
+         //conectarPostgres();
+         long fim = System.currentTimeMillis();
+         System.out.println("Tempo: " + (fim - inicio) / 1000.0 + " s");*/
         /*long i = System.currentTimeMillis();
-        for (int in = 0; in < 1000; in++);
-        long f = System.currentTimeMillis();
-        System.out.println(i + " " + f);*/
+         for (int in = 0; in < 1000; in++);
+         long f = System.currentTimeMillis();
+         System.out.println(i + " " + f);*/
 //        DB db = MongoClientUtil.MONGO_CLIENT.getDB("giaDB");
 //        System.out.println(db.collectionExists("usuarios"));
-        
+
         //Usuario u = new Usuario("A", "B", "C", "D", "E", "F");
-//        UsuarioDao dao = new UsuarioDao();
-//        Usuario u = new Usuario();
-//        u.setNome("visitante");
+        UsuarioDao dao = new UsuarioDao();
+        Usuario u = new Usuario();
+        u.setLogin("Rumme");
+        u.setSenha("123");
+        Util.pf("" + dao.autenticar(u));
+//        List<Usuario> us = dao.pesquisar(u);
+//        if (!us.isEmpty()) {
+//            System.out.println(us.get(0));
+//        }
+//        
 //        Util.pf("%s\n", dao.pesquisar(u));
 //        u.setLogin("G");
 //        u.setId(dao.pesquisar(u).getId());

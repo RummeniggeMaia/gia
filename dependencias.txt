@@ -1,0 +1,3 @@
+mongo-java-driver-2.11.0.jar
+jsf 2.1
+jstl11

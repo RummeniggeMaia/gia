@@ -8,13 +8,28 @@
               xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_1.xsd">
 
     <navigation-rule>
-        <from-view-id>index.xhtml</from-view-id>
+        <from-view-id>/*</from-view-id>
+        <navigation-case>
+            <from-outcome>home</from-outcome>
+            <to-view-id>/index.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule> 
+        <from-view-id>/index.xhtml</from-view-id>
         <navigation-case>
             <from-outcome>cadastrarUsuarios</from-outcome>
             <to-view-id>/testes_site/cadastro_usuarios.xhtml</to-view-id>
         </navigation-case>
+        <navigation-case>
+            <from-outcome>usuarioLogado</from-outcome>
+            <to-view-id>/testes_site/home_usuario.xhtml</to-view-id>
+        </navigation-case>
     </navigation-rule>
     <navigation-rule>
-        
+        <from-view-id>/testes_site/cadastro_usuarios.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>criado</from-outcome>
+            <to-view-id>/testes_site/usuario_criado.xhtml</to-view-id>
+        </navigation-case> 
     </navigation-rule>
 </faces-config>

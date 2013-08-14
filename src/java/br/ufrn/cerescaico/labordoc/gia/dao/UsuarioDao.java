@@ -5,6 +5,7 @@
 package br.ufrn.cerescaico.labordoc.gia.dao;
 
 import br.ufrn.cerescaico.labordoc.gia.modelo.Usuario;
+import br.ufrn.cerescaico.labordoc.gia.util.Consts;
 import br.ufrn.cerescaico.labordoc.gia.util.MongoClientUtil;
 import com.mongodb.*;
 import java.net.UnknownHostException;
@@ -59,6 +60,9 @@ public class UsuarioDao {
             if (u.getLogin() != null) {
                 query.append("login", u.getLogin());
             }
+            if (u.getSenha() != null) {
+                query.append("senha", u.getSenha());
+            }
             if (u.getNome() != null) {
                 query.append("nome", u.getNome());
             }
@@ -87,5 +91,17 @@ public class UsuarioDao {
             }
         }
         return usuarios;
+    }
+    
+    public boolean autenticar(Usuario u) {
+        BasicDBObject bo = new BasicDBObject(Consts.LOGIN, u.getLogin());
+        DBCursor dBCurdor = colecaoUsuarios.find(bo);
+        if (dBCurdor.hasNext()) {
+            bo = (BasicDBObject) dBCurdor.next();
+            if (bo.get(Consts.SENHA).equals(u.getSenha())) {
+                return true;
+            }
+        }
+        return false;
     }
 }
