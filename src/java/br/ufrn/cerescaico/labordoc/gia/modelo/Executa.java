@@ -4,16 +4,23 @@
  */
 package br.ufrn.cerescaico.labordoc.gia.modelo;
 
+import com.google.code.morphia.annotations.*;
 import org.bson.types.ObjectId;
 
 /**
  *
  * @author Rummenigge
  */
+@Entity("execucoes")
 public class Executa {
-    
+
+    @Id
     private ObjectId id;
     private String nome;
+    @Reference
+    private Usuario usuario;
+    @Reference
+    private Funcao funcao;
 
     public Executa() {
     }
@@ -36,6 +43,22 @@ public class Executa {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
+    public Funcao getFuncao() {
+        return funcao;
+    }
+
+    public void setFuncao(Funcao funcao) {
+        this.funcao = funcao;
     }
 
     @Override

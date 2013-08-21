@@ -7,8 +7,12 @@
     </h:head>
     <h:body>
         <h:form>
-            <h:outputLabel value="#{usuarioMB.usuario.id}"/><br />
-            <h:commandLink value="sair" action="#{usuarioMB.sairDoSistema()}"/> 
+            <h:commandLink value="sair" action="#{usuarioMB.sairDoSistema()}" style="text-align: right"/> 
+            <h:panelGrid columns="2">
+                <h:outputLabel value="Nome:"/>
+                <h:outputLabel value="#{usuarioMB.usuario.nome}"/>
+                <h:inputText value="${usuarioMB.usuarios}"/>
+            </h:panelGrid>
         </h:form>
     </h:body>
 </html>

@@ -4,6 +4,7 @@
  */
 package br.ufrn.cerescaico.labordoc.gia.util;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -31,5 +32,11 @@ public class Util {
                 .getExternalContext()
                 .getRequest();
         return httpRequest.getSession();
+    }
+    
+    public static void addMsg(String clientId, String message) {
+        FacesContext
+                .getCurrentInstance()
+                .addMessage(clientId, new FacesMessage(message));
     }
 }

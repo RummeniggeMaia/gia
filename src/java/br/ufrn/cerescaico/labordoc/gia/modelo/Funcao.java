@@ -4,14 +4,17 @@
  */
 package br.ufrn.cerescaico.labordoc.gia.modelo;
 
+import com.google.code.morphia.annotations.*;
 import org.bson.types.ObjectId;
 
 /**
  *
  * @author Rummenigge
  */
+@Entity("funcoes")
 public class Funcao {
 
+    @Id
     private ObjectId id;
     private String nome;
 

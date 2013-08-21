@@ -17,11 +17,11 @@
     <navigation-rule> 
         <from-view-id>/index.xhtml</from-view-id>
         <navigation-case>
-            <from-outcome>cadastrarUsuarios</from-outcome>
+            <from-outcome>cadastrar_usuarios</from-outcome>
             <to-view-id>/testes_site/cadastro_usuarios.xhtml</to-view-id>
         </navigation-case>
         <navigation-case>
-            <from-outcome>usuarioLogado</from-outcome>
+            <from-outcome>usuario_logado</from-outcome>
             <to-view-id>/testes_site/home_usuario.xhtml</to-view-id>
         </navigation-case>
     </navigation-rule>

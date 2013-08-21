@@ -4,6 +4,7 @@
  */
 package br.ufrn.cerescaico.labordoc.gia.modelo;
 
+import com.google.code.morphia.annotations.*;
 import java.io.Serializable;
 import org.bson.types.ObjectId;
 
@@ -11,20 +12,26 @@ import org.bson.types.ObjectId;
  *
  * @author Rummenigge
  */
+@Entity("usuarios")
 public class Usuario implements Serializable {
 
+    @Id
     private ObjectId id;
+    @Indexed(unique = true)
     private String login;
     private String senha;
     private String nome;
+    @Indexed(unique = true)
     private String email;
+    @Indexed(unique = true)
     private String cpf;
     private String matricula;
 
     public Usuario() {
     }
 
-    public Usuario(String login, String senha, String nome, String email, String cpf, String matricula) {
+    public Usuario(String login, String senha, String nome, String email,
+            String cpf, String matricula) {
         this.login = login;
         this.senha = senha;
         this.nome = nome;
@@ -91,6 +98,8 @@ public class Usuario implements Serializable {
 
     @Override
     public String toString() {
-        return "Usuario{" + "id=" + id + ", login=" + login + ", senha=" + senha + ", nome=" + nome + ", email=" + email + ", cpf=" + cpf + ", matricula=" + matricula + '}';
+        return "Usuario{" + "id=" + id + ", login=" + login + ", senha="
+                + senha + ", nome=" + nome + ", email=" + email + ", cpf="
+                + cpf + ", matricula=" + matricula + '}';
     }
 }

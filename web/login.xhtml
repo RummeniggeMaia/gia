@@ -10,12 +10,13 @@
         <h:form>
             <h:panelGrid columns="2">
                 <h:outputLabel value="Login:"/>
-                <h:inputText value="#{visitanteMB.usuario.login}"/>
+                <h:inputText value="#{visitanteMB.visitante.login}"/>
                 <h:outputLabel value="Senha:"/>
-                <h:inputSecret value="#{visitanteMB.usuario.senha}"/>
+                <h:inputSecret value="#{visitanteMB.visitante.senha}"/>
                 <h:commandButton value="Entrar no sistema" action="#{visitanteMB.entrarNoSistema()}"/><br />
-                <h:commandLink value="Criar conta" action="cadastrarUsuarios"/>
+                <h:commandLink value="Criar conta" action="cadastrar_usuarios"/>
                 <h:commandLink value="Esqueceu a senha?"/>
+                <h:messages />
             </h:panelGrid>
         </h:form>
     </h:body>

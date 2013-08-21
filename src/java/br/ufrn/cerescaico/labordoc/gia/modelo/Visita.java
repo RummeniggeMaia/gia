@@ -4,16 +4,21 @@
  */
 package br.ufrn.cerescaico.labordoc.gia.modelo;
 
+import com.google.code.morphia.annotations.*;
 import org.bson.types.ObjectId;
 
 /**
  *
  * @author Rummenigge
  */
+@Entity("entidades")
 public class Visita {
 
+    @Id
     private ObjectId id;
+    @Reference
     private Documento documento;
+    @Reference
     private Usuario usuario;
     private int totalDeVisitas;
 

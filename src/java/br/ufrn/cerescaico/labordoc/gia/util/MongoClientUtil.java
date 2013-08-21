@@ -11,6 +11,7 @@ import java.net.UnknownHostException;
  *
  * @author Rummenigge
  */
+@Deprecated()
 public class MongoClientUtil {
 
     static {
