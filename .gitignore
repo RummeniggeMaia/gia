@@ -1,0 +1,7 @@
+build.xml
+lib/CopyLibs/
+lib/javaee-endorsed-api-6.0/
+lib/jsf20/
+lib/jstl11/
+lib/nblibraries.properties
+nbproject/
