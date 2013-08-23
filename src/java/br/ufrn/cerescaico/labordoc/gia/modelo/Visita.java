@@ -16,7 +16,7 @@ public class Visita {
 
     @Id
     private ObjectId id;
-    @Reference
+    @Embedded
     private Documento documento;
     @Reference
     private Usuario usuario;
@@ -64,6 +64,8 @@ public class Visita {
 
     @Override
     public String toString() {
-        return "Visita{" + "id=" + id + ", documento=" + documento + ", usuario=" + usuario + ", totalDeVisitas=" + totalDeVisitas + '}';
+        return "Visita{" + "id=" + id + ", documento=" + documento 
+                + ", usuario=" + usuario + ", totalDeVisitas=" 
+                + totalDeVisitas + '}';
     }
 }

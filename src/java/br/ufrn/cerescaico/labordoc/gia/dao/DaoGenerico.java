@@ -4,9 +4,10 @@
  */
 package br.ufrn.cerescaico.labordoc.gia.dao;
 
-import br.ufrn.cerescaico.labordoc.gia.negocio.MongoClientSingleton;
+import br.ufrn.cerescaico.labordoc.gia.negocio.*;
 import br.ufrn.cerescaico.labordoc.gia.util.Consts;
 import com.google.code.morphia.*;
+import com.google.code.morphia.query.Query;
 import java.net.UnknownHostException;
 import java.util.List;
 
@@ -16,8 +17,8 @@ import java.util.List;
  */
 public abstract class DaoGenerico<T> {
 
-    private Morphia morphia;
-    private Datastore dataStore;
+    protected Morphia morphia;
+    protected Datastore dataStore;
 
     public DaoGenerico() throws UnknownHostException {
         morphia = new Morphia();
@@ -27,17 +28,36 @@ public abstract class DaoGenerico<T> {
                 Consts.BANCO);
     }
 
-    public void criar(T t) {
-        dataStore.save(t);
+    public Object criar(T t) {
+        Key<T> chave = dataStore.save(t);
+        return chave.getId();
     }
-    
+
     public void editar(T t) {
         dataStore.merge(t);
     }
-    
+
     public void excluir(T t) {
         dataStore.delete(t);
     }
-    
-    public abstract List<T> pesquisar(T t);
+
+    public List<T> pesquisar(
+            T t,
+            int offset,
+            int limit,
+            int criteria) {
+
+        Query q = dataStore.find(t.getClass());
+        q.offset(offset);
+        q.limit(limit);
+        criarCriteria(t, q, criteria);
+        return q.asList();
+    }
+
+    public T pesquisarUm(T t, int criteria) {
+        List<T> lista = pesquisar(t, 0, 1, criteria);
+        return lista.isEmpty() ? null : lista.get(0);
+    }
+
+    protected abstract void criarCriteria(T t, Query<T> q, int criteria);
 }

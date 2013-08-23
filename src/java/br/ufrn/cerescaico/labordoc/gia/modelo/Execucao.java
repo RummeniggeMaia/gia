@@ -12,21 +12,16 @@ import org.bson.types.ObjectId;
  * @author Rummenigge
  */
 @Entity("execucoes")
-public class Executa {
+public class Execucao {
 
     @Id
     private ObjectId id;
-    private String nome;
     @Reference
     private Usuario usuario;
     @Reference
     private Funcao funcao;
 
-    public Executa() {
-    }
-
-    public Executa(String nome) {
-        this.nome = nome;
+    public Execucao() {
     }
 
     public ObjectId getId() {
@@ -35,14 +30,6 @@ public class Executa {
 
     public void setId(ObjectId id) {
         this.id = id;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
     }
 
     public Usuario getUsuario() {
@@ -62,7 +49,16 @@ public class Executa {
     }
 
     @Override
+    public boolean equals(Object obj) {
+        if (obj == null || !(obj instanceof Execucao)) {
+            return false;
+        }
+        Execucao outra = (Execucao) obj;
+        return id.compareTo(outra.getId()) == 0;
+    }
+
+    @Override
     public String toString() {
-        return "Executa{" + "id=" + id + ", nome=" + nome + '}';
+        return "Executa{" + "id=" + id + '}';
     }
 }

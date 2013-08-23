@@ -39,4 +39,12 @@ public class Util {
                 .getCurrentInstance()
                 .addMessage(clientId, new FacesMessage(message));
     }
+    
+    /**
+     * Acessa o FacesContex.
+     * @return Instância atual do FacesContext
+     */
+    public static FacesContext fc() {
+        return FacesContext.getCurrentInstance();
+    }
 }

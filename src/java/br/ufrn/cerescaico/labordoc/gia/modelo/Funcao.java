@@ -42,6 +42,15 @@ public class Funcao {
     }
 
     @Override
+    public boolean equals(Object obj) {
+        if (obj == null || !(obj instanceof Funcao)) {
+            return false;
+        }
+        Funcao outra = (Funcao) obj;
+        return id.compareTo(outra.getId()) == 0;
+    }
+
+    @Override
     public String toString() {
         return "Funcao{" + "id=" + id + ", nome=" + nome + '}';
     }

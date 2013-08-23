@@ -11,60 +11,64 @@ import com.mongodb.MongoException;
 import java.io.Serializable;
 import java.net.UnknownHostException;
 import java.util.List;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.*;
-import javax.faces.context.FacesContext;
+import org.bson.types.ObjectId;
 
 /**
  *
  * @author Rummenigge
  */
 @ManagedBean
-@SessionScoped()
+@ViewScoped
 public class VisitanteMB implements Serializable {
-
+    
     private UsuarioDao usuarioDao;
     private Usuario visitante;
-
+    
     public VisitanteMB() {
         try {
             usuarioDao = new UsuarioDao();
-            visitante = new Usuario();
+            visitante = usuarioDao
+                    .pesquisarUm(
+                    new Usuario(new ObjectId(Consts.NULL_OBJECT_ID)),
+                    Consts.CRITERIA_USUARIO_ID);
         } catch (UnknownHostException uhe) {
             Util.addMsg(null, uhe.getMessage());
         } catch (MongoException me) {
             Util.addMsg(null, me.getMessage());
         }
     }
-
+    
     public String criarUsuario() {
         try {
+            List<Integer> funcoes = visitante.getFuncoes();
+            funcoes.add(Consts.FUNCAO_PESQUISAR_DOCUMENTOS);
+            funcoes.add(Consts.FUNCAO_EDITAR_PERFIL);
+            funcoes.add(Consts.FUNCAO_EXCLUIR_CONTA);
             usuarioDao.criar(visitante);
             visitante = new Usuario();
             return Consts.CRIADO;
         } catch (MongoException me) {
-            FacesContext
-                    .getCurrentInstance()
-                    .addMessage(null, new FacesMessage(me.getMessage()));
+            Util.addMsg(null, me.getMessage());
             return "";
         }
     }
-
+    
     public String entrarNoSistema() {
-        List<Usuario> lista = usuarioDao.pesquisar(visitante);
-        if (!lista.isEmpty()) {
-            Usuario u = lista.get(0);
+        Usuario u = usuarioDao
+                .pesquisarUm(visitante, Consts.CRITERIA_AUTENTICAR);
+        if (u != null) {
             Util.getFacesSession().setAttribute(Consts.LOGADO, u);
             return Consts.USUARIO_LOGADO;
         }
         return Consts.HOME;
     }
-
-    public Usuario getVisitante() {
+    
+    public Usuario getUsuario() {
         return visitante;
     }
-
-    public void setVisitante(Usuario usuario) {
+    
+    public void setUsuario(Usuario usuario) {
         this.visitante = usuario;
     }
 }

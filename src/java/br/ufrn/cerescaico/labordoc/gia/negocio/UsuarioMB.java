@@ -10,8 +10,6 @@ import br.ufrn.cerescaico.labordoc.gia.util.Consts;
 import br.ufrn.cerescaico.labordoc.gia.util.Util;
 import com.mongodb.MongoException;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.servlet.http.HttpSession;
@@ -28,12 +26,10 @@ public class UsuarioMB {
      * Creates a new instance of UsuarioMB
      */
     public Usuario usuario;
-    public List<Usuario> usuarios;
     public UsuarioDao usuarioDao;
 
     public UsuarioMB() {
         try {
-            usuarios = new ArrayList<Usuario>(2);
             usuario = (Usuario) Util
                     .getFacesSession()
                     .getAttribute(Consts.LOGADO);
@@ -83,13 +79,5 @@ public class UsuarioMB {
 
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
-    }
-
-    public List<Usuario> getUsuarios() {
-        return usuarios;
-    }
-
-    public void setUsuarios(List<Usuario> usuarios) {
-        this.usuarios = usuarios;
     }
 }

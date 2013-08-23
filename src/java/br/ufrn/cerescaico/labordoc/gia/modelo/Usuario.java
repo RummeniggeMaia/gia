@@ -6,13 +6,15 @@ package br.ufrn.cerescaico.labordoc.gia.modelo;
 
 import com.google.code.morphia.annotations.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import org.bson.types.ObjectId;
 
 /**
  *
  * @author Rummenigge
  */
-@Entity("usuarios")
+@Entity(value="usuarios", noClassnameStored=true)
 public class Usuario implements Serializable {
 
     @Id
@@ -26,8 +28,14 @@ public class Usuario implements Serializable {
     @Indexed(unique = true)
     private String cpf;
     private String matricula;
+    @Embedded
+    private List<Integer> funcoes = new ArrayList<Integer>(2);
 
     public Usuario() {
+    }
+
+    public Usuario(ObjectId id) {
+        this.id = id;
     }
 
     public Usuario(String login, String senha, String nome, String email,
@@ -96,10 +104,30 @@ public class Usuario implements Serializable {
         this.matricula = matricula;
     }
 
+    public List<Integer> getFuncoes() {
+        return funcoes;
+    }
+
+    public void setFuncoes(List<Integer> funcoes) {
+        this.funcoes = funcoes;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || !(obj instanceof Usuario)) {
+            return false;
+        }
+        Usuario outro = (Usuario) obj;
+        return id.compareTo(outro.getId()) == 0;
+    }
+
     @Override
     public String toString() {
-        return "Usuario{" + "id=" + id + ", login=" + login + ", senha="
-                + senha + ", nome=" + nome + ", email=" + email + ", cpf="
-                + cpf + ", matricula=" + matricula + '}';
+        return "Usuario{" + "id=" + id + ", login=" + login + ", senha=" 
+                + senha + ", nome=" + nome + ", email=" + email + ", cpf=" 
+                + cpf + ", matricula=" + matricula + ", funcoes=" + funcoes 
+                + '}';
     }
+
+    
 }

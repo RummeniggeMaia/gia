@@ -5,3 +5,4 @@ lib/jsf20/
 lib/jstl11/
 lib/nblibraries.properties
 nbproject/
+build/
