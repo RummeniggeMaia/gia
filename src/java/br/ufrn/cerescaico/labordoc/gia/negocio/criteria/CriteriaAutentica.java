@@ -11,13 +11,11 @@ import com.google.code.morphia.query.Query;
  *
  * @author Rummenigge
  */
-public class AutenticaCriteria implements CriteriaStrategyIF<Usuario> {
+public class CriteriaAutentica implements CriteriaStrategyIF<Usuario> {
 
     @Override
-    public void operationCriteria(Usuario t, Query<Usuario> q) {
-        if (t == null) {
-            return;
-        }
+    public void operationCriteria(Usuario t, Object query) {
+        Query<Usuario> q = (Query<Usuario>) query;
         q.and(
                 q.criteria("login").equal(t.getLogin()),
                 q.criteria("senha").equal(t.getSenha()));

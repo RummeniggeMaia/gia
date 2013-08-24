@@ -12,7 +12,8 @@ import com.google.code.morphia.query.Query;
  *
  * @author Rummenigge
  */
-public class BuscaUsuarioId implements CriteriaStrategyIF<Usuario> {
+public class CriteriaBuscaUsuarioId 
+    implements CriteriaStrategyIF<Usuario, Query<Usuario>> {
 
     @Override
     public void operationCriteria(Usuario t, Query<Usuario> q) {

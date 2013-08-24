@@ -32,6 +32,7 @@ public class Consts {
     public static final int CRITERIA_USUARIO_ID = 1;
     public static final int CRITERIA_USUARIO = 2;
     public static final int CRITERIA_AUTENTICAR = 3;
+    public static final int CRITERIA_TIPO_DOCUMENTO = 4;
     /**
      * String: "_id"
      */

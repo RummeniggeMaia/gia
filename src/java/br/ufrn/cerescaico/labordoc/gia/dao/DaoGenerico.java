@@ -9,7 +9,7 @@ import br.ufrn.cerescaico.labordoc.gia.util.Consts;
 import com.google.code.morphia.*;
 import com.google.code.morphia.query.Query;
 import java.net.UnknownHostException;
-import java.util.List;
+import java.util.*;
 
 /**
  *
@@ -28,9 +28,8 @@ public abstract class DaoGenerico<T> {
                 Consts.BANCO);
     }
 
-    public Object criar(T t) {
-        Key<T> chave = dataStore.save(t);
-        return chave.getId();
+    public void criar(T t) {
+        dataStore.save(t);
     }
 
     public void editar(T t) {
@@ -59,5 +58,5 @@ public abstract class DaoGenerico<T> {
         return lista.isEmpty() ? null : lista.get(0);
     }
 
-    protected abstract void criarCriteria(T t, Query<T> q, int criteria);
+    protected abstract void criarCriteria(T t, Object query, int criteria);
 }

@@ -4,44 +4,33 @@
  */
 package br.ufrn.cerescaico.labordoc.gia.modelo;
 
-import br.ufrn.cerescaico.labordoc.gia.negocio.Campo;
-import java.util.List;
-import org.bson.types.ObjectId;
+import com.google.code.morphia.annotations.*;
+import java.io.Serializable;
+import java.util.*;
 
 /**
  *
  * @author Rummenigge
  */
-public class Documento {
-    
-    private ObjectId id;
-    private List<Campo> campos;
+@Entity(value = "documentos", noClassnameStored = true)
+public class Documento extends Entidade implements Serializable {
+
+    @Transient
+    private Map<String, Object> campos = new HashMap<String, Object>();
 
     public Documento() {
     }
 
-    public Documento(List<Campo> campos) {
-        this.campos = campos;
-    }
-
-    public ObjectId getId() {
-        return id;
-    }
-
-    public void setId(ObjectId id) {
-        this.id = id;
-    }
-
-    public List<Campo> getCampos() {
+    public Map<String, Object> getCampos() {
         return campos;
     }
 
-    public void setCampos(List<Campo> campos) {
+    public void setCampos(Map<String, Object> campos) {
         this.campos = campos;
     }
 
     @Override
     public String toString() {
-        return "Documento{" + "id=" + id + ", campos=" + campos + '}';
+        return "Documento{" + "campos=" + campos + '}';
     }
 }

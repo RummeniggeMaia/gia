@@ -15,10 +15,8 @@ import org.bson.types.ObjectId;
  * @author Rummenigge
  */
 @Entity(value="usuarios", noClassnameStored=true)
-public class Usuario implements Serializable {
+public class Usuario extends Entidade implements Serializable {
 
-    @Id
-    private ObjectId id;
     @Indexed(unique = true)
     private String login;
     private String senha;
@@ -35,7 +33,7 @@ public class Usuario implements Serializable {
     }
 
     public Usuario(ObjectId id) {
-        this.id = id;
+        super(id);
     }
 
     public Usuario(String login, String senha, String nome, String email,
@@ -46,14 +44,6 @@ public class Usuario implements Serializable {
         this.email = email;
         this.cpf = cpf;
         this.matricula = matricula;
-    }
-
-    public ObjectId getId() {
-        return id;
-    }
-
-    public void setId(ObjectId id) {
-        this.id = id;
     }
 
     public String getLogin() {
@@ -113,21 +103,10 @@ public class Usuario implements Serializable {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj == null || !(obj instanceof Usuario)) {
-            return false;
-        }
-        Usuario outro = (Usuario) obj;
-        return id.compareTo(outro.getId()) == 0;
-    }
-
-    @Override
     public String toString() {
         return "Usuario{" + "id=" + id + ", login=" + login + ", senha=" 
                 + senha + ", nome=" + nome + ", email=" + email + ", cpf=" 
                 + cpf + ", matricula=" + matricula + ", funcoes=" + funcoes 
                 + '}';
-    }
-
-    
+    } 
 }

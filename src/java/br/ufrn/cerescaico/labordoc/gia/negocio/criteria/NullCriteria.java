@@ -4,8 +4,6 @@
  */
 package br.ufrn.cerescaico.labordoc.gia.negocio.criteria;
 
-import com.google.code.morphia.query.Query;
-
 /**
  *
  * @author Rummenigge
@@ -13,5 +11,6 @@ import com.google.code.morphia.query.Query;
 public class NullCriteria implements CriteriaStrategyIF {
 
     @Override
-    public void operationCriteria(Object t, Query q) {}
+    public void operationCriteria(Object t, Object query) {
+    }
 }

@@ -5,17 +5,16 @@
 package br.ufrn.cerescaico.labordoc.gia.modelo;
 
 import com.google.code.morphia.annotations.*;
+import java.io.Serializable;
 import org.bson.types.ObjectId;
 
 /**
  *
  * @author Rummenigge
  */
-@Entity("entidades")
-public class Visita {
+@Entity(value = "entidades", noClassnameStored = true)
+public class Visita extends Entidade implements Serializable {
 
-    @Id
-    private ObjectId id;
     @Embedded
     private Documento documento;
     @Reference
@@ -64,8 +63,8 @@ public class Visita {
 
     @Override
     public String toString() {
-        return "Visita{" + "id=" + id + ", documento=" + documento 
-                + ", usuario=" + usuario + ", totalDeVisitas=" 
+        return "Visita{" + "id=" + id + ", documento=" + documento
+                + ", usuario=" + usuario + ", totalDeVisitas="
                 + totalDeVisitas + '}';
     }
 }
