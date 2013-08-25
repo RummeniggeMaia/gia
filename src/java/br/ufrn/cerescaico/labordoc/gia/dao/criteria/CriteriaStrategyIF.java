@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.ufrn.cerescaico.labordoc.gia.negocio.criteria;
+package br.ufrn.cerescaico.labordoc.gia.dao.criteria;
 
 /**
  * Interface utilizada para aplicação do padrão Stragy no desenvolvimento
@@ -10,10 +10,10 @@ package br.ufrn.cerescaico.labordoc.gia.negocio.criteria;
  * dados.
  * 
  * @author Rummenigge
- * @param <T> Tipo de entidade
- * @param <Q> Query a ser configurada
+ * @param <E> Entidade a ser buscada
+ * @param <Q> Consulta a ser configurada de acordo com os criterios exigidos
  */
-public interface CriteriaStrategyIF<T, Q> {
+public interface CriteriaStrategyIF<E, Q> {
 
-    public void operationCriteria(T t, Q query);
+    public void operationCriteria(E entity, Q query);
 }

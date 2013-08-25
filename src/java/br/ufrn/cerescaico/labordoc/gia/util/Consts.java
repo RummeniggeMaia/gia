@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.ufrn.cerescaico.labordoc.gia.util;
 
 /**
@@ -28,11 +24,13 @@ public class Consts {
     public static final int FUNCAO_EXCLUIR_CONTA = 10;
     public static final int FUNCAO_CRIAR_NOVOS_TIPOS_DE_DOCUMENTOS = 11;
     //Criterias
-    public static final int NULL_CRITERIA = 0;
-    public static final int CRITERIA_USUARIO_ID = 1;
-    public static final int CRITERIA_USUARIO = 2;
-    public static final int CRITERIA_AUTENTICAR = 3;
-    public static final int CRITERIA_TIPO_DOCUMENTO = 4;
+    public static final Integer NULL_CRITERIA = 0;
+    public static final Integer CRITERIA_USUARIO_ID = 1;
+    public static final Integer CRITERIA_USUARIO = 2;
+    public static final Integer CRITERIA_AUTENTICAR = 3;
+    public static final Integer CRITERIA_DOCUMENTO_ID = 4;
+    public static final Integer CRITERIA_DOCUMENTO_TIPO = 5;
+    public static final Integer CRITERIA_DOCUMENTO = 6;
     /**
      * String: "_id"
      */

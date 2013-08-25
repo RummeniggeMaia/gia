@@ -13,7 +13,7 @@ import java.net.UnknownHostException;
  *
  * @author Rummenigge
  */
-public class VisitaDao extends DaoGenerico<Visita> implements Serializable {
+public class VisitaDao extends MongoDao<Visita> implements Serializable {
 
     public VisitaDao() throws UnknownHostException {
         super();

@@ -4,7 +4,6 @@
  */
 package br.ufrn.cerescaico.labordoc.gia.modelo;
 
-import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import org.bson.types.ObjectId;
 
@@ -15,7 +14,7 @@ import org.bson.types.ObjectId;
 public class Entidade {
     
     @Id()
-    public ObjectId id;
+    protected ObjectId id;
 
     public Entidade() {
     }

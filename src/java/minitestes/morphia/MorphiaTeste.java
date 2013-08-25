@@ -8,9 +8,12 @@ import br.ufrn.cerescaico.labordoc.gia.dao.DocumentoDao;
 import br.ufrn.cerescaico.labordoc.gia.dao.UsuarioDao;
 import br.ufrn.cerescaico.labordoc.gia.modelo.Documento;
 import br.ufrn.cerescaico.labordoc.gia.modelo.Usuario;
+import br.ufrn.cerescaico.labordoc.gia.util.Consts;
+import br.ufrn.cerescaico.labordoc.gia.util.Util;
 import java.net.UnknownHostException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.Map;
 import org.bson.types.ObjectId;
 
@@ -22,22 +25,22 @@ public class MorphiaTeste {
 
     public static void main(String[] asd) 
             throws UnknownHostException, ParseException {
-        criar();
-//        pesqusiar();
+//        criar();
+        pesqusiar();
 //        editar();
 //        excluir();
     }
-
+//370	01/01/1927	Inventário	Arthur Clementino da Silva/ Francisca Mené de Araújo	Consta apenas o ano
     public static void criar() throws UnknownHostException, ParseException {
         Documento d = new Documento();
         DocumentoDao documentoDao = new DocumentoDao();
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         Map<String, Object> campos = d.getCampos();
-        campos.put("caixa", 1);
-        campos.put("data", sdf.parse("30/05/1894"));
-        campos.put("tipo", "Habilitação de casamento");
-        campos.put("titulares", "Guilherme Gomes do Nascimento/Maria Paulina das Dores");
-        documentoDao.criar(d);
+        campos.put("caixa", 370);
+        campos.put("data", sdf.parse("01/01/1927"));
+        campos.put("tipo", "Inventário");
+        campos.put("titulares", "Arthur Clementino da Silva/ Francisca Mené de Araújo");
+        Util.pf(documentoDao.criar(d).toString());
     }
 
     public static void editar() throws UnknownHostException {
@@ -85,5 +88,15 @@ public class MorphiaTeste {
 //        for (Usuario atual : us) {
 //            Util.pf("%s\n", atual.toString());
 //        }
+        DocumentoDao documentoDao = new DocumentoDao();
+        Documento x = new Documento();
+        //x.setId(new ObjectId("5218b009fd761af97e2d0d54"));
+        x.getCampos().put("tipo", "Habilitação de casamento civil");
+        x.getCampos().put("caixa", 1);
+        List<Documento> lista = documentoDao
+                .pesquisar(x, 0, 10, Consts.CRITERIA_DOCUMENTO);
+        for (Documento d : lista) {
+            Util.pf("%s\n", d.toString());
+        }
     }
 }

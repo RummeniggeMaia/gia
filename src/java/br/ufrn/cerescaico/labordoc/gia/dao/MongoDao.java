@@ -1,26 +1,47 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.ufrn.cerescaico.labordoc.gia.dao;
 
-import br.ufrn.cerescaico.labordoc.gia.negocio.*;
+import br.ufrn.cerescaico.labordoc.gia.negocio.MongoClientSingleton;
 import br.ufrn.cerescaico.labordoc.gia.util.Consts;
 import com.google.code.morphia.*;
-import com.google.code.morphia.query.Query;
 import java.net.UnknownHostException;
-import java.util.*;
 
 /**
  *
  * @author Rummenigge
  */
-public abstract class DaoGenerico<T> {
+public abstract class MongoDao<E> implements DaoIF<E> {
 
     protected Morphia morphia;
     protected Datastore dataStore;
 
-    public DaoGenerico() throws UnknownHostException {
+    public MongoDao() throws UnknownHostException {
+        morphia = new Morphia();
+        morphia.mapPackage(Consts.MODELO_PACKAGE);
+        dataStore =
+                morphia.createDatastore(
+                MongoClientSingleton.getInstance(), Consts.BANCO);
+    }
+
+    @Override
+    public Object criar(E e) {
+        return dataStore.save(e);
+    }
+
+    @Override
+    public Object editar(E e) {
+        return dataStore.merge(e);
+    }
+
+    @Override
+    public Object excluir(E e) {
+        return dataStore.delete(e);
+    }
+}
+/*
+ protected Morphia morphia;
+    protected Datastore dataStore;
+
+    public MongoDao() throws UnknownHostException {
         morphia = new Morphia();
         morphia.mapPackage(Consts.MODELO_PACKAGE);
         dataStore = morphia.createDatastore(
@@ -59,4 +80,4 @@ public abstract class DaoGenerico<T> {
     }
 
     protected abstract void criarCriteria(T t, Object query, int criteria);
-}
+ */

@@ -4,8 +4,12 @@
  */
 package br.ufrn.cerescaico.labordoc.gia.dao;
 
+import br.ufrn.cerescaico.labordoc.gia.dao.criteria.CriteriaUsuarioId;
+import br.ufrn.cerescaico.labordoc.gia.dao.criteria.CriteriaAutentica;
+import br.ufrn.cerescaico.labordoc.gia.dao.criteria.CriteriaUsuario;
+import br.ufrn.cerescaico.labordoc.gia.dao.criteria.CriteriaStrategyIF;
+import br.ufrn.cerescaico.labordoc.gia.dao.criteria.NullCriteria;
 import br.ufrn.cerescaico.labordoc.gia.modelo.Usuario;
-import br.ufrn.cerescaico.labordoc.gia.negocio.criteria.*;
 import br.ufrn.cerescaico.labordoc.gia.util.Consts;
 import com.google.code.morphia.query.*;
 import java.io.Serializable;
@@ -15,12 +19,12 @@ import java.net.UnknownHostException;
  *
  * @author Rummenigge
  */
-public class UsuarioDao extends DaoGenerico<Usuario> implements Serializable {
+public class UsuarioDao extends MongoDao<Usuario> implements Serializable {
 
     private CriteriaStrategyIF<Usuario> criteriaStrategyIF;
-    private CriteriaBuscaUsuario buscaUsuario = new CriteriaBuscaUsuario();
-    private CriteriaBuscaUsuarioId buscaUsuarioId =
-            new CriteriaBuscaUsuarioId();
+    private CriteriaUsuario buscaUsuario = new CriteriaUsuario();
+    private CriteriaUsuarioId buscaUsuarioId =
+            new CriteriaUsuarioId();
     private CriteriaAutentica autenticaCriteria = new CriteriaAutentica();
     private NullCriteria nullCriteria = new NullCriteria();
 
