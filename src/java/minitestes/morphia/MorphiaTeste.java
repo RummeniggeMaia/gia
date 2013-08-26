@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package minitestes.morphia;
 
 import br.ufrn.cerescaico.labordoc.gia.dao.DocumentoDao;
@@ -67,11 +63,13 @@ public class MorphiaTeste {
 //        d.setTipo("Habilitação de casamento");
 //        d = documentoDao.pesquisarUm(d, Consts.CRITERIA_TIPO_DOCUMENTO);
 //        Util.pf("%s\n", d);
-//        UsuarioDao usuarioDao = new UsuarioDao();
-//        List<Usuario> us = usuarioDao.pesquisar(us, offset, limit)
-//        for (Usuario u : us) {
-//            Util.pf("%s\n", u.toString());
-//        }
+        UsuarioDao usuarioDao = new UsuarioDao();
+        Usuario u = new Usuario();
+        u.setNome("vbnm,");
+        List<Usuario> us = usuarioDao.pesquisar(u, 0, 5, Consts.CRITERIA_USUARIO);
+        for (Usuario a : us) {
+            Util.pf("%s\n", a.toString());
+        }
 //        UsuarioDao usuarioDao = new UsuarioDao();
 //        Usuario u = new Usuario();
 //        u.setLogin("fghjkl");
@@ -88,15 +86,15 @@ public class MorphiaTeste {
 //        for (Usuario atual : us) {
 //            Util.pf("%s\n", atual.toString());
 //        }
-        DocumentoDao documentoDao = new DocumentoDao();
-        Documento x = new Documento();
-        //x.setId(new ObjectId("5218b009fd761af97e2d0d54"));
-        x.getCampos().put("tipo", "Habilitação de casamento civil");
-        x.getCampos().put("caixa", 1);
-        List<Documento> lista = documentoDao
-                .pesquisar(x, 0, 10, Consts.CRITERIA_DOCUMENTO);
-        for (Documento d : lista) {
-            Util.pf("%s\n", d.toString());
-        }
+//        DocumentoDao documentoDao = new DocumentoDao();
+//        Documento x = new Documento();
+//        //x.setId(new ObjectId("5218b009fd761af97e2d0d54"));
+//        x.getCampos().put("tipo", "Habilitação de casamento");
+//        x.getCampos().put("caixa", 1);
+//        List<Documento> lista = documentoDao
+//                .pesquisar(x, 0, 10, Consts.CRITERIA_DOCUMENTO_TIPO);
+//        for (Documento d : lista) {
+//            Util.pf("%s\n", d.toString());
+//        }
     }
 }

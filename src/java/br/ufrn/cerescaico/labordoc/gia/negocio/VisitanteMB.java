@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.ufrn.cerescaico.labordoc.gia.negocio;
 
 import br.ufrn.cerescaico.labordoc.gia.dao.*;
@@ -19,56 +15,55 @@ import org.bson.types.ObjectId;
  * @author Rummenigge
  */
 @ManagedBean
-@ViewScoped
+@SessionScoped
 public class VisitanteMB implements Serializable {
-    
+
     private UsuarioDao usuarioDao;
-    private Usuario visitante;
-    
+    private Usuario usuario;
+
     public VisitanteMB() {
         try {
             usuarioDao = new UsuarioDao();
-            visitante = usuarioDao
-                    .pesquisarUm(
-                    new Usuario(new ObjectId(Consts.NULL_OBJECT_ID)),
-                    Consts.CRITERIA_USUARIO_ID);
+            usuario = usuarioDao.pesquisarUm(
+                    new Usuario(new ObjectId(Consts.NULL_OBJECT_ID)));
         } catch (UnknownHostException uhe) {
             Util.addMsg(null, uhe.getMessage());
         } catch (MongoException me) {
             Util.addMsg(null, me.getMessage());
         }
     }
-    
+
     public String criarUsuario() {
         try {
-            List<Integer> funcoes = visitante.getFuncoes();
+            List<Integer> funcoes = usuario.getFuncoes();
             funcoes.add(Consts.FUNCAO_PESQUISAR_DOCUMENTOS);
             funcoes.add(Consts.FUNCAO_EDITAR_PERFIL);
             funcoes.add(Consts.FUNCAO_EXCLUIR_CONTA);
-            usuarioDao.criar(visitante);
-            visitante = new Usuario();
+            usuarioDao.criar(usuario);
+            usuario = new Usuario();
             return Consts.CRIADO;
         } catch (MongoException me) {
             Util.addMsg(null, me.getMessage());
             return "";
         }
     }
-    
+
     public String entrarNoSistema() {
         Usuario u = usuarioDao
-                .pesquisarUm(visitante, Consts.CRITERIA_AUTENTICAR);
+                .pesquisarUm(usuario, Consts.CRITERIA_AUTENTICAR);
         if (u != null) {
             Util.getFacesSession().setAttribute(Consts.LOGADO, u);
             return Consts.USUARIO_LOGADO;
         }
+        Util.addMsg(null, "Login ou senha não consta no sistema.");
         return Consts.HOME;
     }
-    
+
     public Usuario getUsuario() {
-        return visitante;
+        return usuario;
     }
-    
+
     public void setUsuario(Usuario usuario) {
-        this.visitante = usuario;
+        this.usuario = usuario;
     }
 }

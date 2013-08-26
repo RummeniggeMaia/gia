@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.ufrn.cerescaico.labordoc.gia.dao;
 
 import br.ufrn.cerescaico.labordoc.gia.dao.criteria.*;
@@ -19,11 +15,11 @@ import org.bson.types.ObjectId;
  */
 public class DocumentoDao extends MongoDao<Documento>
         implements Serializable {
-
+    
     private CriteriaStrategyIF<Documento, DBObject> criteriaStrategyIF;
     private NullCriteria nullCriteria = new NullCriteria();
     private Map<Integer, CriteriaStrategyIF> criterias;
-
+    
     public DocumentoDao() throws UnknownHostException {
         super();
         criteriaStrategyIF = nullCriteria;
@@ -35,30 +31,31 @@ public class DocumentoDao extends MongoDao<Documento>
         criterias.put(
                 Consts.CRITERIA_DOCUMENTO, new CriteriaDocumento());
     }
-
+    
     @Override
     public Object criar(Documento e) {
         DBObject dBObject = new BasicDBObject(e.getCampos());
-        WriteResult wr = 
+        WriteResult wr =
                 dataStore.getCollection(Documento.class).insert(dBObject);
         return wr;
     }
-
+    
     @Override
     public List<Documento> pesquisar(
             Documento e,
             int offset,
             int limit,
             Integer criteria) {
-
+        
         List<Documento> documentos = new ArrayList<Documento>();
         if (e == null) {
             return documentos;
         }
         DBObject dBObject = new BasicDBObject();
-        criteriaStrategyIF = criterias.get(criteria);
+        CriteriaStrategyIF aux = criterias.get(criteria);
+        criteriaStrategyIF = (aux == null) ? nullCriteria : aux;
         criteriaStrategyIF.operationCriteria(e, dBObject);
-
+        
         DBCollection dBCollection = dataStore.getCollection(Documento.class);
         DBCursor dBCursor = dBCollection.find(dBObject);
         dBCursor.skip(offset);

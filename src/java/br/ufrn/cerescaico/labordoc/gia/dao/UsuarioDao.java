@@ -1,19 +1,12 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.ufrn.cerescaico.labordoc.gia.dao;
 
-import br.ufrn.cerescaico.labordoc.gia.dao.criteria.CriteriaUsuarioId;
-import br.ufrn.cerescaico.labordoc.gia.dao.criteria.CriteriaAutentica;
-import br.ufrn.cerescaico.labordoc.gia.dao.criteria.CriteriaUsuario;
-import br.ufrn.cerescaico.labordoc.gia.dao.criteria.CriteriaStrategyIF;
-import br.ufrn.cerescaico.labordoc.gia.dao.criteria.NullCriteria;
+import br.ufrn.cerescaico.labordoc.gia.dao.criteria.*;
 import br.ufrn.cerescaico.labordoc.gia.modelo.Usuario;
 import br.ufrn.cerescaico.labordoc.gia.util.Consts;
 import com.google.code.morphia.query.*;
 import java.io.Serializable;
 import java.net.UnknownHostException;
+import java.util.List;
 
 /**
  *
@@ -21,7 +14,7 @@ import java.net.UnknownHostException;
  */
 public class UsuarioDao extends MongoDao<Usuario> implements Serializable {
 
-    private CriteriaStrategyIF<Usuario> criteriaStrategyIF;
+    private CriteriaStrategyIF<Usuario, Query<Usuario>> criteriaStrategyIF;
     private CriteriaUsuario buscaUsuario = new CriteriaUsuario();
     private CriteriaUsuarioId buscaUsuarioId =
             new CriteriaUsuarioId();
@@ -34,19 +27,29 @@ public class UsuarioDao extends MongoDao<Usuario> implements Serializable {
     }
 
     @Override
-    protected void criarCriteria(Usuario u, Object query, int criteria) {
-        if (!(query instanceof Query)) {
-            throw new IllegalArgumentException("Query não é instância de "
-                    + "com.google.code.morphia.query.Query");
-        }
-        Query<Usuario> q = (Query<Usuario>) query;
+    public List<Usuario> pesquisar(
+            Usuario e, 
+            int offset, 
+            int limit, 
+            Integer criteria) {
+        
+        Query<Usuario> query = dataStore.find(Usuario.class);
+        mudarCriteria(criteria);
+        query.offset(offset);
+        query.limit(limit);
+        criteriaStrategyIF.operationCriteria(e, query);
+        return query.asList();
+    }
+    
+    private void mudarCriteria(Integer criteria) {
         if (criteria == Consts.CRITERIA_USUARIO_ID) {
             criteriaStrategyIF = buscaUsuarioId;
         } else if (criteria == Consts.CRITERIA_AUTENTICAR) {
             criteriaStrategyIF = autenticaCriteria;
-        } else {
+        } else if (criteria == Consts.CRITERIA_USUARIO) {
             criteriaStrategyIF = buscaUsuario;
+        } else {
+            criteriaStrategyIF = nullCriteria;
         }
-        criteriaStrategyIF.operationCriteria(u, q);
     }
 }

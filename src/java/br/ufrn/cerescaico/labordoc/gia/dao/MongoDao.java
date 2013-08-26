@@ -4,6 +4,7 @@ import br.ufrn.cerescaico.labordoc.gia.negocio.MongoClientSingleton;
 import br.ufrn.cerescaico.labordoc.gia.util.Consts;
 import com.google.code.morphia.*;
 import java.net.UnknownHostException;
+import java.util.List;
 
 /**
  *
@@ -35,6 +36,19 @@ public abstract class MongoDao<E> implements DaoIF<E> {
     @Override
     public Object excluir(E e) {
         return dataStore.delete(e);
+    }
+    
+    public E pesquisarUm(E e) {
+        return dataStore.get(e);
+    }
+    
+    public E pesquisarUm(E e, Integer criteria) {
+        List<E> lista = pesquisar(e, 0, 1, criteria);
+        return lista.isEmpty() ? null : lista.get(0);
+    }
+    
+    public List<E> pesquisarTodos(Class c) {
+        return dataStore.find(c).asList();
     }
 }
 /*

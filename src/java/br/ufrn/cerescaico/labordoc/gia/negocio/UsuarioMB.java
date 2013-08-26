@@ -8,8 +8,6 @@ import br.ufrn.cerescaico.labordoc.gia.dao.UsuarioDao;
 import br.ufrn.cerescaico.labordoc.gia.modelo.Usuario;
 import br.ufrn.cerescaico.labordoc.gia.util.Consts;
 import br.ufrn.cerescaico.labordoc.gia.util.Util;
-import com.mongodb.MongoException;
-import java.net.UnknownHostException;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.servlet.http.HttpSession;
@@ -29,40 +27,14 @@ public class UsuarioMB {
     public UsuarioDao usuarioDao;
 
     public UsuarioMB() {
-        try {
-            usuario = (Usuario) Util
-                    .getFacesSession()
-                    .getAttribute(Consts.LOGADO);
-            usuarioDao = new UsuarioDao();
-        } catch (UnknownHostException uhe) {
-            Util.addMsg(null, uhe.getMessage());
-        }
-    }
-
-    public void editarConta() {
-        try {
-            usuarioDao.editar(usuario);
-        } catch (MongoException ex) {
-            Util.addMsg(null, ex.getMessage());
-        }
-    }
-
-    public void excluirConta() {
-        try {
-            usuarioDao.excluir(usuario);
-        } catch (MongoException ex) {
-            Util.addMsg(null, ex.getMessage());
-        }
-    }
-
-    public void pesquisarDocumentos() {
-    }
-
-    public String excluirUsuarios() {
-        return "";
-    }
-
-    public void pesquisarUsuarios() {
+//        try {
+//            usuario = (Usuario) Util
+//                    .getFacesSession()
+//                    .getAttribute(Consts.LOGADO);
+//            usuarioDao = new UsuarioDao();
+//        } catch (UnknownHostException uhe) {
+//            Util.addMsg(null, uhe.getMessage());
+//        }
     }
 
     public String sairDoSistema() {
