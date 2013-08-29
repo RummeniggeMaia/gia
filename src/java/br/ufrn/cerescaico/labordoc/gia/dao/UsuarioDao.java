@@ -5,8 +5,12 @@ import br.ufrn.cerescaico.labordoc.gia.modelo.Usuario;
 import br.ufrn.cerescaico.labordoc.gia.util.Consts;
 import com.google.code.morphia.query.*;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 import java.net.UnknownHostException;
+import java.security.*;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -24,6 +28,11 @@ public class UsuarioDao extends MongoDao<Usuario> implements Serializable {
     public UsuarioDao() throws UnknownHostException {
         super();
         criteriaStrategyIF = nullCriteria;
+    }
+
+    @Override
+    public Object criar(Usuario e) {
+        return super.criar(e);
     }
 
     @Override
@@ -51,5 +60,26 @@ public class UsuarioDao extends MongoDao<Usuario> implements Serializable {
         } else {
             criteriaStrategyIF = nullCriteria;
         }
+    }
+    
+    private void criptografar(Usuario e) {
+        try {
+            MessageDigest messageDigest = MessageDigest.getInstance("SHA-1");
+            messageDigest.reset();
+            String loginSenha =  e.getLogin() + e.getSenha();
+            messageDigest.update(loginSenha.getBytes("UTF-8"));
+            e.setSenha(new String(
+                    messageDigest.digest(loginSenha.getBytes("UTF-8"))));
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(
+                    UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(
+                    UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void close() {
+        dataStore.getMongo().close();
     }
 }

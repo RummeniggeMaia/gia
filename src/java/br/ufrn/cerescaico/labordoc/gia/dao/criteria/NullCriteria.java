@@ -4,11 +4,13 @@
  */
 package br.ufrn.cerescaico.labordoc.gia.dao.criteria;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Rummenigge
  */
-public class NullCriteria implements CriteriaStrategyIF {
+public class NullCriteria implements CriteriaStrategyIF, Serializable {
 
     @Override
     public void operationCriteria(Object t, Object query) {

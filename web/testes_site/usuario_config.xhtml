@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html">
+    <h:head>
+        <title>Configurações</title>
+    </h:head>
+    <h:body>
+        <h:form>
+            <h:panelGrid columns="2">
+                <h:outputLabel value="Login:"/>
+                <h:outputLabel value="#{usuarioMB.dono.login}"/>
+                <h:outputLabel value="Nome:"/>
+                <h:outputLabel value="#{usuarioMB.dono.nome}"/>
+                <h:outputLabel value="E-mail:"/>
+                <h:outputLabel value="#{usuarioMB.dono.email}"/>
+                <h:outputLabel value="CPF:"/>
+                <h:outputLabel value="#{usuarioMB.dono.cpf}"/>
+                <h:outputLabel value="Matrícula:"/>
+                <h:outputLabel value="#{usuarioMB.dono.matricula}"/>
+                <h:commandLink 
+                    value="Editar conta"
+                    action="editar_conta"/>
+                <h:commandLink 
+                    value="Excluir conta" 
+                    action="#{usuarioMB.excluirConta()}"/>
+            </h:panelGrid>
+        </h:form>
+    </h:body>
+</html>
+

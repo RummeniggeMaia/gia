@@ -13,6 +13,8 @@ public class Documento extends Entidade implements Serializable {
 
     @Transient
     private Map<String, Object> campos = new HashMap<String, Object>();
+    @Reference
+    private Tipo tipo;
 
     public Documento() {
     }
@@ -23,6 +25,14 @@ public class Documento extends Entidade implements Serializable {
 
     public void setCampos(Map<String, Object> campos) {
         this.campos = campos;
+    }
+
+    public Tipo getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(Tipo tipo) {
+        this.tipo = tipo;
     }
 
     @Override

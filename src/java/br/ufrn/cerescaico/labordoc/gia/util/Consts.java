@@ -1,12 +1,14 @@
 package br.ufrn.cerescaico.labordoc.gia.util;
 
+import java.io.Serializable;
+
 /**
  * Constantes usadas no sistema para evitar que dados sejam digitados errados
  * durante o desenvolvimento.
  *
  * @author Rummenigge
  */
-public class Consts {
+public class Consts implements Serializable {
 
     /**
      * Funções do sistema.
@@ -71,7 +73,8 @@ public class Consts {
     /**
      * String: "br.ufrn.cerescaico.labordoc.gia.modelo"
      */
-    public static final String MODELO_PACKAGE = "br.ufrn.cerescaico.labordoc.gia.modelo";
+    public static final String MODELO_PACKAGE 
+            = "br.ufrn.cerescaico.labordoc.gia.modelo";
     //Visita
     /**
      * String: "usuario"
@@ -85,10 +88,6 @@ public class Consts {
      * String: "total_de_visitas"
      */
     public static final String TOTAL_DE_VISITAS = "total_de_visitas";
-    /**
-     * String: "usuario_logado"
-     */
-    public static final String USUARIO_LOGADO = "usuario_logado";
     //Usuario
     /**
      * String: "login"
@@ -115,17 +114,22 @@ public class Consts {
      */
     public static final String CAMPO_MATRICULA = "matricula";
     /**
-     * String: "logado"
+     * String: "usuario_logado"
      */
-    public static final String LOGADO = "usuario_gia_logado";
-    //Documento
+    public static final String USUARIO_LOGADO = "usuario_gia_logado";
+    /**
+     * String: "usuario_dao"
+     */
+    public static final String USUARIO_DAO = "usuario_dao";
     //Cadastro de usuarios
     /**
-     * String: "criado"
+     * String: "usuario_criado"
      */
-    public static final String CRIADO = "criado";
+    public static final String USUARIO_CRIADO = "usuario_criado";
     /**
-     * String: "nao_criado"
+     * String: "usuario_nao_criado"
      */
-    public static final String NAO_CRIADO = "nao_criado";
+    public static final String USUARIO_NAO_CRIADO = "usuario_nao_criado";
+    
+    public static final String CADASTRAR_USUARIOS = "cadastrar_usuarios";
 }

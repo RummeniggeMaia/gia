@@ -21,6 +21,7 @@ public abstract class MongoDao<E> implements DaoIF<E> {
         dataStore =
                 morphia.createDatastore(
                 MongoClientSingleton.getInstance(), Consts.BANCO);
+        dataStore.ensureIndexes();
     }
 
     @Override

@@ -1,14 +1,12 @@
 <?xml version='1.0' encoding='UTF-8'?>
 
 <!-- =========== FULL CONFIGURATION FILE ================================== -->
-
 <faces-config version="2.1"
               xmlns="http://java.sun.com/xml/ns/javaee"
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_1.xsd">
 
     <navigation-rule>
-        <from-view-id>/*</from-view-id>
         <navigation-case>
             <from-outcome>home</from-outcome>
             <to-view-id>/login.xhtml</to-view-id>
@@ -21,15 +19,42 @@
             <to-view-id>/testes_site/cadastro_usuarios.xhtml</to-view-id>
         </navigation-case>
         <navigation-case>
-            <from-outcome>usuario_logado</from-outcome>
-            <to-view-id>/testes_site/index.xhtml</to-view-id>
+            <from-outcome>role_user</from-outcome>
+            <from-action>#{visitanteMB.entrarNoSistema()}</from-action>
+            <to-view-id>/testes_site/usuario_home.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>role_admin</from-outcome>
+            <from-action>#{visitanteMB.entrarNoSistema()}</from-action>
+            <to-view-id>/testes_site/admin_home.xhtml</to-view-id>
         </navigation-case>
     </navigation-rule>
     <navigation-rule>
         <from-view-id>/testes_site/cadastro_usuarios.xhtml</from-view-id>
         <navigation-case>
-            <from-outcome>criado</from-outcome>
+            <from-outcome>usuario_criado</from-outcome>
             <to-view-id>/testes_site/usuario_criado.xhtml</to-view-id>
         </navigation-case> 
     </navigation-rule>
+    <!--Página dos usuários-->
+    <navigation-rule>
+        <from-view-id>/testes_site/usuario_home.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>configuracoes</from-outcome>
+            <to-view-id>/testes_site/usuario_config.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>/testes_site/usuario_config.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>editar_conta</from-outcome>
+            <to-view-id>/testes_site/usuario_editar_conta.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <converter>
+        <converter-id>objectIdConverter</converter-id>
+        <converter-class>
+            br.ufrn.cerescaico.labordoc.gia.util.converter.ObjectIdConverter
+        </converter-class>
+    </converter>
 </faces-config>

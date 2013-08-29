@@ -7,6 +7,7 @@ package br.ufrn.cerescaico.labordoc.gia.dao.criteria;
 import br.ufrn.cerescaico.labordoc.gia.modelo.Documento;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
+import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -14,7 +15,7 @@ import java.util.Map;
  * @author Rummenigge
  */
 public class CriteriaDocumento
-        implements CriteriaStrategyIF<Documento, BasicDBObject> {
+        implements CriteriaStrategyIF<Documento, BasicDBObject>, Serializable {
 
     @Override
     public void operationCriteria(Documento entity, BasicDBObject query) {

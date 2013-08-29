@@ -4,6 +4,10 @@
  */
 package br.ufrn.cerescaico.labordoc.gia.util;
 
+import br.ufrn.cerescaico.labordoc.gia.dao.UsuarioDao;
+import java.net.UnknownHostException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
@@ -15,6 +19,14 @@ import javax.servlet.http.HttpSession;
  */
 public class Util {
 
+    static {
+        try {
+            USUARIO_DAO = new UsuarioDao();
+        } catch (UnknownHostException ex) {
+            Logger.getLogger(Util.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    public static UsuarioDao USUARIO_DAO;
     /**
      * Mesmo que System.out.printf(), usado apenas para não ter que digitar
      * System.out.println().

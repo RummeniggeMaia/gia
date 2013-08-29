@@ -7,8 +7,8 @@ import com.mongodb.MongoException;
 import java.io.Serializable;
 import java.net.UnknownHostException;
 import java.util.List;
+import java.util.Map;
 import javax.faces.bean.*;
-import org.bson.types.ObjectId;
 
 /**
  *
@@ -16,18 +16,14 @@ import org.bson.types.ObjectId;
  */
 @ManagedBean
 @SessionScoped
-public class VisitanteMB implements Serializable {
-
-    private UsuarioDao usuarioDao;
-    private Usuario usuario;
+public class VisitanteMB extends AbstractUsuarioMB implements Serializable {
 
     public VisitanteMB() {
         try {
             usuarioDao = new UsuarioDao();
-            usuario = usuarioDao.pesquisarUm(
-                    new Usuario(new ObjectId(Consts.NULL_OBJECT_ID)));
-        } catch (UnknownHostException uhe) {
-            Util.addMsg(null, uhe.getMessage());
+            usuario = new Usuario();
+        } catch (UnknownHostException ex) {
+            Util.addMsg(null, ex.getMessage());
         } catch (MongoException me) {
             Util.addMsg(null, me.getMessage());
         }
@@ -35,35 +31,48 @@ public class VisitanteMB implements Serializable {
 
     public String criarUsuario() {
         try {
-            List<Integer> funcoes = usuario.getFuncoes();
-            funcoes.add(Consts.FUNCAO_PESQUISAR_DOCUMENTOS);
-            funcoes.add(Consts.FUNCAO_EDITAR_PERFIL);
-            funcoes.add(Consts.FUNCAO_EXCLUIR_CONTA);
             usuarioDao.criar(usuario);
             usuario = new Usuario();
-            return Consts.CRIADO;
+            return Consts.USUARIO_CRIADO;
         } catch (MongoException me) {
             Util.addMsg(null, me.getMessage());
-            return "";
+            return Consts.HOME;
         }
     }
 
     public String entrarNoSistema() {
-        Usuario u = usuarioDao
+        Usuario aux = usuarioDao
                 .pesquisarUm(usuario, Consts.CRITERIA_AUTENTICAR);
-        if (u != null) {
-            Util.getFacesSession().setAttribute(Consts.LOGADO, u);
-            return Consts.USUARIO_LOGADO;
+        usuario = new Usuario();
+        if (aux != null) {
+            Map<String, Object> sessionMap =
+                    Util.fc().getExternalContext().getSessionMap();
+            sessionMap.put(Consts.USUARIO_LOGADO, aux);
+            sessionMap.put(Consts.USUARIO_DAO, usuarioDao);
+            String role = aux.getRole();
+            return role;
         }
-        Util.addMsg(null, "Login ou senha não consta no sistema.");
+        Util.addMsg(null, "Login ou senha não constam no sistema.");
         return Consts.HOME;
     }
 
-    public Usuario getUsuario() {
-        return usuario;
+    @Override
+    public Documento getDocumento() {
+        throw new UnsupportedOperationException("Operação não suportada");
     }
 
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
+    @Override
+    public List<Documento> getDocumentos() {
+        throw new UnsupportedOperationException("Operação não suportada");
+    }
+
+    @Override
+    public void setDocumento(Documento documento) {
+        throw new UnsupportedOperationException("Operação não suportada");
+    }
+
+    @Override
+    public void pesqusiarDocumentos() {
+        throw new UnsupportedOperationException("Operação não suportada");
     }
 }

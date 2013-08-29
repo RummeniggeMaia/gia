@@ -14,20 +14,20 @@ import org.bson.types.ObjectId;
  *
  * @author Rummenigge
  */
-@Entity(value="usuarios", noClassnameStored=true)
+@Entity(value = "usuarios", noClassnameStored = true)
 public class Usuario extends Entidade implements Serializable {
 
     @Indexed(unique = true)
     private String login;
     private String senha;
     private String nome;
-    @Indexed(unique = true)
     private String email;
     @Indexed(unique = true)
     private String cpf;
     private String matricula;
-    @Embedded
+    @Transient
     private List<Integer> funcoes = new ArrayList<Integer>(2);
+    private String role = ROLE_USER;
 
     public Usuario() {
     }
@@ -102,11 +102,23 @@ public class Usuario extends Entidade implements Serializable {
         this.funcoes = funcoes;
     }
 
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
     @Override
     public String toString() {
-        return "Usuario{" + "id=" + id + ", login=" + login + ", senha=" 
-                + senha + ", nome=" + nome + ", email=" + email + ", cpf=" 
-                + cpf + ", matricula=" + matricula + ", funcoes=" + funcoes 
+        return "Usuario{" + "id=" + id + ", login=" + login + ", senha="
+                + senha + ", nome=" + nome + ", email=" + email + ", cpf="
+                + cpf + ", matricula=" + matricula + ", funcoes=" + funcoes
                 + '}';
-    } 
+    }
+    @Transient
+    public static final String ROLE_USER = "role_user";
+    @Transient
+    public static final String ROLE_ADMIN = "role_admin";
 }

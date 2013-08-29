@@ -16,11 +16,19 @@ import java.io.Serializable;
 public class FuncaoCriarUsuario
         implements Funcao, Serializable {
 
-    private Integer id = Consts.FUNCAO_CRIAR_USUARIOS;
-    private String label = "Cadastrar usuário";
+    private final Integer id = Consts.FUNCAO_CRIAR_USUARIOS;
+    private final String label = "Cadastrar usuário";
     private UsuarioDao dao;
     private Usuario usuario;
 
+    public FuncaoCriarUsuario() {
+    }
+
+    public FuncaoCriarUsuario(UsuarioDao dao, Usuario usuario) {
+        this.dao = dao;
+        this.usuario = usuario;
+    }
+    
     @Override
     public Object executar() throws Exception {
         return dao.criar(usuario);

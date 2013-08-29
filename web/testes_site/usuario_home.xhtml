@@ -3,12 +3,15 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html">
     <h:head>
-        <title>Usuario cadastado</title>
+        <title>Usuario home</title>
     </h:head>
     <h:body>
         <h:form>
-            <h:outputLabel value="Usuário cadastrado com sucesso!" style="color:green;font-size: 12pt"/><br />
-            <h:commandLink value="&lt;&lt;voltar" action="home"/>
+            <h:outputLabel value="Bem-vindo #{usuarioMB.dono.nome}!"/>
+            <h:panelGrid columns="2">
+                <h:commandLink value="Configurações" action="configuracoes"/>
+                <h:commandLink value="sair" action="#{usuarioMB.sairDoSistema()}"/>
+            </h:panelGrid>
         </h:form>
     </h:body>
 </html>

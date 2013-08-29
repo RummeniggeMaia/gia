@@ -6,15 +6,15 @@ package br.ufrn.cerescaico.labordoc.gia.dao.criteria;
 
 import br.ufrn.cerescaico.labordoc.gia.modelo.Usuario;
 import br.ufrn.cerescaico.labordoc.gia.util.Consts;
-import com.google.code.morphia.query.Criteria;
 import com.google.code.morphia.query.Query;
+import java.io.Serializable;
 
 /**
  *
  * @author Rummenigge
  */
 public class CriteriaUsuario 
-implements CriteriaStrategyIF<Usuario, Query<Usuario>> {
+implements CriteriaStrategyIF<Usuario, Query<Usuario>>, Serializable {
 
     @Override
     public void operationCriteria(Usuario t, Query<Usuario> q) {

@@ -1,16 +1,11 @@
 package minitestes.morphia;
 
-import br.ufrn.cerescaico.labordoc.gia.dao.DocumentoDao;
 import br.ufrn.cerescaico.labordoc.gia.dao.UsuarioDao;
-import br.ufrn.cerescaico.labordoc.gia.modelo.Documento;
 import br.ufrn.cerescaico.labordoc.gia.modelo.Usuario;
 import br.ufrn.cerescaico.labordoc.gia.util.Consts;
 import br.ufrn.cerescaico.labordoc.gia.util.Util;
 import java.net.UnknownHostException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.List;
-import java.util.Map;
 import org.bson.types.ObjectId;
 
 /**
@@ -21,22 +16,31 @@ public class MorphiaTeste {
 
     public static void main(String[] asd) 
             throws UnknownHostException, ParseException {
-//        criar();
-        pesqusiar();
+        criar();
+//        pesqusiar();
 //        editar();
 //        excluir();
     }
 //370	01/01/1927	Inventário	Arthur Clementino da Silva/ Francisca Mené de Araújo	Consta apenas o ano
     public static void criar() throws UnknownHostException, ParseException {
-        Documento d = new Documento();
-        DocumentoDao documentoDao = new DocumentoDao();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        Map<String, Object> campos = d.getCampos();
-        campos.put("caixa", 370);
-        campos.put("data", sdf.parse("01/01/1927"));
-        campos.put("tipo", "Inventário");
-        campos.put("titulares", "Arthur Clementino da Silva/ Francisca Mené de Araújo");
-        Util.pf(documentoDao.criar(d).toString());
+//        Documento d = new Documento();
+//        DocumentoDao documentoDao = new DocumentoDao();
+//        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+//        Map<String, Object> campos = d.getCampos();
+//        campos.put("caixa", 200);
+//        campos.put("data", sdf.parse("20/05/1956"));
+//        campos.put("tipo", "Inventário");
+//        campos.put("titulares", "Arthur/ Francisca");
+//        Util.pf(documentoDao.criar(d).toString());
+        Usuario u = new Usuario();
+        UsuarioDao usuarioDao = new UsuarioDao();
+        u.setNome("Rummenigge");
+        u.setLogin("rumme");
+        u.setSenha("123");
+        u.setEmail("meuemail@email.com");
+        u.setCpf("000.000.00-02");
+        u.setRole(Usuario.ROLE_USER);
+        usuarioDao.criar(u);
     }
 
     public static void editar() throws UnknownHostException {
@@ -65,11 +69,14 @@ public class MorphiaTeste {
 //        Util.pf("%s\n", d);
         UsuarioDao usuarioDao = new UsuarioDao();
         Usuario u = new Usuario();
-        u.setNome("vbnm,");
-        List<Usuario> us = usuarioDao.pesquisar(u, 0, 5, Consts.CRITERIA_USUARIO);
-        for (Usuario a : us) {
-            Util.pf("%s\n", a.toString());
-        }
+        u.setLogin("chicao5");
+        u.setSenha("chico123");
+        Usuario us = usuarioDao.pesquisarUm(u, Consts.CRITERIA_AUTENTICAR);
+        Util.pf("%s\n", us.getLogin());
+//        List<Usuario> us = usuarioDao.pesquisar(u, 0, 5, Consts.CRITERIA_AUTENTICAR);
+//        for (Usuario a : us) {
+//            Util.pf("%s\n", a.toString());
+//        }
 //        UsuarioDao usuarioDao = new UsuarioDao();
 //        Usuario u = new Usuario();
 //        u.setLogin("fghjkl");
