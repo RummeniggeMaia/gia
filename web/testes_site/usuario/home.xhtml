@@ -1,0 +1,74 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Usuario home</title>
+    </h:head>
+    <h:body>
+        <h:form>
+            <h:outputLabel value="Bem-vindo #{usuarioMB.dono.nome}!"/>
+            <h:panelGrid columns="2">
+                <h:commandLink value="Configurações" action="configuracoes"/>
+                <h:commandLink value="sair" action="#{usuarioMB.sairDoSistema}"/>
+            </h:panelGrid><br />
+            <h:selectOneMenu
+                value="#{usuarioMB.tipo}"
+                converter="#{usuarioMB.converters['tipoConverter']}">
+
+                <f:selectItem 
+                    itemLabel="Selecione um tipo de documento"
+                    itemValue="#{null}"
+                    noSelectionOption="true"/>
+                <f:selectItems 
+                    value="#{usuarioMB.tipos}"
+                    var="tipoAtual"
+                    itemLabel="#{tipoAtual.nome}"
+                    itemValue="#{tipoAtual}"/>
+                <f:ajax execute="@this" render="tabelaCampos"/>
+            </h:selectOneMenu><br />
+            <h:dataTable 
+                id="tabelaCampos"
+                value="#{usuarioMB.tipo.campos}"
+                var="campoAtual">
+
+                <h:column>
+                    <h:outputLabel value="#{campoAtual.nome}"/>
+                </h:column>
+                <h:column>
+                    <h:inputText 
+                        value="#{campoAtual.valor}"
+                        converter="#{usuarioMB.converters[campoAtual.tipoDeDado]}">
+                        <f:ajax execute="@this" event="blur"/>
+                    </h:inputText>
+                </h:column>
+            </h:dataTable>
+            <br />
+            <h:commandButton 
+                value="Pesquisar"
+                action="#{usuarioMB.pesquisarDocumentos}">
+                <f:ajax render="tabelaDocumentos"/>
+            </h:commandButton>
+            <br />
+            <p:dataTable 
+                id="tabelaDocumentos"
+                value="#{usuarioMB.documentos}"
+                var="linha">
+
+                <p:columns value="#{usuarioMB.tipo.campos}" 
+                           var="coluna">
+                    <f:facet name="header">
+                        <p:outputLabel value="#{coluna.nome}"/>
+                    </f:facet>
+                    
+                    <h:outputLabel 
+                        value="#{linha.campos[coluna.nome]}"
+                        converter="#{usuarioMB.converters[coluna.tipoDeDado]}"/>
+                </p:columns>
+            </p:dataTable>
+        </h:form>
+    </h:body>
+</html>
+

@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <h:form>
+            <h:selectOneMenu
+                value="#{administradorMB.tipo}"
+                converter="#{administradorMB.converters['tipoConverter']}">
+
+                <f:selectItem 
+                    itemLabel="Selecione um tipo de documento"
+                    itemValue="#{null}"
+                    noSelectionOption="true"/>
+                <f:selectItems 
+                    value="#{administradorMB.tipos}"
+                    var="tipoAtual"
+                    itemLabel="#{tipoAtual.nome}"
+                    itemValue="#{tipoAtual}"/>
+                <p:ajax process="@this" update="tabelaCampos"/>
+            </h:selectOneMenu>
+            <h:dataTable
+                id="tabelaCampos"
+                value="#{administradorMB.tipo.campos}"
+                var="campoAtual">
+
+                <h:column>
+                    <h:outputLabel value="#{campoAtual.nome}:"/>
+                </h:column>
+                <h:column>
+                    <h:inputText 
+                        value="#{campoAtual.valor}"
+                        converter="#{usuarioMB.converters[campoAtual.tipoDeDado]}">
+                        <f:ajax execute="@this" event="blur"/>
+                    </h:inputText>
+                </h:column>
+            </h:dataTable>
+            <h:commandButton 
+                value="Cadastrar documento"
+                action="#{administradorMB.criarDocumento}"/>
+            <h:commandButton value="Editar documento"/>
+        </h:form>
+    </h:body>
+</html>
+

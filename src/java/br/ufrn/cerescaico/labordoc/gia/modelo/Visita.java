@@ -15,7 +15,7 @@ import org.bson.types.ObjectId;
 @Entity(value = "entidades", noClassnameStored = true)
 public class Visita extends Entidade implements Serializable {
 
-    @Embedded
+    @Reference
     private Documento documento;
     @Reference
     private Usuario usuario;

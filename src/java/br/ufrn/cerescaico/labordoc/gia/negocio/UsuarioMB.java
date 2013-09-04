@@ -1,5 +1,6 @@
 package br.ufrn.cerescaico.labordoc.gia.negocio;
 
+import br.ufrn.cerescaico.labordoc.gia.modelo.*;
 import br.ufrn.cerescaico.labordoc.gia.util.*;
 import java.io.Serializable;
 import javax.faces.bean.*;
@@ -40,6 +41,22 @@ public class UsuarioMB extends AbstractUsuarioMB implements Serializable {
         }
     }
 
-    public void mudarSenha() {
+    public void pesquisarDocumentos() {
+        pesquisaCtrl.setCriteria(Consts.CRITERIA_DOCUMENTO);
+        pesquisaCtrl.setOffset(0);
+        pesquisaCtrl.setLimit(10);
+        documento.setTipo(tipo);
+        for (Campo c : tipo.getCampos()) {
+            documento.getCampos().put(c.getNome(), c.getValor());
+        }
+        try {
+            documentos = documentoDao.pesquisar(
+                    documento, 
+                    pesquisaCtrl.getOffset(), 
+                    pesquisaCtrl.getLimit(), 
+                    pesquisaCtrl.getCriteria());
+        } catch (Exception e) {
+            Util.addMsg(null, e.getMessage());
+        }
     }
 }

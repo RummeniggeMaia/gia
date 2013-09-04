@@ -6,8 +6,6 @@ package br.ufrn.cerescaico.labordoc.gia.modelo;
 
 import com.google.code.morphia.annotations.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import org.bson.types.ObjectId;
 
 /**
@@ -25,8 +23,6 @@ public class Usuario extends Entidade implements Serializable {
     @Indexed(unique = true)
     private String cpf;
     private String matricula;
-    @Transient
-    private List<Integer> funcoes = new ArrayList<Integer>(2);
     private String role = ROLE_USER;
 
     public Usuario() {
@@ -94,14 +90,6 @@ public class Usuario extends Entidade implements Serializable {
         this.matricula = matricula;
     }
 
-    public List<Integer> getFuncoes() {
-        return funcoes;
-    }
-
-    public void setFuncoes(List<Integer> funcoes) {
-        this.funcoes = funcoes;
-    }
-
     public String getRole() {
         return role;
     }
@@ -109,16 +97,29 @@ public class Usuario extends Entidade implements Serializable {
     public void setRole(String role) {
         this.role = role;
     }
-
-    @Override
-    public String toString() {
-        return "Usuario{" + "id=" + id + ", login=" + login + ", senha="
-                + senha + ", nome=" + nome + ", email=" + email + ", cpf="
-                + cpf + ", matricula=" + matricula + ", funcoes=" + funcoes
-                + '}';
-    }
     @Transient
     public static final String ROLE_USER = "role_user";
     @Transient
     public static final String ROLE_ADMIN = "role_admin";
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(id);
+        sb.append(",");
+        sb.append(cpf);
+        sb.append(",");
+        sb.append(email);
+        sb.append(",");
+        sb.append(login);
+        sb.append(",");
+        sb.append(matricula);
+        sb.append(",");
+        sb.append(nome);
+        sb.append(",");
+        sb.append(role);
+        sb.append(",");
+        sb.append(senha);
+        return sb.toString();
+    }
 }

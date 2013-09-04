@@ -1,11 +1,14 @@
 package minitestes.morphia;
 
+import br.ufrn.cerescaico.labordoc.gia.dao.TipoDao;
 import br.ufrn.cerescaico.labordoc.gia.dao.UsuarioDao;
+import br.ufrn.cerescaico.labordoc.gia.modelo.Campo;
+import br.ufrn.cerescaico.labordoc.gia.modelo.Tipo;
 import br.ufrn.cerescaico.labordoc.gia.modelo.Usuario;
-import br.ufrn.cerescaico.labordoc.gia.util.Consts;
 import br.ufrn.cerescaico.labordoc.gia.util.Util;
 import java.net.UnknownHostException;
 import java.text.ParseException;
+import java.util.List;
 import org.bson.types.ObjectId;
 
 /**
@@ -34,13 +37,22 @@ public class MorphiaTeste {
 //        Util.pf(documentoDao.criar(d).toString());
         Usuario u = new Usuario();
         UsuarioDao usuarioDao = new UsuarioDao();
-        u.setNome("Rummenigge");
-        u.setLogin("rumme");
-        u.setSenha("123");
+        u.setNome("Jao Pe de Fejao");
+        u.setLogin("jao");
+        u.setSenha("456");
         u.setEmail("meuemail@email.com");
-        u.setCpf("000.000.00-02");
+        u.setCpf("000.000.00-10");
         u.setRole(Usuario.ROLE_USER);
         usuarioDao.criar(u);
+//        TipoDao tipoDao = new TipoDao();
+//        Tipo t = new Tipo();
+//        t.setTipo("Habilitação de casamento");
+//        List<Campo> campos = t.getCampos();
+//        campos.add(new Campo("caixa"));
+//        campos.add(new Campo("data"));
+//        campos.add(new Campo("titulares"));
+//        tipoDao.criar(t);
+        
     }
 
     public static void editar() throws UnknownHostException {
@@ -48,10 +60,14 @@ public class MorphiaTeste {
 //        Usuario u = new Usuario("a", "b", "c", "d", "e", "f");
 //        u.setId(new ObjectId("520a853aa5ca260ef9888a34"));
 //        usuarioDao.editar(u);
-        UsuarioDao dao = new UsuarioDao();
+//        UsuarioDao dao = new UsuarioDao();
+//        Usuario u = new Usuario();
+//        u.setId(new ObjectId("521387ef628351ea54cb5902"));
+//        dao.editar(u);
         Usuario u = new Usuario();
-        u.setId(new ObjectId("521387ef628351ea54cb5902"));
-        dao.editar(u);
+        UsuarioDao dao = new UsuarioDao();
+        Util.pf(u.getId().toString());
+        dao.criar(u);
     }
 
     public static void excluir() throws UnknownHostException {
@@ -62,17 +78,25 @@ public class MorphiaTeste {
     }
 
     public static void pesqusiar() throws UnknownHostException {
+        TipoDao tipoDao = new TipoDao();
+        List<Tipo> tipos = tipoDao.pesquisarTodos(Tipo.class);
+        for (Tipo t : tipos) {
+            Util.pf(t.toString());
+            for (Campo c : t.getCampos()) {
+                Util.pf("\t%s\n", c.toString());
+            }
+        }
 //        DocumentoDao documentoDao = new DocumentoDao();
 //        Documento d = new Documento();
 //        d.setTipo("Habilitação de casamento");
 //        d = documentoDao.pesquisarUm(d, Consts.CRITERIA_TIPO_DOCUMENTO);
 //        Util.pf("%s\n", d);
-        UsuarioDao usuarioDao = new UsuarioDao();
-        Usuario u = new Usuario();
-        u.setLogin("chicao5");
-        u.setSenha("chico123");
-        Usuario us = usuarioDao.pesquisarUm(u, Consts.CRITERIA_AUTENTICAR);
-        Util.pf("%s\n", us.getLogin());
+//        UsuarioDao usuarioDao = new UsuarioDao();
+//        Usuario u = new Usuario();
+//        u.setLogin("chicao5");
+//        u.setSenha("chico123");
+//        Usuario us = usuarioDao.pesquisarUm(u, Consts.CRITERIA_AUTENTICAR);
+//        Util.pf("%s\n", us.getLogin());
 //        List<Usuario> us = usuarioDao.pesquisar(u, 0, 5, Consts.CRITERIA_AUTENTICAR);
 //        for (Usuario a : us) {
 //            Util.pf("%s\n", a.toString());

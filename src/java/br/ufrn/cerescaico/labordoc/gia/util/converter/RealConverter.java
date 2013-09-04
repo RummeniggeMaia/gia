@@ -8,14 +8,13 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
-import org.bson.types.ObjectId;
 
 /**
  *
  * @author Rummenigge
  */
-@FacesConverter(value="objectIdConverter")
-public class ObjectIdConverter implements Converter {
+@FacesConverter(value="real")
+public class RealConverter implements Converter {
 
     @Override
     public Object getAsObject(
@@ -23,18 +22,24 @@ public class ObjectIdConverter implements Converter {
             UIComponent component, 
             String value) {
         
-        if (ObjectId.isValid(value)) {
-            return new ObjectId(value);
+        try {
+            return new Double(value);
+        } catch (Exception e) {
+            return null;
         }
-        return null;
     }
-    
+
     @Override
     public String getAsString(
             FacesContext context, 
             UIComponent component, 
             Object value) {
         
-        return value == null ? null : value.toString();
+        try {
+            return new Double(value.toString()).toString();
+        } catch (Exception e) {
+            return null;
+        }
     }
+    
 }

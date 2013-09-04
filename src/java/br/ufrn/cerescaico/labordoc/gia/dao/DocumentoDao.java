@@ -29,12 +29,14 @@ public class DocumentoDao extends MongoDao<Documento>
         criterias.put(
                 Consts.CRITERIA_DOCUMENTO_TIPO, new CriteriaDocumentoTipo());
         criterias.put(
-                Consts.CRITERIA_DOCUMENTO, new CriteriaDocumento());
+                Consts.CRITERIA_DOCUMENTO, new CriteriaDocumento(dataStore));
     }
     
     @Override
     public Object criar(Documento e) {
-        DBObject dBObject = new BasicDBObject(e.getCampos());
+        DBRef bRef = new DBRef(dataStore.getDB(), "tipos", e.getTipo().getId());
+        BasicDBObject dBObject = new BasicDBObject(e.getCampos());
+        dBObject.append("tipo", bRef);
         WriteResult wr =
                 dataStore.getCollection(Documento.class).insert(dBObject);
         return wr;

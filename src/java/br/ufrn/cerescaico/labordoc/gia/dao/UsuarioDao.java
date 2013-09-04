@@ -32,6 +32,7 @@ public class UsuarioDao extends MongoDao<Usuario> implements Serializable {
 
     @Override
     public Object criar(Usuario e) {
+        e.setId(null);
         return super.criar(e);
     }
 
@@ -77,9 +78,5 @@ public class UsuarioDao extends MongoDao<Usuario> implements Serializable {
             Logger.getLogger(
                     UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
-    
-    public void close() {
-        dataStore.getMongo().close();
     }
 }

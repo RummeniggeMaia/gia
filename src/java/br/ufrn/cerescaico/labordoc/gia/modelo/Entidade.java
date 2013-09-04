@@ -11,10 +11,11 @@ import org.bson.types.ObjectId;
  *
  * @author Rummenigge
  */
-public class Entidade {
+public abstract class Entidade {
     
     @Id()
-    protected ObjectId id;
+    protected ObjectId id = new ObjectId();
+    
 
     public Entidade() {
     }

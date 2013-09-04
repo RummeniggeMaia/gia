@@ -33,6 +33,11 @@ public class Consts implements Serializable {
     public static final Integer CRITERIA_DOCUMENTO_ID = 4;
     public static final Integer CRITERIA_DOCUMENTO_TIPO = 5;
     public static final Integer CRITERIA_DOCUMENTO = 6;
+    //Tipos de dados
+    public static final String INTEIRO = "nume";
+    public static final String REAL = "real";
+    public static final String DATA = "data";
+    public static final String TEXTO = "text";
     /**
      * String: "_id"
      */
@@ -59,13 +64,9 @@ public class Consts implements Serializable {
      */
     public static final String COLECAO_VISITAS = "visitas";
     /**
-     * String: "execucoes"
+     * String: "tipos"
      */
-    public static final String COLECAO_EXECUCOES = "execucoes";
-    /**
-     * String: "funcoes"
-     */
-    public static final String COLECAO_FUNCOES = "funcoes";
+    public static final String COLECAO_TIPOS = "tipos";
     /**
      * String: "000000000000000000000000"
      */

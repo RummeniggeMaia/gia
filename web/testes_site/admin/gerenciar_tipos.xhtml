@@ -1,0 +1,77 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>Criar novos tipos de documentos</title>
+    </h:head>
+    <h:body>
+        <h:form id="formTipos">
+            <h:panelGrid columns="4">
+                <h:outputLabel value="Novo tipo: "/>
+                <h:inputText 
+                    value="#{administradorMB.tipo.nome}">
+                    <f:ajax event="blur" execute="@this"/>
+                </h:inputText>
+                <h:commandButton 
+                    value="Inserir novo campo"
+                    action="#{administradorMB.inserirCampo}">
+                    <f:ajax render="tabelaCampos"/>
+                </h:commandButton>
+                <h:commandButton 
+                    value="Limpar" 
+                    action="#{administradorMB.limparCampos}">
+                    <f:ajax render="tabelaCampos"/>
+                </h:commandButton>
+            </h:panelGrid><br />
+            <h:dataTable 
+                id="tabelaCampos"
+                value="#{administradorMB.tipo.campos}"
+                var="campoAtual">
+                <h:column>
+                    <h:inputHidden 
+                        value="#{campoAtual.id}" 
+                        converter="objectIdConverter"/>
+                </h:column>
+                <h:column>
+                    <h:outputLabel value="Nome:"/>
+                </h:column>
+                <h:column>
+                    <h:inputText value="#{campoAtual.nome}">
+                        <f:ajax event="blur" execute="@this"/>
+                    </h:inputText>
+                </h:column>
+                <h:column>
+                    <h:outputLabel value="Tipo de dado:"/>
+                </h:column>
+                <h:column>
+                    <h:selectOneMenu value="#{campoAtual.tipoDeDado}">
+                        <f:selectItem itemLabel="Texto" itemValue="text"/>
+                        <f:selectItem itemLabel="Data" itemValue="data"/>
+                        <f:selectItem itemLabel="Número" itemValue="nume"/>
+                        <f:selectItem itemLabel="Número real" itemValue="real"/>
+                        <f:ajax execute="@this"/>
+                    </h:selectOneMenu>
+                </h:column>
+                    <h:column>
+                        <h:commandButton value="X" 
+                                         action="#{administradorMB.deletarCampo}">
+                            <f:setPropertyActionListener 
+                                value="#{campoAtual}"
+                                target="#{administradorMB.campo}"/>
+                            <f:ajax render="@form"/>
+                        </h:commandButton>
+                    </h:column>
+            </h:dataTable><br />
+            <h:commandButton value="Cadastrar novo tipo" 
+                             action="#{administradorMB.criarTipoDeDocumento}">
+                <f:ajax render="@all"/>
+            </h:commandButton>
+            <h:commandButton value="Cancelar" action="cancelar"/>
+            <br />
+            <h:messages/>
+        </h:form>
+    </h:body>
+</html>
+

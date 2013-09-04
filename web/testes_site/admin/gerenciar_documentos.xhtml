@@ -3,15 +3,18 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html">
     <h:head>
-        <title>Usuario home</title>
+        <title>Facelet Title</title>
     </h:head>
     <h:body>
         <h:form>
-            <h:outputLabel value="Bem-vindo #{usuarioMB.dono.nome}!"/>
             <h:panelGrid columns="2">
-                <h:commandLink value="Configurações" action="configuracoes"/>
-                <h:commandLink value="sair" action="#{usuarioMB.sairDoSistema()}"/>
-            </h:panelGrid>
+                <h:commandButton 
+                    value="Gerenciar tipos de documentos"
+                    action="adm_tipos"/>
+                <h:commandButton 
+                    value="Cadastrar novo documento"
+                    action="criar_editar_documentos"/>
+            </h:panelGrid><br />
         </h:form>
     </h:body>
 </html>

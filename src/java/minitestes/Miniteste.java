@@ -4,9 +4,6 @@
  */
 package minitestes;
 
-import br.ufrn.cerescaico.labordoc.gia.dao.UsuarioDao;
-import br.ufrn.cerescaico.labordoc.gia.modelo.Usuario;
-import br.ufrn.cerescaico.labordoc.gia.util.Util;
 import java.io.File;
 import java.io.FileReader;
 import java.io.PrintWriter;
