@@ -4,6 +4,7 @@
  */
 package br.ufrn.cerescaico.labordoc.gia.util;
 
+import java.util.Map;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
@@ -27,13 +28,24 @@ public class Util {
     }
 
     public static HttpSession getFacesSession() {
-        HttpServletRequest httpRequest = (HttpServletRequest) FacesContext
-                .getCurrentInstance()
+        HttpServletRequest httpRequest = (HttpServletRequest) fc()
                 .getExternalContext()
                 .getRequest();
         return httpRequest.getSession();
     }
 
+    /**
+     * Aessa o mapa de sessões
+     * @return map de sessões do JSF
+     */
+    public static Map<String, Object> getSessionMap() {
+        return fc().getExternalContext().getSessionMap();
+    }
+    /**
+     * Adiciona uma mensagem no faces context
+     * @param clientId pode ser null
+     * @param message Mensagem
+     */
     public static void addMsg(String clientId, String message) {
         FacesContext
                 .getCurrentInstance()

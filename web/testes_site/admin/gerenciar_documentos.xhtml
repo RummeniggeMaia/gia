@@ -1,20 +1,136 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://java.sun.com/jsf/html">
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
     <h:head>
-        <title>Facelet Title</title>
+        <title>Gerenciar documentos</title>
+        <style>
+            .semBorda tr, .semBorda td {
+                border: none !important;
+            }
+        </style>
     </h:head>
     <h:body>
-        <h:form>
+        <h:form id="form_docs">
             <h:panelGrid columns="2">
-                <h:commandButton 
-                    value="Gerenciar tipos de documentos"
+                <p:commandButton 
+                    value="Gerenciar tipos de documento"
                     action="adm_tipos"/>
-                <h:commandButton 
-                    value="Cadastrar novo documento"
-                    action="criar_editar_documentos"/>
             </h:panelGrid><br />
+            <p:selectOneMenu
+                id="selectTipo"
+                value="#{administradorMB.tipo}"
+                converter="#{administradorMB.converters['tipoConverter']}">
+
+                <f:selectItem 
+                    itemLabel="Selecione..."
+                    itemValue="#{null}"
+                    noSelectionOption="true"/>
+                <f:selectItems 
+                    value="#{administradorMB.tipos}"
+                    var="tipoAtual"
+                    itemLabel="#{tipoAtual.nome}"
+                    itemValue="#{tipoAtual}"/>
+                <p:ajax process="@this" update=":form_docs:grid_campos"/>
+            </p:selectOneMenu><br /><br />
+            <p:dataTable 
+                id="grid_campos"
+                value="#{administradorMB.tipo.campos}"
+                var="campoAtual"
+                emptyMessage="Selecione um tipo de documento.">
+
+                <p:column>
+                    <p:outputLabel value="#{campoAtual.nome}"/>
+                </p:column>
+                <p:column>
+                    <p:inputText 
+                        value="#{campoAtual.valor}"
+                        converter="#{administradorMB.converters[campoAtual.tipoDeDado]}">
+                        <p:ajax process="@this" event="blur"/>
+                    </p:inputText>
+                </p:column>
+            </p:dataTable>
+            <br />
+            <p:panelGrid columns="3" styleClass="semBorda">
+                <p:commandButton 
+                    value="Cadastrar documento"
+                    update=":form_docs:grid_campos :form_docs:selectTipo :form_docs:msgs"
+                    action="#{administradorMB.criarDocumento}"/>
+                <p:commandButton 
+                    value="Pesquisar documentos"
+                    update=":form_docs:tabela_docs"
+                    action="#{administradorMB.pesquisarDocumentos}"/>
+                <p:commandButton 
+                    value="Editar documento"
+                    update=":form_docs:tabela_docs :form_docs:selectTipo :form_docs:grid_campos"
+                    action="#{administradorMB.pesquisarDocumentos}"/>
+            </p:panelGrid>
+            <br />
+            <p:dataTable 
+                id="tabela_docs"
+                value="#{administradorMB.documentos}"
+                var="linha"
+                emptyMessage="Não há documentos.">
+
+                <h:inputHidden value="#{linha.id}"
+                               converter="objectIdConverter"/>
+                <p:columns value="#{administradorMB.tipo.campos}" 
+                           var="coluna">
+                    <f:facet name="header">
+                        <p:outputLabel value="#{coluna.nome}"/>
+                    </f:facet>
+                    <h:outputLabel 
+                        value="#{linha.campos[coluna.nome]}"
+                        converter="#{administradorMB.converters[coluna.tipoDeDado]}"/>
+                </p:columns>
+                <p:column>
+                    <f:facet name="header">
+                        <p:outputLabel value="Editar"/>
+                    </f:facet>
+                    <p:commandLink value="editar"
+                                   update=":form_docs:selectTipo :form_docs:grid_campos"
+                                   actionListener="#{administradorMB.carregarDocumento}">
+                        <f:attribute name="documento" value="#{linha}"/>
+                    </p:commandLink>
+                </p:column>
+                <p:column style="text-align: center">
+                    <f:facet name="header">
+                        <p:outputLabel value="Excluir"/>
+                    </f:facet>
+                    <p:commandButton 
+                        icon="ui-icon-closethick"
+                        oncomplete="confirmExcluirDoc.show()">
+                        <f:setPropertyActionListener 
+                            value="#{linha}" 
+                            target="#{administradorMB.docAux}"/>
+                    </p:commandButton>
+                </p:column>
+            </p:dataTable>
+            <p:confirmDialog
+                message="Deseja excluir este documento?"
+                header="Excluir documento"
+                widgetVar="confirmExcluirDoc"
+                showEffect="explode"
+                hideEffect="puff"
+                appendToBody="true">
+                <p:panel 
+                    style="border: none;text-align: center">
+                    <p:commandButton 
+                        value="Sim"
+                        styleClass="ui-confirmdialog-yes"
+                        oncomplete="confirmExcluirDoc.hide()"
+                        action="#{administradorMB.excluirDocumento}"
+                        update=":form_docs:tabela_docs :form_docs:msgs"/>
+                    <p:commandButton 
+                        value="Não" 
+                        type="button"
+                        styleClass="ui-confirmdialog-no"
+                        onclick="confirmExcluirDoc.hide()"/>
+                </p:panel>
+            </p:confirmDialog>
+            <p:growl id="msgs" showDetail="true"/>
         </h:form>
     </h:body>
 </html>

@@ -18,14 +18,14 @@ import org.bson.types.ObjectId;
 public class MorphiaTeste {
 
     public static void main(String[] asd) 
-            throws UnknownHostException, ParseException {
+            throws UnknownHostException, ParseException, Exception {
         criar();
 //        pesqusiar();
 //        editar();
 //        excluir();
     }
 //370	01/01/1927	Inventário	Arthur Clementino da Silva/ Francisca Mené de Araújo	Consta apenas o ano
-    public static void criar() throws UnknownHostException, ParseException {
+    public static void criar() throws UnknownHostException, ParseException, Exception {
 //        Documento d = new Documento();
 //        DocumentoDao documentoDao = new DocumentoDao();
 //        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -55,7 +55,7 @@ public class MorphiaTeste {
         
     }
 
-    public static void editar() throws UnknownHostException {
+    public static void editar() throws UnknownHostException, Exception {
 //        UsuarioDao usuarioDao = new UsuarioDao();
 //        Usuario u = new Usuario("a", "b", "c", "d", "e", "f");
 //        u.setId(new ObjectId("520a853aa5ca260ef9888a34"));
@@ -70,14 +70,14 @@ public class MorphiaTeste {
         dao.criar(u);
     }
 
-    public static void excluir() throws UnknownHostException {
+    public static void excluir() throws UnknownHostException, Exception {
         UsuarioDao usuarioDao = new UsuarioDao();
         Usuario u = new Usuario();
         u.setId(new ObjectId("000000000000000000000000"));
         usuarioDao.excluir(u);
     }
 
-    public static void pesqusiar() throws UnknownHostException {
+    public static void pesqusiar() throws UnknownHostException, Exception {
         TipoDao tipoDao = new TipoDao();
         List<Tipo> tipos = tipoDao.pesquisarTodos(Tipo.class);
         for (Tipo t : tipos) {

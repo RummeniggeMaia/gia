@@ -5,14 +5,12 @@
 package br.ufrn.cerescaico.labordoc.gia.dao.criteria;
 
 import br.ufrn.cerescaico.labordoc.gia.modelo.Documento;
-import br.ufrn.cerescaico.labordoc.gia.negocio.MongoClientSingleton;
 import br.ufrn.cerescaico.labordoc.gia.util.Consts;
 import com.google.code.morphia.Datastore;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBRefBase;
 import java.io.Serializable;
-import java.net.UnknownHostException;
 import java.util.Map;
 
 /**
@@ -32,21 +30,17 @@ public class CriteriaDocumento
     public void operationCriteria(
             Documento entity,
             BasicDBObject query) {
-        
+
         BasicDBList basicDBList = new BasicDBList();
         Map<String, Object> mapa = entity.getCampos();
         for (String key : mapa.keySet()) {
             basicDBList.add(new BasicDBObject(key, mapa.get(key)));
         }
-
-        try {
-            DBRefBase refBase = new DBRefBase(
-                    datastore.getDB(),
-                    Consts.COLECAO_TIPOS,
-                    entity.getId());
-            basicDBList.add(refBase);
-        } catch (Exception ex) {
-        }
+        DBRefBase refBase = new DBRefBase(
+                datastore.getDB(),
+                Consts.COLECAO_TIPOS,
+                entity.getId());
+        basicDBList.add(refBase);
         query.append("$or", basicDBList);
     }
 }

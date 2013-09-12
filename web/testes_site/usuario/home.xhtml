@@ -5,16 +5,16 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.org/ui">
     <h:head>
-        <title>Usuario home</title>
+        <title>Usuário home</title>
     </h:head>
     <h:body>
-        <h:form>
-            <h:outputLabel value="Bem-vindo #{usuarioMB.dono.nome}!"/>
-            <h:panelGrid columns="2">
-                <h:commandLink value="Configurações" action="configuracoes"/>
-                <h:commandLink value="sair" action="#{usuarioMB.sairDoSistema}"/>
-            </h:panelGrid><br />
-            <h:selectOneMenu
+        <h:form id="form_docs">
+            <p:outputLabel value="Bem-vindo #{usuarioMB.dono.nome}!"/>
+            <p:panelGrid columns="2">
+                <p:commandLink value="Configurações" action="configuracoes"/>
+                <p:commandLink value="sair" action="#{usuarioMB.sairDoSistema}"/>
+            </p:panelGrid><br />
+            <p:selectOneMenu
                 value="#{usuarioMB.tipo}"
                 converter="#{usuarioMB.converters['tipoConverter']}">
 
@@ -27,33 +27,33 @@
                     var="tipoAtual"
                     itemLabel="#{tipoAtual.nome}"
                     itemValue="#{tipoAtual}"/>
-                <f:ajax execute="@this" render="tabelaCampos"/>
-            </h:selectOneMenu><br />
-            <h:dataTable 
-                id="tabelaCampos"
+                <p:ajax process="@this"
+                        update=":form_docs:tabela_campos"/>
+            </p:selectOneMenu><br />
+            <p:dataTable 
+                id="tabela_campos"
                 value="#{usuarioMB.tipo.campos}"
                 var="campoAtual">
 
-                <h:column>
-                    <h:outputLabel value="#{campoAtual.nome}"/>
-                </h:column>
-                <h:column>
-                    <h:inputText 
+                <p:column>
+                    <p:outputLabel value="#{campoAtual.nome}"/>
+                </p:column>
+                <p:column>
+                    <p:inputText 
                         value="#{campoAtual.valor}"
                         converter="#{usuarioMB.converters[campoAtual.tipoDeDado]}">
-                        <f:ajax execute="@this" event="blur"/>
-                    </h:inputText>
-                </h:column>
-            </h:dataTable>
+                        <p:ajax process="@this" event="blur"/>
+                    </p:inputText>
+                </p:column>
+            </p:dataTable>
             <br />
-            <h:commandButton 
+            <p:commandButton 
                 value="Pesquisar"
-                action="#{usuarioMB.pesquisarDocumentos}">
-                <f:ajax render="tabelaDocumentos"/>
-            </h:commandButton>
+                update=":form_docs:tabela_documentos"
+                action="#{usuarioMB.pesquisarDocumentos}"/>
             <br />
             <p:dataTable 
-                id="tabelaDocumentos"
+                id="tabela_documentos"
                 value="#{usuarioMB.documentos}"
                 var="linha">
 
@@ -62,7 +62,6 @@
                     <f:facet name="header">
                         <p:outputLabel value="#{coluna.nome}"/>
                     </f:facet>
-                    
                     <h:outputLabel 
                         value="#{linha.campos[coluna.nome]}"
                         converter="#{usuarioMB.converters[coluna.tipoDeDado]}"/>

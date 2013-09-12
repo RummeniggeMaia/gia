@@ -1,12 +1,143 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://java.sun.com/jsf/html">
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
     <h:head>
         <title>Facelet Title</title>
+        <style>
+            .semBorda tr, .semBorda td {
+                border: none !important;
+            }
+        </style>
     </h:head>
-    <h:body>
-        Usuarios
+    <h:body onload="#{administradorMB.iniciarUsuarios()}">
+        <h:form id="form_usuarios">
+            <p:panel 
+                id="grid_usuario"
+                header="Gerenciamento de usuários"
+                styleClass="semBorda">
+                <h:inputHidden value="#{administradorMB.usuario.id}"
+                               converter="objectIdConverter"/>
+                <p:panelGrid columns="2">
+                    <p:outputLabel value="Nome:"/>
+                    <p:inputText value="#{administradorMB.usuario.nome}"/>
+                    <p:outputLabel value="E-Mail:"/>
+                    <p:inputText value="#{administradorMB.usuario.email}"/>
+                    <p:outputLabel value="CPF:"/>
+                    <p:inputText value="#{administradorMB.usuario.cpf}"/>
+                    <p:outputLabel value="Matricula:"/>
+                    <p:inputText value="#{administradorMB.usuario.matricula}"/>
+                    <p:outputLabel value="Funcionalidade:"/>
+                    <p:selectOneMenu 
+                        value="#{administradorMB.usuario.role}">
+                        <f:selectItem itemValue="#{null}" 
+                                      itemLabel="Selecione..."
+                                      noSelectionOption="true"/>
+                        <f:selectItem itemValue="role_user" 
+                                      itemLabel="Usuário"/>
+                        <f:selectItem itemValue="role_admin" 
+                                      itemLabel="Administrador"/>
+                    </p:selectOneMenu>
+                </p:panelGrid>
+                <br />
+                <p:commandButton value="Pesquisar usuários"
+                                 update=":form_usuarios:tabela_usuario :form_usuarios:msgs"
+                                 action="#{administradorMB.pesquisarUsuarios()}"/>
+                <p:commandButton value="Editar usuário"
+                                 update=":form_usuarios:tabela_usuario msgs :form_usuarios:grid_usuario :form_usuarios:msgs"
+                                 action="#{administradorMB.editarUsuario()}"/>
+                <br />
+                <br />
+                <p:dataTable id="tabela_usuario"
+                             value="#{administradorMB.usuarios}"
+                             var="usuarioAtual" 
+                             emptyMessage="Não há usuários">
+                    <p:column>
+                        <f:facet name="header">
+                            <p:outputLabel value="Nome"/>
+                        </f:facet>
+                        <p:outputLabel value="#{usuarioAtual.nome}"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <p:outputLabel value="E-mail"/>
+                        </f:facet>
+                        <p:outputLabel value="#{usuarioAtual.email}"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <p:outputLabel value="CPF"/>
+                        </f:facet>
+                        <p:outputLabel value="#{usuarioAtual.cpf}"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <p:outputLabel value="Matrícula"/>
+                        </f:facet>
+                        <p:outputLabel value="#{usuarioAtual.matricula}"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <p:outputLabel value="Funcionalidade"/>
+                        </f:facet>
+                        <p:outputLabel 
+                            value="Usuário"
+                            rendered="#{usuarioAtual.role eq 'role_user'}"/>
+                        <p:outputLabel 
+                            value="Administrador"
+                            rendered="#{usuarioAtual.role eq 'role_admin'}"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <p:outputLabel value="Editar"/>
+                        </f:facet>
+                        <p:commandLink value="editar"
+                                       update=":form_usuarios:grid_usuario">
+                            <f:setPropertyActionListener 
+                                value="#{usuarioAtual}"
+                                target="#{administradorMB.usuario}"/>
+                        </p:commandLink>
+                    </p:column>
+                    <p:column style="text-align: center">
+                        <f:facet name="header">
+                            <p:outputLabel value="Excluir"/>
+                        </f:facet>
+                        <p:commandButton 
+                            icon="ui-icon-closethick"
+                            oncomplete="confirmExcluirUsuario.show()">
+                            <f:setPropertyActionListener 
+                                value="#{usuarioAtual}" 
+                                target="#{administradorMB.usuarioAux}"/>
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable>
+            </p:panel>
+            <p:confirmDialog
+                message="Deseja excluir este usuário?"
+                header="Excluir usuário"
+                widgetVar="confirmExcluirUsuario"
+                showEffect="explode"
+                hideEffect="puff"
+                appendToBody="true">
+                <p:panel 
+                    style="border: none;text-align: center">
+                    <p:commandButton 
+                        value="Sim"
+                        styleClass="ui-confirmdialog-yes"
+                        oncomplete="confirmExcluirUsuario.hide()"
+                        action="#{administradorMB.excluirUsuario}"
+                        update=":form_usuarios:tabela_usuario :form_usuarios:msgs"/>
+                    <p:commandButton 
+                        value="Não" 
+                        type="button"
+                        styleClass="ui-confirmdialog-no"
+                        onclick="confirmExcluirUsuario.hide()"/>
+                </p:panel>
+            </p:confirmDialog>
+            <p:growl id="msgs"/>
+        </h:form>
     </h:body>
 </html>
 

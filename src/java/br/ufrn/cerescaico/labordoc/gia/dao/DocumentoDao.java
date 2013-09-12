@@ -15,11 +15,11 @@ import org.bson.types.ObjectId;
  */
 public class DocumentoDao extends MongoDao<Documento>
         implements Serializable {
-    
+
     private CriteriaStrategyIF<Documento, DBObject> criteriaStrategyIF;
     private NullCriteria nullCriteria = new NullCriteria();
     private Map<Integer, CriteriaStrategyIF> criterias;
-    
+
     public DocumentoDao() throws UnknownHostException {
         super();
         criteriaStrategyIF = nullCriteria;
@@ -31,9 +31,10 @@ public class DocumentoDao extends MongoDao<Documento>
         criterias.put(
                 Consts.CRITERIA_DOCUMENTO, new CriteriaDocumento(dataStore));
     }
-    
+
     @Override
-    public Object criar(Documento e) {
+    public Object criar(Documento e) throws Exception {
+        e.setId(null);
         DBRef bRef = new DBRef(dataStore.getDB(), "tipos", e.getTipo().getId());
         BasicDBObject dBObject = new BasicDBObject(e.getCampos());
         dBObject.append("tipo", bRef);
@@ -41,14 +42,14 @@ public class DocumentoDao extends MongoDao<Documento>
                 dataStore.getCollection(Documento.class).insert(dBObject);
         return wr;
     }
-    
+
     @Override
     public List<Documento> pesquisar(
             Documento e,
             int offset,
             int limit,
-            Integer criteria) {
-        
+            Integer criteria) throws Exception {
+
         List<Documento> documentos = new ArrayList<Documento>();
         if (e == null) {
             return documentos;
@@ -57,7 +58,7 @@ public class DocumentoDao extends MongoDao<Documento>
         CriteriaStrategyIF aux = criterias.get(criteria);
         criteriaStrategyIF = (aux == null) ? nullCriteria : aux;
         criteriaStrategyIF.operationCriteria(e, dBObject);
-        
+
         DBCollection dBCollection = dataStore.getCollection(Documento.class);
         DBCursor dBCursor = dBCollection.find(dBObject);
         dBCursor.skip(offset);
@@ -67,6 +68,9 @@ public class DocumentoDao extends MongoDao<Documento>
             Map<String, Object> campos = dBCursor.next().toMap();
             atual.setId((ObjectId) campos.get(Consts._ID));
             campos.remove(Consts._ID);
+            DBRef ref = (DBRef) campos.get("tipo");
+            atual.getTipo().setId((ObjectId) ref.getId());
+            campos.remove("tipo");
             atual.setCampos(campos);
             documentos.add(atual);
         }

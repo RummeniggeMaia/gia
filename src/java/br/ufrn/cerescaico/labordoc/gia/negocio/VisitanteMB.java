@@ -4,9 +4,9 @@ import br.ufrn.cerescaico.labordoc.gia.dao.*;
 import br.ufrn.cerescaico.labordoc.gia.modelo.*;
 import br.ufrn.cerescaico.labordoc.gia.util.*;
 import com.mongodb.MongoException;
+import java.io.IOException;
 import java.io.Serializable;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
 import java.util.Map;
 import javax.faces.bean.*;
 
@@ -16,148 +16,77 @@ import javax.faces.bean.*;
  */
 @ManagedBean
 @SessionScoped
-public class VisitanteMB extends AbstractUsuarioMB implements Serializable {
+public class VisitanteMB implements Serializable {
+
+    private UsuarioDao usuarioDao;
+    private Usuario usuario;
 
     public VisitanteMB() {
         try {
-            usuarioDao = new UsuarioDao();
-            usuario = new Usuario();
-            usuarios = new ArrayList<Usuario>(2);
+            Map<String, Object> map = Util
+                    .getSessionMap();
+            Object mb = map.get("visitanteMB");
+            VisitanteMB vMB = null;
+            if (mb != null && mb instanceof VisitanteMB) {
+                vMB = (VisitanteMB) mb;
+                usuarioDao = vMB.getUsuarioDao();
+                usuario = (Usuario) map.get(Consts.USUARIO_LOGADO);
+            } else {
+                usuarioDao = new UsuarioDao();
+                usuario = new Usuario();
+            }
         } catch (UnknownHostException ex) {
             Util.addMsg(null, ex.getMessage());
         } catch (MongoException me) {
             Util.addMsg(null, me.getMessage());
+        } catch (IOException ie) {
+            Util.addMsg(null, ie.getMessage());
         }
     }
 
     public String criarUsuario() {
         try {
+            usuario.setRole(Usuario.ROLE_USER);
             usuarioDao.criar(usuario);
             usuario = new Usuario();
             return Consts.USUARIO_CRIADO;
-        } catch (MongoException me) {
+        } catch (Exception me) {
             Util.addMsg(null, me.getMessage());
             return Consts.HOME;
         }
     }
 
     public String entrarNoSistema() {
-        Usuario aux = usuarioDao
-                .pesquisarUm(usuario, Consts.CRITERIA_AUTENTICAR);
-        usuario = new Usuario();
-        if (aux != null) {
-            Map<String, Object> sessionMap =
-                    Util.fc().getExternalContext().getSessionMap();
-            sessionMap.put(Consts.USUARIO_LOGADO, aux);
-            sessionMap.put(Consts.USUARIO_DAO, usuarioDao);
-            String role = aux.getRole();
-            return role;
+        try {
+            Usuario aux = usuarioDao
+                    .pesquisarUm(usuario, Consts.CRITERIA_AUTENTICAR);
+            usuario = new Usuario();
+            if (aux != null) {
+                Map<String, Object> sessionMap = Util.getSessionMap();
+                sessionMap.put(Consts.USUARIO_LOGADO, aux);
+                String role = aux.getRole();
+                return role;
+            }
+            throw new Exception("Login ou senha não constam no sistema.");
+        } catch (Exception e) {
+            Util.addMsg(null, e.getMessage());
+            return Consts.HOME;
         }
-        Util.addMsg(null, "Login ou senha não constam no sistema.");
-        return Consts.HOME;
-    }/*
-
-    @Override
-    public Documento getDocumento() {
-        throw new UnsupportedOperationException("Operação não suportada");
-    }
-
-    @Override
-    public List<Documento> getDocumentos() {
-        throw new UnsupportedOperationException("Operação não suportada");
-    }
-
-    @Override
-    public void setDocumento(Documento documento) {
-        throw new UnsupportedOperationException("Operação não suportada");
-    }
-
-    @Override
-    public void pesquisarDocumentos() {
-        throw new UnsupportedOperationException("Operação não suportada");
-    }
-
-    public DocumentoDao getDocumentoDao() {
-        throw new UnsupportedOperationException("Operação não suportada");
-    }
-
-    @Override
-    public Usuario getDono() {
-        throw new UnsupportedOperationException("Operação não suportada");
-    }
-
-    public void setDocumentoDao(DocumentoDao documentoDao) {
-        throw new UnsupportedOperationException("Operação não suportada");
-    }
-
-    public PesquisaCtrl getPesquisaCtrl() {
-        throw new UnsupportedOperationException("Operação não suportada");
-    }
-
-    @Override
-    public TipoDeDocumento getTipo() {
-        throw new UnsupportedOperationException("Operação não suportada");
-    }
-
-    public TipoDeDocumentoDao getTipoDeDocumentoDao() {
-        throw new UnsupportedOperationException("Operação não suportada");
-    }
-
-    @Override
-    public List<TipoDeDocumento> getTipos() {
-        throw new UnsupportedOperationException("Operação não suportada");
     }
 
     public UsuarioDao getUsuarioDao() {
-        throw new UnsupportedOperationException("Operação não suportada");
-    }
-
-    @Override
-    public Usuario getUsuario() {
-        throw new UnsupportedOperationException("Operação não suportada");
-    }
-
-    @Override
-    public List<Usuario> getUsuarios() {
-        throw new UnsupportedOperationException("Operação não suportada");
-    }
-
-    public void setDocumentos(List<Documento> documentos) {
-        throw new UnsupportedOperationException("Operação não suportada");
-    }
-
-    @Override
-    public void setDono(Usuario dono) {
-        throw new UnsupportedOperationException("Operação não suportada");
-    }
-
-    public void setPesquisaCtrl(PesquisaCtrl pesquisaCtrl) {
-        throw new UnsupportedOperationException("Operação não suportada");
-    }
-
-    @Override
-    public void setTipo(TipoDeDocumento tipo) {
-        throw new UnsupportedOperationException("Operação não suportada");
-    }
-
-    public void setTipoDeDocumentoDao(TipoDeDocumentoDao tipoDao) {
-        this.tipoDao = tipoDao;
-    }
-
-    public void setTipos(List<TipoDeDocumento> tipos) {
-        throw new UnsupportedOperationException("Operação não suportada");
-    }
-
-    @Override
-    public void setUsuario(Usuario usuario) {
-        throw new UnsupportedOperationException("Operação não suportada");
+        return usuarioDao;
     }
 
     public void setUsuarioDao(UsuarioDao usuarioDao) {
-        throw new UnsupportedOperationException("Operação não suportada");
+        this.usuarioDao = usuarioDao;
     }
 
-    public void setUsuarios(List<Usuario> usuarios) {
-        throw new UnsupportedOperationException("Operação não suportada");
-    }*/
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
 }

@@ -22,6 +22,7 @@ public class UsuarioDao extends MongoDao<Usuario> implements Serializable {
     private CriteriaUsuario buscaUsuario = new CriteriaUsuario();
     private CriteriaUsuarioId buscaUsuarioId =
             new CriteriaUsuarioId();
+    private CriteriaUsuarioConj buscaConjutiva = new CriteriaUsuarioConj();
     private CriteriaAutentica autenticaCriteria = new CriteriaAutentica();
     private NullCriteria nullCriteria = new NullCriteria();
 
@@ -31,18 +32,18 @@ public class UsuarioDao extends MongoDao<Usuario> implements Serializable {
     }
 
     @Override
-    public Object criar(Usuario e) {
+    public Object criar(Usuario e) throws Exception {
         e.setId(null);
         return super.criar(e);
     }
 
     @Override
     public List<Usuario> pesquisar(
-            Usuario e, 
-            int offset, 
-            int limit, 
+            Usuario e,
+            int offset,
+            int limit,
             Integer criteria) {
-        
+
         Query<Usuario> query = dataStore.find(Usuario.class);
         mudarCriteria(criteria);
         query.offset(offset);
@@ -50,7 +51,7 @@ public class UsuarioDao extends MongoDao<Usuario> implements Serializable {
         criteriaStrategyIF.operationCriteria(e, query);
         return query.asList();
     }
-    
+
     private void mudarCriteria(Integer criteria) {
         if (criteria == Consts.CRITERIA_USUARIO_ID) {
             criteriaStrategyIF = buscaUsuarioId;
@@ -58,16 +59,18 @@ public class UsuarioDao extends MongoDao<Usuario> implements Serializable {
             criteriaStrategyIF = autenticaCriteria;
         } else if (criteria == Consts.CRITERIA_USUARIO) {
             criteriaStrategyIF = buscaUsuario;
+        } else if (criteria == Consts.CRITERIA_USUARIO_CONJUTIVA) {
+            criteriaStrategyIF = buscaConjutiva;
         } else {
             criteriaStrategyIF = nullCriteria;
         }
     }
-    
+
     private void criptografar(Usuario e) {
         try {
             MessageDigest messageDigest = MessageDigest.getInstance("SHA-1");
             messageDigest.reset();
-            String loginSenha =  e.getLogin() + e.getSenha();
+            String loginSenha = e.getLogin() + e.getSenha();
             messageDigest.update(loginSenha.getBytes("UTF-8"));
             e.setSenha(new String(
                     messageDigest.digest(loginSenha.getBytes("UTF-8"))));

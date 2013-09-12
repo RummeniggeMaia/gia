@@ -14,7 +14,7 @@ import javax.faces.bean.*;
 public class UsuarioMB extends AbstractUsuarioMB implements Serializable {
 
     public UsuarioMB() {
-        super(Util.fc().getExternalContext().getSessionMap());
+        super();
     }
 
     public String sairDoSistema() {

@@ -33,6 +33,10 @@ implements CriteriaStrategyIF<Usuario, Query<Usuario>>, Serializable {
                 q.criteria(Consts.CAMPO_CPF)
                 .notEqual(null)
                 .and(q.criteria(Consts.CAMPO_CPF)
-                .equal(t.getCpf())));
+                .equal(t.getCpf())),
+                q.criteria(Consts.CAMPO_ROLE)
+                .notEqual(null)
+                .and(q.criteria(Consts.CAMPO_ROLE)
+                .equal(t.getRole())));
     }
 }

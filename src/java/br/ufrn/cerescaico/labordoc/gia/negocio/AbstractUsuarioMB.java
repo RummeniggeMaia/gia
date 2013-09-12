@@ -8,7 +8,6 @@ import br.ufrn.cerescaico.labordoc.gia.dao.*;
 import br.ufrn.cerescaico.labordoc.gia.modelo.*;
 import br.ufrn.cerescaico.labordoc.gia.util.*;
 import br.ufrn.cerescaico.labordoc.gia.util.converter.*;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -36,23 +35,23 @@ public abstract class AbstractUsuarioMB {
     protected PesquisaCtrl pesquisaCtrl = new PesquisaCtrl();
 
     public AbstractUsuarioMB() {
-    }
-
-    public AbstractUsuarioMB(Map<String, Object> sessionMap) {
         try {
+            Map<String, Object> sessionMap = Util.getSessionMap();
             dono = (Usuario) sessionMap.get(Consts.USUARIO_LOGADO);
-            usuarioDao = (UsuarioDao) sessionMap.get(Consts.USUARIO_DAO);
-            if (dono == null || usuarioDao == null) {
+            if (dono == null) {
                 throw new IllegalArgumentException(
-                        "Usuário ou DAO nulo.");
+                        "Houve um erro durante o login, acesso negado.");
             }
+            VisitanteMB vMB =
+                    (VisitanteMB) sessionMap.get("visitanteMB");
+            usuarioDao = vMB.getUsuarioDao();
             usuario = new Usuario();
             usuarios = new ArrayList<Usuario>(2);
+            documentoDao = new DocumentoDao();
             documento = new Documento();
             documentos = new ArrayList<Documento>(2);
-            documentoDao = new DocumentoDao();
-            tipo = new Tipo();
             tipoDao = new TipoDao();
+            tipo = new Tipo();
             tipos = tipos = tipoDao.pesquisarTodos(Tipo.class);
             converters = new HashMap<String, Converter>();
             converters.put(Consts.INTEIRO, new NumeConverter());
@@ -60,15 +59,13 @@ public abstract class AbstractUsuarioMB {
             converters.put(Consts.DATA, new DataConverter());
             converters.put(Consts.TEXTO, new TextConverter());
             converters.put("tipoConverter", new TipoConverter(tipos));
-        } catch (UnknownHostException uhe) {
-            Util.addMsg(null, uhe.getMessage());
-        } catch (IllegalArgumentException iae) {
-            Util.addMsg(null, iae.getMessage());
+        } catch (Exception ex) {
+            Util.addMsg(null, ex.getMessage());
         }
     }
 
     public Usuario getDono() {
-        return dono;
+        return dono; 
     }
 
     public void setDono(Usuario dono) {
@@ -76,13 +73,13 @@ public abstract class AbstractUsuarioMB {
     }
 
     public Usuario getUsuario() {
-        if (usuarios != null && usuario != null) {
-            for (Usuario atual : usuarios) {
-                if (usuario.equals(atual)) {
-                    usuario = atual;
-                }
-            }
-        }
+//        if (usuarios != null && usuario != null) {
+//            for (Usuario atual : usuarios) {
+//                if (usuario.equals(atual)) {
+//                    usuario = atual;
+//                }
+//            }
+//        }
         return usuario;
     }
 
@@ -107,13 +104,13 @@ public abstract class AbstractUsuarioMB {
     }
 
     public Documento getDocumento() {
-        if (documentos != null && documento != null) {
-            for (Documento atual : documentos) {
-                if (documento.equals(atual)) {
-                    documento = atual;
-                }
-            }
-        }
+//        if (documentos != null && documento != null) {
+//            for (Documento atual : documentos) {
+//                if (documento.equals(atual)) {
+//                    documento = atual;
+//                }
+//            }
+//        }
         return documento;
     }
 
@@ -138,13 +135,13 @@ public abstract class AbstractUsuarioMB {
     }
 
     public Tipo getTipo() {
-        if (tipo != null && tipos != null) {
-            for (Tipo atual : tipos) {
-                if (tipo.equals(atual)) {
-                    tipo = atual;
-                }
-            }
-        }
+//        if (tipo != null && tipos != null) {
+//            for (Tipo atual : tipos) {
+//                if (tipo.equals(atual)) {
+//                    tipo = atual;
+//                }
+//            }
+//        }
         return tipo;
     }
 
@@ -182,5 +179,14 @@ public abstract class AbstractUsuarioMB {
 
     public void setConverters(Map<String, Converter> converters) {
         this.converters = converters;
+    }
+    
+    public void close() {
+        usuarioDao.close();
+        usuarioDao = null;
+        documentoDao.close();
+        documentoDao = null;
+        tipoDao.close();
+        tipoDao = null;
     }
 }

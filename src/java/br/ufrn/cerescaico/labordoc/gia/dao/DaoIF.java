@@ -12,11 +12,15 @@ import java.util.List;
  */
 public interface DaoIF<E> {
     
-    public Object criar(E e);
+    public Object criar(E e)throws Exception;
     
-    public Object editar(E e);
+    public Object editar(E e) throws Exception;
     
-    public Object excluir(E e);
+    public Object excluir(E e) throws Exception;
     
-    public List<E> pesquisar(E e, int offset, int limit, Integer criteria);
+    public List<E> pesquisar(
+            E e, 
+            int offset, 
+            int limit, 
+            Integer criteria) throws Exception;
 }

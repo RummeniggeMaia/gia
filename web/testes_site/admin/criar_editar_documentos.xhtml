@@ -5,11 +5,11 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://java.sun.com/jsf/core">
     <h:head>
-        <title>Facelet Title</title>
+        <title>Cadastrar e editar documentos</title>
     </h:head>
     <h:body>
-        <h:form>
-            <h:selectOneMenu
+        <h:form id="form_doc">
+            <p:selectOneMenu
                 value="#{administradorMB.tipo}"
                 converter="#{administradorMB.converters['tipoConverter']}">
 
@@ -22,29 +22,30 @@
                     var="tipoAtual"
                     itemLabel="#{tipoAtual.nome}"
                     itemValue="#{tipoAtual}"/>
-                <p:ajax process="@this" update="tabelaCampos"/>
-            </h:selectOneMenu>
-            <h:dataTable
-                id="tabelaCampos"
+                <p:ajax process="@this" update=":form_doc:tabela_campos"/>
+            </p:selectOneMenu>
+            <p:dataTable
+                id="tabela_campos"
                 value="#{administradorMB.tipo.campos}"
                 var="campoAtual">
 
+                <p:column>
+                    <p:outputLabel value="#{campoAtual.nome}:"/>
+                </p:column>
                 <h:column>
-                    <h:outputLabel value="#{campoAtual.nome}:"/>
-                </h:column>
-                <h:column>
-                    <h:inputText 
+                    <p:inputText 
                         value="#{campoAtual.valor}"
                         converter="#{usuarioMB.converters[campoAtual.tipoDeDado]}">
-                        <f:ajax execute="@this" event="blur"/>
-                    </h:inputText>
+                        <p:ajax process="@this" event="blur"/>
+                    </p:inputText>
                 </h:column>
-            </h:dataTable>
-            <h:commandButton 
+            </p:dataTable>
+            <p:commandButton 
                 value="Cadastrar documento"
                 action="#{administradorMB.criarDocumento}"/>
-            <h:commandButton value="Editar documento"/>
+            <p:commandButton value="Editar documento"/>
         </h:form>
+        <p:growl id="msgs"/>
     </h:body>
 </html>
 

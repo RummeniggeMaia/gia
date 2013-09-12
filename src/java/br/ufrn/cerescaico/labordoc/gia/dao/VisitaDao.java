@@ -5,7 +5,6 @@
 package br.ufrn.cerescaico.labordoc.gia.dao;
 
 import br.ufrn.cerescaico.labordoc.gia.modelo.*;
-import com.google.code.morphia.query.Query;
 import java.io.Serializable;
 import java.net.UnknownHostException;
 import java.util.List;
@@ -25,7 +24,7 @@ public class VisitaDao extends MongoDao<Visita> implements Serializable {
             Visita e, 
             int offset, 
             int limit, 
-            Integer criteria) {
+            Integer criteria) throws Exception {
         
         throw new UnsupportedOperationException("Not supported yet.");
     }

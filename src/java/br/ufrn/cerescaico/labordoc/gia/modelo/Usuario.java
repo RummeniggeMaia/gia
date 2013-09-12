@@ -23,7 +23,7 @@ public class Usuario extends Entidade implements Serializable {
     @Indexed(unique = true)
     private String cpf;
     private String matricula;
-    private String role = ROLE_USER;
+    private String role;
 
     public Usuario() {
     }

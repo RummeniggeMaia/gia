@@ -25,30 +25,35 @@ public abstract class MongoDao<E> implements DaoIF<E> {
     }
 
     @Override
-    public Object criar(E e) {
+    public Object criar(E e) throws Exception {
         return dataStore.save(e);
     }
 
     @Override
-    public Object editar(E e) {
+    public Object editar(E e) throws Exception {
         return dataStore.merge(e);
     }
 
     @Override
-    public Object excluir(E e) {
+    public Object excluir(E e) throws Exception {
         return dataStore.delete(e);
     }
-    
-    public E pesquisarUm(E e) {
+
+    public E pesquisarUm(E e) throws Exception {
         return dataStore.get(e);
     }
-    
-    public E pesquisarUm(E e, Integer criteria) {
+
+    public E pesquisarUm(E e, Integer criteria) throws Exception {
         List<E> lista = pesquisar(e, 0, 1, criteria);
         return lista.isEmpty() ? null : lista.get(0);
     }
-    
-    public List<E> pesquisarTodos(Class c) {
+
+    public List<E> pesquisarTodos(Class c) throws Exception {
         return dataStore.find(c).asList();
+    }
+    
+    public void close() {
+        morphia = null;
+        dataStore = null;
     }
 }

@@ -28,11 +28,17 @@ public class TipoDao extends MongoDao<Tipo>
     }
 
     @Override
+    public Object criar(Tipo e) throws Exception {
+        e.setId(null);
+        return super.criar(e);
+    }
+
+    @Override
     public List<Tipo> pesquisar(
             Tipo e,
             int offset,
             int limit,
-            Integer criteria) {
+            Integer criteria) throws Exception {
 
         Query<Tipo> query = dataStore.find(Tipo.class);
         query.offset(offset);

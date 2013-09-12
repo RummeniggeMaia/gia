@@ -12,6 +12,7 @@
         <servlet-name>Faces Servlet</servlet-name>
         <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
+        
     </servlet>
     <servlet-mapping>
         <servlet-name>Faces Servlet</servlet-name>
@@ -19,10 +20,30 @@
     </servlet-mapping>
     <session-config>
         <session-timeout>
-            30
+            300
         </session-timeout>
     </session-config>
     <welcome-file-list>
         <welcome-file>testes_site/visitante/login.jsf</welcome-file>
     </welcome-file-list>
+    <filter>
+        <filter-name>Charset Filter</filter-name>
+        <filter-class>
+            br.ufrn.cerescaico.labordoc.gia.util.filter.CharsetFilter
+        </filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>Charset Filter</filter-name>
+        <url-pattern>*.jsf</url-pattern>
+    </filter-mapping>
+    <!--<filter>
+        <filter-name>FdA</filter-name>
+        <filter-class>
+            br.ufrn.cerescaico.labordoc.gia.util.filter.FiltroDeAcesso
+        </filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>FdA</filter-name>
+        <url-pattern>*.jsf</url-pattern>
+    </filter-mapping>-->
 </web-app>
