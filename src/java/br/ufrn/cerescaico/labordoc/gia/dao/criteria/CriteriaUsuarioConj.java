@@ -16,24 +16,27 @@ public class CriteriaUsuarioConj
 
     @Override
     public void operationCriteria(Usuario entity, Query<Usuario> query) {
+        if (entity == null) {
+            return;
+        }
         List<Criteria> criterias = new ArrayList<Criteria>();
-        if (!entity.getNome().isEmpty()) {
+        if (entity.getNome() != null && !entity.getNome().isEmpty()) {
             criterias.add(query.criteria(Consts.CAMPO_NOME)
                     .equal(entity.getNome()));
         }
-        if (!entity.getEmail().isEmpty()) {
+        if (entity.getEmail() != null && !entity.getEmail().isEmpty()) {
             criterias.add(query.criteria(Consts.CAMPO_EMAIL)
                     .equal(entity.getEmail()));
         }
-        if (!entity.getCpf().isEmpty()) {
+        if (entity.getCpf() != null && !entity.getCpf().isEmpty()) {
             criterias.add(query.criteria(Consts.CAMPO_CPF)
                     .equal(entity.getCpf()));
         }
-        if (!entity.getMatricula().isEmpty()) {
+        if (entity.getMatricula() != null && !entity.getMatricula().isEmpty()) {
             criterias.add(query.criteria(Consts.CAMPO_MATRICULA)
                     .equal(entity.getMatricula()));
         }
-        if (!entity.getRole().isEmpty()) {
+        if (entity.getRole() != null && !entity.getRole().isEmpty()) {
             criterias.add(query.criteria(Consts.CAMPO_ROLE)
                     .equal(entity.getRole()));
         }

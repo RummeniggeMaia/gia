@@ -60,12 +60,13 @@ public class Teste {
 //        TipoConverter tc = new TipoConverter();
 //        Tipo tp = (Tipo) tc.getAsObject(null, null, t.toString());
 //        Util.pf("%s\n", tp.getNome());
-        Usuario x = new Usuario();
-        Usuario y = new Usuario();
-        y.setNome("asd");
-        x = y;
-        y.setNome("qwe");
-        y = null;
-        Util.pf("%s\n", x.getNome());
+//        Usuario x = new Usuario();
+//        Usuario y = new Usuario();
+//        y.setNome("asd");
+//        x = y;
+//        y.setNome("qwe");
+//        y = null;
+//        Util.pf("%s\n", x.getNome());
+        Util.pf("%d\n", 3 % 5);
     }
 }

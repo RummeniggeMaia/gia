@@ -3,6 +3,7 @@ package br.ufrn.cerescaico.labordoc.gia.negocio;
 import br.ufrn.cerescaico.labordoc.gia.modelo.*;
 import br.ufrn.cerescaico.labordoc.gia.util.*;
 import java.io.Serializable;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.*;
 
 /**
@@ -25,24 +26,26 @@ public class UsuarioMB extends AbstractUsuarioMB implements Serializable {
     public void editarConta() {
         try {
             usuarioDao.editar(dono);
-            Util.addMsg(null, "Dados editados com sucesso.");
+            Util.addMsg(null, "Dados editados com sucesso.", 
+                    FacesMessage.SEVERITY_INFO);
         } catch (Exception e) {
-            Util.addMsg(null, e.getMessage());
+            Util.addMsg(null, e.getMessage(), FacesMessage.SEVERITY_ERROR);
         }
     }
 
     public String excluirConta() {
         try {
             usuarioDao.excluir(dono);
+            Util.addMsg(null, "Conta excluída com sucesso.", 
+                    FacesMessage.SEVERITY_INFO);
             return sairDoSistema();
         } catch (Exception e) {
-            Util.addMsg(null, e.getMessage());
+            Util.addMsg(null, e.getMessage(), FacesMessage.SEVERITY_ERROR);
             return "";
         }
     }
 
     public void pesquisarDocumentos() {
-        pesquisaCtrl.setCriteria(Consts.CRITERIA_DOCUMENTO);
         pesquisaCtrl.setOffset(0);
         pesquisaCtrl.setLimit(10);
         documento.setTipo(tipo);
@@ -54,9 +57,9 @@ public class UsuarioMB extends AbstractUsuarioMB implements Serializable {
                     documento, 
                     pesquisaCtrl.getOffset(), 
                     pesquisaCtrl.getLimit(), 
-                    pesquisaCtrl.getCriteria());
+                    Consts.CRITERIA_DOCUMENTO);
         } catch (Exception e) {
-            Util.addMsg(null, e.getMessage());
+            Util.addMsg(null, e.getMessage(), FacesMessage.SEVERITY_WARN);
         }
     }
 }

@@ -20,9 +20,13 @@
     </servlet-mapping>
     <session-config>
         <session-timeout>
-            300
+            30
         </session-timeout>
     </session-config>
+    <context-param>  
+        <param-name>javax.faces.STATE_SAVING_METHOD</param-name>  
+        <param-value>server</param-value>  
+    </context-param>  
     <welcome-file-list>
         <welcome-file>testes_site/visitante/login.jsf</welcome-file>
     </welcome-file-list>

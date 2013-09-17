@@ -12,7 +12,7 @@
             }
         </style>
     </h:head>
-    <h:body>
+    <h:body onload="#{administradorMB.iniciarDocumentos()}">
         <h:form id="form_docs">
             <h:panelGrid columns="2">
                 <p:commandButton 
@@ -20,9 +20,10 @@
                     action="adm_tipos"/>
             </h:panelGrid><br />
             <p:selectOneMenu
-                id="selectTipo"
+                id="select_tipo"
                 value="#{administradorMB.tipo}"
-                converter="#{administradorMB.converters['tipoConverter']}">
+                converter="#{administradorMB.converters['tipoConverter']}"
+                disabled="#{administradorMB.editarDocumento}">
 
                 <f:selectItem 
                     itemLabel="Selecione..."
@@ -47,25 +48,49 @@
                 <p:column>
                     <p:inputText 
                         value="#{campoAtual.valor}"
-                        converter="#{administradorMB.converters[campoAtual.tipoDeDado]}">
+                        converter="#{administradorMB.converters[campoAtual.tipoDeDado]}"
+                        size="#{campoAtual.tipoDeDado == 'text' ? '75' : '10'}">
                         <p:ajax process="@this" event="blur"/>
                     </p:inputText>
                 </p:column>
             </p:dataTable>
             <br />
-            <p:panelGrid columns="3" styleClass="semBorda">
+            <p:panelGrid columns="2" styleClass="semBorda" id="grid_botoes">
                 <p:commandButton 
                     value="Cadastrar documento"
-                    update=":form_docs:grid_campos :form_docs:selectTipo :form_docs:msgs"
-                    action="#{administradorMB.criarDocumento}"/>
+                    update=":form_docs:grid_campos :form_docs:select_tipo :form_docs:msgs"
+                    action="#{administradorMB.criarDocumento}"
+                    rendered="#{!administradorMB.editarDocumento}">
+                    <p:effect type="slide" event="load">
+                        <f:param name="mode" value="'show'"/>
+                    </p:effect>
+                </p:commandButton>
                 <p:commandButton 
                     value="Pesquisar documentos"
                     update=":form_docs:tabela_docs"
-                    action="#{administradorMB.pesquisarDocumentos}"/>
+                    action="#{administradorMB.pesquisarDocumentos}"
+                    rendered="#{!administradorMB.editarDocumento}">
+                    <p:effect type="slide" event="load">
+                        <f:param name="mode" value="'show'"/>
+                    </p:effect>
+                </p:commandButton>
                 <p:commandButton 
                     value="Editar documento"
-                    update=":form_docs:tabela_docs :form_docs:selectTipo :form_docs:grid_campos"
-                    action="#{administradorMB.pesquisarDocumentos}"/>
+                    update=":form_docs:tabela_docs :form_docs:select_tipo :form_docs:grid_campos :form_docs:grid_botoes"
+                    action="#{administradorMB.editarDocumento}"
+                    rendered="#{administradorMB.editarDocumento}">
+                    <p:effect type="slide" event="load">
+                        <f:param name="mode" value="'show'"/>
+                    </p:effect>
+                </p:commandButton>
+                <p:commandButton value="Cancelar edição"
+                                 action="#{administradorMB.cancelarEditarDocumento()}"
+                                 update=":form_docs:grid_botoes :form_docs:grid_campos :form_docs:select_tipo"
+                                 rendered="#{administradorMB.editarDocumento}">
+                    <p:effect type="slide" event="load">
+                        <f:param name="mode" value="'show'"/>
+                    </p:effect>
+                </p:commandButton> 
             </p:panelGrid>
             <br />
             <p:dataTable 
@@ -90,7 +115,8 @@
                         <p:outputLabel value="Editar"/>
                     </f:facet>
                     <p:commandLink value="editar"
-                                   update=":form_docs:selectTipo :form_docs:grid_campos"
+                                   action="#{administradorMB.iniciarEdidarDocumento()}"
+                                   update=":form_docs:select_tipo :form_docs:grid_campos :form_docs:grid_botoes"
                                    actionListener="#{administradorMB.carregarDocumento}">
                         <f:attribute name="documento" value="#{linha}"/>
                     </p:commandLink>
@@ -130,7 +156,7 @@
                         onclick="confirmExcluirDoc.hide()"/>
                 </p:panel>
             </p:confirmDialog>
-            <p:growl id="msgs" showDetail="true"/>
+            <p:growl id="msgs"/>
         </h:form>
     </h:body>
 </html>

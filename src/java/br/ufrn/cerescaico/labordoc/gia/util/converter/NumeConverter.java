@@ -1,5 +1,6 @@
 package br.ufrn.cerescaico.labordoc.gia.util.converter;
 
+import java.io.Serializable;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
@@ -10,7 +11,7 @@ import javax.faces.convert.FacesConverter;
  * @author Rummenigge
  */
 @FacesConverter(value="nume")
-public class NumeConverter implements Converter {
+public class NumeConverter implements Converter, Serializable {
 
     @Override
     public Object getAsObject(

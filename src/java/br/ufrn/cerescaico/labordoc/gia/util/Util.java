@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.ufrn.cerescaico.labordoc.gia.util;
 
 import java.util.Map;
@@ -46,10 +42,11 @@ public class Util {
      * @param clientId pode ser null
      * @param message Mensagem
      */
-    public static void addMsg(String clientId, String message) {
+    public static void addMsg(String clientId, String message, 
+            FacesMessage.Severity s) {
         FacesContext
                 .getCurrentInstance()
-                .addMessage(clientId, new FacesMessage(message));
+                .addMessage(clientId, new FacesMessage(s, message, message));
     }
 
     /**

@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.faces.application.FacesMessage;
 import javax.faces.convert.Converter;
 
 /**
@@ -32,7 +33,7 @@ public abstract class AbstractUsuarioMB {
     protected List<Tipo> tipos;
     //controle
     protected Map<String, Converter> converters;
-    protected PesquisaCtrl pesquisaCtrl = new PesquisaCtrl();
+    protected PaginacaoCtrl pesquisaCtrl = new PaginacaoCtrl();
 
     public AbstractUsuarioMB() {
         try {
@@ -60,7 +61,7 @@ public abstract class AbstractUsuarioMB {
             converters.put(Consts.TEXTO, new TextConverter());
             converters.put("tipoConverter", new TipoConverter(tipos));
         } catch (Exception ex) {
-            Util.addMsg(null, ex.getMessage());
+            Util.addMsg(null, ex.getMessage(), FacesMessage.SEVERITY_FATAL);
         }
     }
 
@@ -165,11 +166,11 @@ public abstract class AbstractUsuarioMB {
         this.tipos = tipos;
     }
 
-    public PesquisaCtrl getPesquisaCtrl() {
+    public PaginacaoCtrl getPesquisaCtrl() {
         return pesquisaCtrl;
     }
 
-    public void setPesquisaCtrl(PesquisaCtrl pesquisaCtrl) {
+    public void setPesquisaCtrl(PaginacaoCtrl pesquisaCtrl) {
         this.pesquisaCtrl = pesquisaCtrl;
     }
 

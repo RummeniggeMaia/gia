@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.net.UnknownHostException;
 import java.util.Map;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.*;
 
 /**
@@ -36,11 +37,11 @@ public class VisitanteMB implements Serializable {
                 usuario = new Usuario();
             }
         } catch (UnknownHostException ex) {
-            Util.addMsg(null, ex.getMessage());
+            Util.addMsg(null, ex.getMessage(), FacesMessage.SEVERITY_ERROR);
         } catch (MongoException me) {
-            Util.addMsg(null, me.getMessage());
+            Util.addMsg(null, me.getMessage(), FacesMessage.SEVERITY_ERROR);
         } catch (IOException ie) {
-            Util.addMsg(null, ie.getMessage());
+            Util.addMsg(null, ie.getMessage(), FacesMessage.SEVERITY_ERROR);
         }
     }
 
@@ -49,9 +50,11 @@ public class VisitanteMB implements Serializable {
             usuario.setRole(Usuario.ROLE_USER);
             usuarioDao.criar(usuario);
             usuario = new Usuario();
+            Util.addMsg(null, "Usuário criado com sucesso.", 
+                    FacesMessage.SEVERITY_INFO);
             return Consts.USUARIO_CRIADO;
         } catch (Exception me) {
-            Util.addMsg(null, me.getMessage());
+            Util.addMsg(null, me.getMessage(), FacesMessage.SEVERITY_ERROR);
             return Consts.HOME;
         }
     }
@@ -69,7 +72,7 @@ public class VisitanteMB implements Serializable {
             }
             throw new Exception("Login ou senha não constam no sistema.");
         } catch (Exception e) {
-            Util.addMsg(null, e.getMessage());
+            Util.addMsg(null, e.getMessage(), FacesMessage.SEVERITY_ERROR);
             return Consts.HOME;
         }
     }

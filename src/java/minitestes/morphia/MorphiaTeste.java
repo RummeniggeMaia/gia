@@ -1,14 +1,10 @@
 package minitestes.morphia;
 
-import br.ufrn.cerescaico.labordoc.gia.dao.TipoDao;
 import br.ufrn.cerescaico.labordoc.gia.dao.UsuarioDao;
-import br.ufrn.cerescaico.labordoc.gia.modelo.Campo;
-import br.ufrn.cerescaico.labordoc.gia.modelo.Tipo;
 import br.ufrn.cerescaico.labordoc.gia.modelo.Usuario;
 import br.ufrn.cerescaico.labordoc.gia.util.Util;
 import java.net.UnknownHostException;
 import java.text.ParseException;
-import java.util.List;
 import org.bson.types.ObjectId;
 
 /**
@@ -17,14 +13,15 @@ import org.bson.types.ObjectId;
  */
 public class MorphiaTeste {
 
-    public static void main(String[] asd) 
+    public static void main(String[] asd)
             throws UnknownHostException, ParseException, Exception {
-        criar();
-//        pesqusiar();
+//        criar();
+        pesqusiar();
 //        editar();
 //        excluir();
     }
 //370	01/01/1927	Inventário	Arthur Clementino da Silva/ Francisca Mené de Araújo	Consta apenas o ano
+
     public static void criar() throws UnknownHostException, ParseException, Exception {
 //        Documento d = new Documento();
 //        DocumentoDao documentoDao = new DocumentoDao();
@@ -52,7 +49,7 @@ public class MorphiaTeste {
 //        campos.add(new Campo("data"));
 //        campos.add(new Campo("titulares"));
 //        tipoDao.criar(t);
-        
+
     }
 
     public static void editar() throws UnknownHostException, Exception {
@@ -78,14 +75,14 @@ public class MorphiaTeste {
     }
 
     public static void pesqusiar() throws UnknownHostException, Exception {
-        TipoDao tipoDao = new TipoDao();
-        List<Tipo> tipos = tipoDao.pesquisarTodos(Tipo.class);
-        for (Tipo t : tipos) {
-            Util.pf(t.toString());
-            for (Campo c : t.getCampos()) {
-                Util.pf("\t%s\n", c.toString());
-            }
-        }
+//        TipoDao tipoDao = new TipoDao();
+//        List<Tipo> tipos = tipoDao.pesquisarTodos(Tipo.class);
+//        for (Tipo t : tipos) {
+//            Util.pf(t.toString());
+//            for (Campo c : t.getCampos()) {
+//                Util.pf("\t%s\n", c.toString());
+//            }
+//        }
 //        DocumentoDao documentoDao = new DocumentoDao();
 //        Documento d = new Documento();
 //        d.setTipo("Habilitação de casamento");
@@ -126,6 +123,34 @@ public class MorphiaTeste {
 //                .pesquisar(x, 0, 10, Consts.CRITERIA_DOCUMENTO_TIPO);
 //        for (Documento d : lista) {
 //            Util.pf("%s\n", d.toString());
+//        }
+//        DocumentoDao dao = new DocumentoDao();
+//        Documento d = new Documento();
+//        Tipo t = new Tipo();
+//        t.setId(new ObjectId("52278a4c13b2e4b2208c33e5"));
+//        d.setTipo(null);
+//        d.getCampos().put("Caixa", 1);
+//        //d.getCampos().put("Caixa", 1);
+//        List<Documento> lista = dao.pesquisar(d, 0, 10, Consts.CRITERIA_DOCUMENTO_CONJUNTIVA);
+//        for (Documento a : lista) {
+//            Util.pf("id=%s tipo.id=%s\n", a.getId(), a.getTipo().getId());
+//        }
+//        Usuario u = new Usuario();
+//        u.setNome("Jao Pe de Fejao");
+//        u.setLogin("jao");
+//        u.setSenha("456");
+//        u.setEmail("meuemail@email.com");
+////        u.setCpf("000.000.00-10");
+//        u.setRole(Usuario.ROLE_USER);
+//        TesteMB testeMB = new TesteMB();
+//        testeMB.setUsuario(u);
+//        testeMB.getPesquisaCtrl().setLimit(2);
+//        testeMB.pesquisar();
+//        testeMB.getPesquisaCtrl().proxima();
+//        testeMB.realizarPesquisaUsuarios();
+//        List<Usuario> us = testeMB.getUsers();
+//        for (Usuario a : us) {
+//            Util.pf("%s\n", a.getId().toString());
 //        }
     }
 }

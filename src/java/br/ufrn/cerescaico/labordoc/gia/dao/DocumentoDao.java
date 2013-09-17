@@ -30,14 +30,20 @@ public class DocumentoDao extends MongoDao<Documento>
                 Consts.CRITERIA_DOCUMENTO_TIPO, new CriteriaDocumentoTipo());
         criterias.put(
                 Consts.CRITERIA_DOCUMENTO, new CriteriaDocumento(dataStore));
+        criterias.put(
+                Consts.CRITERIA_DOCUMENTO_CONJUNTIVA, 
+                new CriteriaDocumentoConj(dataStore));
     }
 
     @Override
     public Object criar(Documento e) throws Exception {
         e.setId(null);
-        DBRef bRef = new DBRef(dataStore.getDB(), "tipos", e.getTipo().getId());
+        DBRef bRef = new DBRef(
+                dataStore.getDB(), 
+                Consts.COLECAO_TIPOS, 
+                e.getTipo().getId());
         BasicDBObject dBObject = new BasicDBObject(e.getCampos());
-        dBObject.append("tipo", bRef);
+        dBObject.append(Consts.CAMPO_TIPO, bRef);
         WriteResult wr =
                 dataStore.getCollection(Documento.class).insert(dBObject);
         return wr;
@@ -68,9 +74,9 @@ public class DocumentoDao extends MongoDao<Documento>
             Map<String, Object> campos = dBCursor.next().toMap();
             atual.setId((ObjectId) campos.get(Consts._ID));
             campos.remove(Consts._ID);
-            DBRef ref = (DBRef) campos.get("tipo");
+            DBRef ref = (DBRef) campos.get(Consts.CAMPO_TIPO);
             atual.getTipo().setId((ObjectId) ref.getId());
-            campos.remove("tipo");
+            campos.remove(Consts.CAMPO_TIPO);
             atual.setCampos(campos);
             documentos.add(atual);
         }

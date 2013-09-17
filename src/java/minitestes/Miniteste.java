@@ -4,6 +4,7 @@
  */
 package minitestes;
 
+import br.ufrn.cerescaico.labordoc.gia.negocio.PaginacaoCtrl;
 import java.io.File;
 import java.io.FileReader;
 import java.io.PrintWriter;
@@ -98,6 +99,15 @@ public class Miniteste {
     }
 
     public static void main(String[] asd) throws Exception {
+        PaginacaoCtrl pc = new PaginacaoCtrl();
+        pc.setLimit(3);
+        String p = pc.getPagina();
+        pc.setCont(7);
+        pc.setPagina("3");
+        pc.setLimit(6);
+        int pa = pc.paginaAtual();
+        int tp = pc.totalDePaginas();
+        p = pc.getPagina();
         /*long inicio = System.currentTimeMillis();
 
          extrairTiposDeDocumentos("D:\\Catalogação LABORDOC\\Catalogacao.txt");

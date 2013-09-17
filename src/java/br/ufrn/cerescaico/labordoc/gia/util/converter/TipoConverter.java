@@ -30,7 +30,7 @@ public class TipoConverter implements Converter {
             FacesContext context,
             UIComponent component,
             String value) {
-
+        
         try {
             Tipo tipo = new Tipo();
             String[] split = value.split("-");
@@ -64,7 +64,7 @@ public class TipoConverter implements Converter {
             UIComponent component,
             Object value) {
 
-        return value == null ? null : value.toString();
+        return value == null ? "" : value.toString();
     }
 
     public List<Tipo> getTipos() {

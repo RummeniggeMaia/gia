@@ -22,7 +22,7 @@
                                converter="objectIdConverter"/>
                 <p:panelGrid columns="2">
                     <p:outputLabel value="Nome:"/>
-                    <p:inputText value="#{administradorMB.usuario.nome}"/>
+                    <p:inputText value="#{administradorMB.usuario.nome}" />
                     <p:outputLabel value="E-Mail:"/>
                     <p:inputText value="#{administradorMB.usuario.email}"/>
                     <p:outputLabel value="CPF:"/>
@@ -42,14 +42,32 @@
                     </p:selectOneMenu>
                 </p:panelGrid>
                 <br />
-                <p:commandButton value="Pesquisar usuários"
-                                 update=":form_usuarios:tabela_usuario :form_usuarios:msgs"
-                                 action="#{administradorMB.pesquisarUsuarios()}"/>
-                <p:commandButton value="Editar usuário"
-                                 update=":form_usuarios:tabela_usuario msgs :form_usuarios:grid_usuario :form_usuarios:msgs"
-                                 action="#{administradorMB.editarUsuario()}"/>
-                <br />
-                <br />
+                <p:panelGrid id="grid_botoes" columns="2">
+                    <p:commandButton value="Pesquisar usuários"
+                                     update=":form_usuarios:tabela_usuario :form_usuarios:msgs"
+                                     action="#{administradorMB.pesquisarUsuarios()}"
+                                     rendered="#{!administradorMB.editarUsuario}">
+                        <p:effect type="drop" event="load">
+                            <f:param name="mode" value="'show'"/>
+                        </p:effect>
+                    </p:commandButton>
+                    <p:commandButton value="Editar usuário"
+                                     update=":form_usuarios:tabela_usuario :form_usuarios:grid_botoes :form_usuarios:grid_usuario :form_usuarios:msgs"
+                                     action="#{administradorMB.editarUsuario()}"
+                                     rendered="#{administradorMB.editarUsuario}">
+                        <p:effect type="drop" event="load">
+                            <f:param name="mode" value="'show'"/>
+                        </p:effect>
+                    </p:commandButton>
+                    <p:commandButton value="Cancelar"
+                                     update=":form_usuarios:grid_botoes :form_usuarios:grid_usuario"
+                                     action="#{administradorMB.cancelarEditarUsuario()}"
+                                     rendered="#{administradorMB.editarUsuario}">
+                        <p:effect type="drop" event="load">
+                            <f:param name="mode" value="'show'"/>
+                        </p:effect>
+                    </p:commandButton>
+                </p:panelGrid>
                 <p:dataTable id="tabela_usuario"
                              value="#{administradorMB.usuarios}"
                              var="usuarioAtual" 
@@ -94,7 +112,8 @@
                             <p:outputLabel value="Editar"/>
                         </f:facet>
                         <p:commandLink value="editar"
-                                       update=":form_usuarios:grid_usuario">
+                                       update=":form_usuarios:grid_usuario :form_usuarios:grid_botoes"
+                                       action="#{administradorMB.iniciarEdidarUsuario()}">
                             <f:setPropertyActionListener 
                                 value="#{usuarioAtual}"
                                 target="#{administradorMB.usuario}"/>

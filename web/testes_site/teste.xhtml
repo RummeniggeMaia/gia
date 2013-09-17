@@ -6,26 +6,96 @@
       xmlns:p="http://primefaces.org/ui">
     <h:head>
         <title>Facelet Title</title>
+        <style>
+            .botPag {
+                width: 30px;
+                height: 30px;
+                top:5px;
+                margin: -15px 2px -5px 2px;
+            }
+        </style>
     </h:head>
     <h:body>
         <h:form id="f1">
-            <p:selectOneMenu 
-                value="#{testeMB.tipo}"
-                converter="#{testeMB.tc}">
-                <f:selectItem 
-                    noSelectionOption="true"
-                    itemLabel="Selecione"
-                    itemValue="#{null}"/>
-                <f:selectItems
-                    value="#{testeMB.tipos}"
-                    var="t"
-                    itemLabel="#{t.nome}"
-                    itemValue="#{t}"/>
-                <p:ajax process="@this" update="a"/>
-            </p:selectOneMenu>
-            <p:outputLabel id="a" value=">>> #{testeMB.tipo.nome}"/>
-            <p:commandButton value="ASd" ajax="false"/>
+            <p:commandButton value="Pesquisar" 
+                             action="#{testeMB.pesquisar()}"
+                             update=":f1:tbl :msgs :f1:pag"/>
+            <p:panel id="pag"
+                     styleClass="ui-paginator ui-paginator-top ui-widget-header ui-corner-top">
+                <p:commandButton id="primeira"
+                                 icon="ui-icon ui-icon-seek-first"
+                                 styleClass="botPag"
+                                 actionListener="#{testeMB.paginar}"
+                                 disabled="#{!testeMB.pesquisaCtrl.podeVoltar()}"
+                                 action="#{testeMB.realizarPesquisaUsuarios()}"
+                                 update=":f1:pag :f1:tbl"/>
+                <p:commandButton id="anterior" 
+                                 icon="ui-icon ui-icon-seek-prev"
+                                 styleClass="botPag"
+                                 actionListener="#{testeMB.paginar}"
+                                 disabled="#{!testeMB.pesquisaCtrl.podeVoltar()}"
+                                 action="#{testeMB.realizarPesquisaUsuarios()}"
+                                 update=":f1:pag :f1:tbl"/>
+                <p:inputText id="pular"
+                             style="margin: -10px 5px -10px 5px;text-align: center"
+                             value="#{testeMB.pesquisaCtrl.pagina}">
+                    <p:ajax event="blur" 
+                            process="@this" 
+                            update=":f1:pag :f1:tbl"
+                            listener="#{testeMB.realizarPesquisaUsuarios()}"/>
+                </p:inputText>
+                <p:commandButton id="proxima"
+                                 icon="ui-icon ui-icon-seek-next"
+                                 styleClass="botPag"
+                                 actionListener="#{testeMB.paginar}"
+                                 disabled="#{!testeMB.pesquisaCtrl.podeSeguir()}"
+                                 action="#{testeMB.realizarPesquisaUsuarios()}"
+                                 update=":f1:pag :f1:tbl"/>
+                <p:commandButton id="ultima"
+                                 icon="ui-icon ui-icon-seek-end"
+                                 styleClass="botPag"
+                                 actionListener="#{testeMB.paginar}"
+                                 disabled="#{!testeMB.pesquisaCtrl.podeSeguir()}"
+                                 action="#{testeMB.realizarPesquisaUsuarios()}"
+                                 update=":f1:pag :f1:tbl"/>
+                
+                <p:selectOneMenu value="#{testeMB.pesquisaCtrl.limit}"
+                                 converter="#{testeMB.ic}"
+                                 style="margin: -10px 0px -10px 20px;width: 75px">
+                    <f:selectItem itemValue="3" itemLabel="3"/>
+                    <f:selectItem itemValue="6" itemLabel="6"/>
+                    <f:selectItem itemValue="9" itemLabel="9"/>
+                    <p:ajax update=":f1:pag :f1:tbl"
+                            event="change"
+                            listener="#{testeMB.realizarPesquisaUsuarios()}"/>
+                </p:selectOneMenu>
+            </p:panel>
+            <p:dataTable 
+                id="tbl"
+                value="#{testeMB.users}" 
+                var="var">
+
+                <p:column>
+                    <f:facet name="header">
+                        Nome
+                    </f:facet>
+                    #{var.nome}
+                </p:column>
+                <p:column>
+                    <f:facet name="header">
+                        E-Mail
+                    </f:facet>
+                    #{var.email}
+                </p:column>
+                <p:column>
+                    <f:facet name="header">
+                        CPF
+                    </f:facet>
+                    #{var.cpf}
+                </p:column>
+            </p:dataTable>
         </h:form>
+        <p:growl id="msgs"/>
     </h:body>
 </html>
 

@@ -4,75 +4,45 @@
  */
 package minitestes;
 
-import br.ufrn.cerescaico.labordoc.gia.dao.TipoDao;
-import br.ufrn.cerescaico.labordoc.gia.modelo.Tipo;
+import br.ufrn.cerescaico.labordoc.gia.dao.UsuarioDao;
 import br.ufrn.cerescaico.labordoc.gia.modelo.Usuario;
-import br.ufrn.cerescaico.labordoc.gia.util.converter.TipoConverter;
-import br.ufrn.cerescaico.labordoc.gia.util.converter.UsuarioConverter;
+import br.ufrn.cerescaico.labordoc.gia.negocio.PaginacaoCtrl;
+import br.ufrn.cerescaico.labordoc.gia.util.Consts;
+import br.ufrn.cerescaico.labordoc.gia.util.Util;
+import br.ufrn.cerescaico.labordoc.gia.util.converter.NumeConverter;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.faces.bean.SessionScoped;
+import javax.faces.convert.Converter;
+import javax.faces.event.ActionEvent;
+import javax.faces.event.AjaxBehaviorEvent;
 
 /**
  *
  * @author Rummenigge
  */
 @ManagedBean
-@ViewScoped
-public class TesteMB {
+@SessionScoped
+public class TesteMB implements Serializable {
 
-    private List<String> lista;
-    private List<String> headers;
-    private Tipo tipo = new Tipo();
-    private List<Tipo> tipos;
     private Usuario usuario;
-    private List<Usuario> users = new ArrayList<Usuario>();
-    private TipoConverter tc;
-    private UsuarioConverter uc = new UsuarioConverter(users);
+    private UsuarioDao usuarioDao;
+    private List<Usuario> users;
+    private PaginacaoCtrl paginacaoCtrl;
+    private Converter ic = new NumeConverter();
 
     public TesteMB() {
-        usuario = new Usuario();
-        users.add(new Usuario("A", "B", "C", "D", "E", "F"));
-        users.add(new Usuario("G", "H", "I", "J", "K", "L"));
-        users.add(new Usuario("M", "N", "O", "P", "Q", "R"));
         try {
-            tipos = new TipoDao().pesquisarTodos(Tipo.class);
-            tc = new TipoConverter(tipos);
+            usuario = new Usuario();
+            usuarioDao = new UsuarioDao();
+            users = new ArrayList<Usuario>();
+            paginacaoCtrl = new PaginacaoCtrl();
         } catch (Exception e) {
+            Util.addMsg(null, e.getMessage(), FacesMessage.SEVERITY_ERROR);
         }
-    }
-
-    public List<String> getLista() {
-        return lista;
-    }
-
-    public void setLista(List<String> lista) {
-        this.lista = lista;
-    }
-
-    public List<String> getHeaders() {
-        return headers;
-    }
-
-    public void setHeaders(List<String> headers) {
-        this.headers = headers;
-    }
-
-    public Tipo getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(Tipo tipo) {
-        this.tipo = tipo;
-    }
-
-    public List<Tipo> getTipos() {
-        return tipos;
-    }
-
-    public void setTipos(List<Tipo> tipos) {
-        this.tipos = tipos;
     }
 
     public Usuario getUsuario() {
@@ -91,19 +61,75 @@ public class TesteMB {
         this.users = users;
     }
 
-    public UsuarioConverter getUc() {
-        return uc;
+    public void pesquisar() {
+        try {
+            Usuario aux = new Usuario();
+            aux.setCpf(usuario.getCpf());
+            aux.setEmail(usuario.getEmail());
+            aux.setMatricula(usuario.getMatricula());
+            aux.setNome(usuario.getNome());
+            aux.setRole(usuario.getRole());
+            paginacaoCtrl.setEntidade(aux);
+            paginacaoCtrl.setCont(
+                    (int) usuarioDao.contar(usuario,
+                    Consts.CRITERIA_USUARIO_CONJUNTIVA));
+            paginacaoCtrl.primeira();
+            realizarPesquisaUsuarios();
+        } catch (Exception e) {
+            Util.addMsg(null, e.getMessage(), FacesMessage.SEVERITY_ERROR);
+        }
     }
 
-    public void setUc(UsuarioConverter uc) {
-        this.uc = uc;
+    public PaginacaoCtrl getPesquisaCtrl() {
+        return paginacaoCtrl;
     }
 
-    public TipoConverter getTc() {
-        return tc;
+    public void setPesquisaCtrl(PaginacaoCtrl pesquisaCtrl) {
+        this.paginacaoCtrl = pesquisaCtrl;
     }
 
-    public void setTc(TipoConverter tc) {
-        this.tc = tc;
+    public UsuarioDao getUsuarioDao() {
+        return usuarioDao;
+    }
+
+    public void setUsuarioDao(UsuarioDao usuarioDao) {
+        this.usuarioDao = usuarioDao;
+    }
+
+    public Converter getIc() {
+        return ic;
+    }
+
+    public void setIc(Converter ic) {
+        this.ic = ic;
+    }
+
+    public void realizarPesquisaUsuarios() {
+        try {
+        users = usuarioDao.pesquisar(
+                (Usuario) paginacaoCtrl.getEntidade(),
+                paginacaoCtrl.getOffset(),
+                paginacaoCtrl.getLimit(),
+                Consts.CRITERIA_USUARIO_CONJUNTIVA);
+        } catch (Exception e) {
+            Util.addMsg(null, e.getMessage(), FacesMessage.SEVERITY_ERROR);
+        }
+    }
+    
+    public void paginar(ActionEvent ae) {
+        String cmd = ae.getComponent().getId();
+        if (cmd.equals("primeira")) {
+            paginacaoCtrl.primeira();
+        } else if (cmd.equals("anterior")) {
+            paginacaoCtrl.anterior();
+        } else if (cmd.equals("proxima")) {
+            paginacaoCtrl.proxima();
+        } else if (cmd.equals("ultima")) {
+            paginacaoCtrl.ultima();
+        }
+    }
+    
+    public void mudarLimit(AjaxBehaviorEvent vce) {
+        paginacaoCtrl.primeira();
     }
 }

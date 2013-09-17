@@ -13,25 +13,29 @@ import javax.faces.convert.FacesConverter;
  *
  * @author Rummenigge
  */
-@FacesConverter(value="text")
+@FacesConverter(value = "text")
 public class TextConverter implements Converter {
-    
+
     @Override
     public Object getAsObject(
-            FacesContext context, 
-            UIComponent component, 
+            FacesContext context,
+            UIComponent component,
             String value) {
-        
+
         return value;
     }
 
     @Override
     public String getAsString(
-            FacesContext context, 
-            UIComponent component, 
+            FacesContext context,
+            UIComponent component,
             Object value) {
-        
-        
-        return value == null ? null : value.toString();
+
+
+        return value == null
+                ? ""
+                : value.toString().equals("null")
+                ? ""
+                : value.toString();
     }
 }

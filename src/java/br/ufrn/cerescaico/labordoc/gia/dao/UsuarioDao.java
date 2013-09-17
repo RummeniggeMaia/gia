@@ -51,6 +51,16 @@ public class UsuarioDao extends MongoDao<Usuario> implements Serializable {
         criteriaStrategyIF.operationCriteria(e, query);
         return query.asList();
     }
+    
+    public long contar(
+            Usuario e,
+            Integer criteria) {
+        
+        Query<Usuario> query = dataStore.find(Usuario.class);
+        mudarCriteria(criteria);
+        criteriaStrategyIF.operationCriteria(e, query);
+        return query.countAll();
+    }
 
     private void mudarCriteria(Integer criteria) {
         if (criteria == Consts.CRITERIA_USUARIO_ID) {
@@ -59,7 +69,7 @@ public class UsuarioDao extends MongoDao<Usuario> implements Serializable {
             criteriaStrategyIF = autenticaCriteria;
         } else if (criteria == Consts.CRITERIA_USUARIO) {
             criteriaStrategyIF = buscaUsuario;
-        } else if (criteria == Consts.CRITERIA_USUARIO_CONJUTIVA) {
+        } else if (criteria == Consts.CRITERIA_USUARIO_CONJUNTIVA) {
             criteriaStrategyIF = buscaConjutiva;
         } else {
             criteriaStrategyIF = nullCriteria;
