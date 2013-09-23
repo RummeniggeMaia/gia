@@ -3,13 +3,19 @@ package br.ufrn.cerescaico.labordoc.gia.negocio;
 import br.ufrn.cerescaico.labordoc.gia.dao.*;
 import br.ufrn.cerescaico.labordoc.gia.modelo.*;
 import br.ufrn.cerescaico.labordoc.gia.util.*;
+import br.ufrn.cerescaico.labordoc.gia.util.converter.DataConverter;
+import br.ufrn.cerescaico.labordoc.gia.validator.ValidarUsuarioNome;
 import com.mongodb.MongoException;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.UnknownHostException;
+import java.util.Date;
 import java.util.Map;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.*;
+import javax.faces.convert.Converter;
+import javax.faces.event.AjaxBehaviorEvent;
+import javax.faces.validator.Validator;
 
 /**
  *
@@ -21,6 +27,9 @@ public class VisitanteMB implements Serializable {
 
     private UsuarioDao usuarioDao;
     private Usuario usuario;
+    private String data;
+    private Converter dataConverter;
+    private Validator validarNome;
 
     public VisitanteMB() {
         try {
@@ -36,6 +45,9 @@ public class VisitanteMB implements Serializable {
                 usuarioDao = new UsuarioDao();
                 usuario = new Usuario();
             }
+            dataConverter = new DataConverter();
+            data = dataConverter.getAsString(null, null, new Date());
+            validarNome = new ValidarUsuarioNome();
         } catch (UnknownHostException ex) {
             Util.addMsg(null, ex.getMessage(), FacesMessage.SEVERITY_ERROR);
         } catch (MongoException me) {
@@ -50,7 +62,7 @@ public class VisitanteMB implements Serializable {
             usuario.setRole(Usuario.ROLE_USER);
             usuarioDao.criar(usuario);
             usuario = new Usuario();
-            Util.addMsg(null, "Usuário criado com sucesso.", 
+            Util.addMsg(null, "Usuário criado com sucesso.",
                     FacesMessage.SEVERITY_INFO);
             return Consts.USUARIO_CRIADO;
         } catch (Exception me) {
@@ -91,5 +103,49 @@ public class VisitanteMB implements Serializable {
 
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
+    }
+
+    public String getData() {
+        return data;
+    }
+
+    public void setData(String data) {
+        this.data = data;
+    }
+
+    public Converter getDataConverter() {
+        return dataConverter;
+    }
+
+    public void setDataConverter(Converter dataConverter) {
+        this.dataConverter = dataConverter;
+    }
+
+    public Validator getValidarNome() {
+        return validarNome;
+    }
+
+    public void setValidarNome(Validator validarNome) {
+        this.validarNome = validarNome;
+    }
+
+    public void contemLogin(AjaxBehaviorEvent abe) {
+        try {
+            Usuario u = usuarioDao
+                    .pesquisarUm(usuario, Consts.CRITERIA_USUARIO_LOGIN);
+            if (u != null) {
+                Util.addMsg("form_criar_conta:campoLogin", 
+                        "Já existe alguém com esse login, tente outro.", 
+                        FacesMessage.SEVERITY_WARN);
+            } else {
+                Util.addMsg("form_criar_conta:campoLogin", 
+                        "Login aceito", 
+                        FacesMessage.SEVERITY_INFO);
+            }
+        } catch (Exception ex) {
+            Util.addMsg("form_criar_conta:campoLogin", 
+                    "Erro durante a verificação de login", 
+                    FacesMessage.SEVERITY_ERROR);
+        }
     }
 }

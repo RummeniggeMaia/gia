@@ -5,10 +5,16 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://java.sun.com/jsf/core">
     <h:head>
-        <title>Facelet Title</title>
+        <title>Gerenciar usuários</title>
         <style>
             .semBorda tr, .semBorda td {
                 border: none !important;
+            }
+            .botPag {
+                width: 30px;
+                height: 30px;
+                top:5px;
+                margin: -15px 2px -5px 2px;
             }
         </style>
     </h:head>
@@ -44,7 +50,7 @@
                 <br />
                 <p:panelGrid id="grid_botoes" columns="2">
                     <p:commandButton value="Pesquisar usuários"
-                                     update=":form_usuarios:tabela_usuario :form_usuarios:msgs"
+                                     update=":form_usuarios:tabela_usuario :form_usuarios:msgs :form_usuarios:paginacao"
                                      action="#{administradorMB.pesquisarUsuarios()}"
                                      rendered="#{!administradorMB.editarUsuario}">
                         <p:effect type="drop" event="load">
@@ -68,6 +74,65 @@
                         </p:effect>
                     </p:commandButton>
                 </p:panelGrid>
+<!--Paginação-->
+                <p:panel id="paginacao"
+                         styleClass="ui-paginator ui-widget-header ui-corner-top">
+                    <p:outputLabel style="margin-right: 20px;"
+                        value="(#{administradorMB.paginacaoCtrl.totalLidos()} de #{administradorMB.paginacaoCtrl.cont})"/>
+                    <p:commandButton id="primeira"
+                                     icon="ui-icon ui-icon-seek-first"
+                                     styleClass="botPag"
+                                     actionListener="#{administradorMB.paginar}"
+                                     disabled="#{!administradorMB.paginacaoCtrl.podeVoltar()}"
+                                     action="#{administradorMB.realizarPesquisaUsuarios()}"
+                                     update=":form_usuarios:paginacao :form_usuarios:tabela_usuario"
+                                     process="@this"/>
+                    <p:commandButton id="anterior" 
+                                     icon="ui-icon ui-icon-seek-prev"
+                                     styleClass="botPag"
+                                     actionListener="#{administradorMB.paginar}"
+                                     disabled="#{!administradorMB.paginacaoCtrl.podeVoltar()}"
+                                     action="#{administradorMB.realizarPesquisaUsuarios()}"
+                                     update=":form_usuarios:paginacao :form_usuarios:tabela_usuario"
+                                     process="@this"/>
+                    <p:inputText id="pular"
+                                 style="margin: -10px 5px -10px 5px;text-align: center"
+                                 value="#{administradorMB.paginacaoCtrl.pagina}"
+                                 onkeypress="if (event.keyCode == 13) {this.blur();return false;}">
+                        <p:ajax event="blur" 
+                                process="@this" 
+                                update=":form_usuarios:paginacao :form_usuarios:tabela_usuario"
+                                listener="#{administradorMB.realizarPesquisaUsuarios()}"/>
+                    </p:inputText>
+                    <p:commandButton id="proxima"
+                                     icon="ui-icon ui-icon-seek-next"
+                                     styleClass="botPag"
+                                     actionListener="#{administradorMB.paginar}"
+                                     disabled="#{!administradorMB.paginacaoCtrl.podeSeguir()}"
+                                     action="#{administradorMB.realizarPesquisaUsuarios()}"
+                                     update=":form_usuarios:paginacao :form_usuarios:tabela_usuario"
+                                     process="@this"/>
+                    <p:commandButton id="ultima"
+                                     icon="ui-icon ui-icon-seek-end"
+                                     styleClass="botPag"
+                                     actionListener="#{administradorMB.paginar}"
+                                     disabled="#{!administradorMB.paginacaoCtrl.podeSeguir()}"
+                                     action="#{administradorMB.realizarPesquisaUsuarios()}"
+                                     update=":form_usuarios:paginacao :form_usuarios:tabela_usuario"
+                                     process="@this"/>
+
+                    <p:selectOneMenu value="#{administradorMB.paginacaoCtrl.limit}"
+                                     converter="#{administradorMB.converters['nume']}"
+                                     style="margin: -10px 0px -10px 20px;width: 75px">
+                        <f:selectItem itemValue="5" itemLabel="5"/>
+                        <f:selectItem itemValue="10" itemLabel="10"/>
+                        <f:selectItem itemValue="15" itemLabel="15"/>
+                        <p:ajax update=":form_usuarios:paginacao :form_usuarios:tabela_usuario"
+                                event="change"
+                                listener="#{administradorMB.realizarPesquisaUsuarios()}"/>
+                    </p:selectOneMenu>
+                </p:panel>
+<!-- Tabela de usuários -->
                 <p:dataTable id="tabela_usuario"
                              value="#{administradorMB.usuarios}"
                              var="usuarioAtual" 
@@ -155,7 +220,7 @@
                         onclick="confirmExcluirUsuario.hide()"/>
                 </p:panel>
             </p:confirmDialog>
-            <p:growl id="msgs"/>
+            <p:growl id="msgs" sticky="true" autoUpdate="true" globalOnly="true"/>
         </h:form>
     </h:body>
 </html>

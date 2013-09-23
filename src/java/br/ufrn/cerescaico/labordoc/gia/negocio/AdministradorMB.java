@@ -173,11 +173,12 @@ public class AdministradorMB extends AbstractUsuarioMB
             for (Campo c : tipo.getCampos()) {
                 documento.getCampos().put(c.getNome(), c.getValor());
             }
-            documentos = documentoDao.pesquisar(
-                    documento,
-                    0,
-                    10,
-                    Consts.CRITERIA_DOCUMENTO_CONJUNTIVA);
+            paginacaoCtrl.setCont(
+                    documentoDao.contar(documento, 
+                    Consts.CRITERIA_DOCUMENTO_CONJUNTIVA));
+            paginacaoCtrl.setEntidade(documento);
+            paginacaoCtrl.primeira();
+            realizarPesquisaDocumentos();
         } catch (Exception e) {
             Util.addMsg(null, e.getMessage(), FacesMessage.SEVERITY_WARN);
         }
@@ -229,7 +230,7 @@ public class AdministradorMB extends AbstractUsuarioMB
             tipo = new Tipo();
             tipoAux = new Tipo();
             pesquisarTipos();
-            pesquisaCtrl = new PaginacaoCtrl();
+            paginacaoCtrl = new PaginacaoCtrl();
         } catch (Exception e) {
             Util.addMsg(null, e.getMessage(), FacesMessage.SEVERITY_WARN);
         }
@@ -237,28 +238,34 @@ public class AdministradorMB extends AbstractUsuarioMB
     }
 
     public void iniciarUsuarios() {
-        usuario = new Usuario();
         usuarioAux = new Usuario();
         usuarios = new ArrayList<Usuario>();
-        pesquisaCtrl = new PaginacaoCtrl();
-        editarUsuario = false;
+        paginacaoCtrl = new PaginacaoCtrl();
+        cancelarEditarUsuario();
     }
 
     public void iniciarDocumentos() {
         documento = new Documento();
         documentos = new ArrayList<Documento>();
-        pesquisaCtrl = new PaginacaoCtrl();
+        paginacaoCtrl = new PaginacaoCtrl();
         cancelarEditarDocumento();
         docAux = new Documento();
     }
 
     public void pesquisarUsuarios() {
         try {
-            usuarios = usuarioDao.pesquisar(
-                    usuario,
-                    0,
-                    10,
-                    Consts.CRITERIA_USUARIO_CONJUNTIVA);
+            Usuario aux = new Usuario();
+            aux.setCpf(usuario.getCpf());
+            aux.setEmail(usuario.getEmail());
+            aux.setMatricula(usuario.getMatricula());
+            aux.setNome(usuario.getNome());
+            aux.setRole(usuario.getRole());
+            paginacaoCtrl.setEntidade(aux);
+            paginacaoCtrl.setCont(
+                    (int) usuarioDao.contar(usuario,
+                    Consts.CRITERIA_USUARIO_CONJUNTIVA));
+            paginacaoCtrl.primeira();
+            realizarPesquisaUsuarios();
         } catch (Exception ex) {
             Util.addMsg(null, ex.getMessage(), FacesMessage.SEVERITY_WARN);
         }
@@ -323,5 +330,42 @@ public class AdministradorMB extends AbstractUsuarioMB
     public void cancelarEditarTipo() {
         tipo = new Tipo();
         editarTipo = false;
+    }
+
+    public void realizarPesquisaUsuarios() {
+        try {
+            usuarios = usuarioDao.pesquisar(
+                    (Usuario) paginacaoCtrl.getEntidade(),
+                    paginacaoCtrl.getOffset(),
+                    paginacaoCtrl.getLimit(),
+                    Consts.CRITERIA_USUARIO_CONJUNTIVA);
+        } catch (Exception e) {
+            Util.addMsg(null, e.getMessage(), FacesMessage.SEVERITY_ERROR);
+        }
+    }
+
+    public void realizarPesquisaDocumentos() {
+        try {
+            documentos = documentoDao.pesquisar(
+                    (Documento) paginacaoCtrl.getEntidade(),
+                    paginacaoCtrl.getOffset(),
+                    paginacaoCtrl.getLimit(),
+                    Consts.CRITERIA_DOCUMENTO_CONJUNTIVA);
+        } catch (Exception e) {
+            Util.addMsg(null, e.getMessage(), FacesMessage.SEVERITY_ERROR);
+        }
+    }
+
+    public void paginar(ActionEvent ae) {
+        String cmd = ae.getComponent().getId();
+        if (cmd.equals("primeira")) {
+            paginacaoCtrl.primeira();
+        } else if (cmd.equals("anterior")) {
+            paginacaoCtrl.anterior();
+        } else if (cmd.equals("proxima")) {
+            paginacaoCtrl.proxima();
+        } else if (cmd.equals("ultima")) {
+            paginacaoCtrl.ultima();
+        }
     }
 }

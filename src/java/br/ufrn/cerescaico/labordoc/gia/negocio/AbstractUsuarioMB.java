@@ -33,7 +33,7 @@ public abstract class AbstractUsuarioMB {
     protected List<Tipo> tipos;
     //controle
     protected Map<String, Converter> converters;
-    protected PaginacaoCtrl pesquisaCtrl = new PaginacaoCtrl();
+    protected PaginacaoCtrl paginacaoCtrl = new PaginacaoCtrl();
 
     public AbstractUsuarioMB() {
         try {
@@ -166,12 +166,12 @@ public abstract class AbstractUsuarioMB {
         this.tipos = tipos;
     }
 
-    public PaginacaoCtrl getPesquisaCtrl() {
-        return pesquisaCtrl;
+    public PaginacaoCtrl getPaginacaoCtrl() {
+        return paginacaoCtrl;
     }
 
-    public void setPesquisaCtrl(PaginacaoCtrl pesquisaCtrl) {
-        this.pesquisaCtrl = pesquisaCtrl;
+    public void setPaginacaoCtrl(PaginacaoCtrl pesquisaCtrl) {
+        this.paginacaoCtrl = pesquisaCtrl;
     }
 
     public Map<String, Converter> getConverters() {

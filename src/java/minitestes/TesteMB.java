@@ -18,7 +18,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.convert.Converter;
 import javax.faces.event.ActionEvent;
-import javax.faces.event.AjaxBehaviorEvent;
 
 /**
  *
@@ -106,16 +105,16 @@ public class TesteMB implements Serializable {
 
     public void realizarPesquisaUsuarios() {
         try {
-        users = usuarioDao.pesquisar(
-                (Usuario) paginacaoCtrl.getEntidade(),
-                paginacaoCtrl.getOffset(),
-                paginacaoCtrl.getLimit(),
-                Consts.CRITERIA_USUARIO_CONJUNTIVA);
+            users = usuarioDao.pesquisar(
+                    (Usuario) paginacaoCtrl.getEntidade(),
+                    paginacaoCtrl.getOffset(),
+                    paginacaoCtrl.getLimit(),
+                    Consts.CRITERIA_USUARIO_CONJUNTIVA);
         } catch (Exception e) {
             Util.addMsg(null, e.getMessage(), FacesMessage.SEVERITY_ERROR);
         }
     }
-    
+
     public void paginar(ActionEvent ae) {
         String cmd = ae.getComponent().getId();
         if (cmd.equals("primeira")) {
@@ -127,9 +126,5 @@ public class TesteMB implements Serializable {
         } else if (cmd.equals("ultima")) {
             paginacaoCtrl.ultima();
         }
-    }
-    
-    public void mudarLimit(AjaxBehaviorEvent vce) {
-        paginacaoCtrl.primeira();
     }
 }

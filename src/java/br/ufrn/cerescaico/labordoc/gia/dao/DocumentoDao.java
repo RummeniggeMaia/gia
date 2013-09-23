@@ -82,6 +82,19 @@ public class DocumentoDao extends MongoDao<Documento>
         }
         return documentos;
     }
+    
+    public int contar(
+            Documento e,
+            Integer criteria) {
+        
+        DBObject dBObject = new BasicDBObject();
+        CriteriaStrategyIF aux = criterias.get(criteria);
+        criteriaStrategyIF = (aux == null) ? nullCriteria : aux;
+        criteriaStrategyIF.operationCriteria(e, dBObject);
+        DBCollection dBCollection = dataStore.getCollection(Documento.class);
+        DBCursor dBCursor = dBCollection.find(dBObject);
+        return dBCursor.count();
+    }
 }
 
 /*

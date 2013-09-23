@@ -6,6 +6,7 @@ package br.ufrn.cerescaico.labordoc.gia.modelo;
 
 import com.google.code.morphia.annotations.*;
 import java.io.Serializable;
+import java.util.Date;
 import org.bson.types.ObjectId;
 
 /**
@@ -18,12 +19,15 @@ public class Usuario extends Entidade implements Serializable {
     @Indexed(unique = true)
     private String login;
     private String senha;
+    
     private String nome;
     private String email;
     @Indexed(unique = true)
     private String cpf;
     private String matricula;
     private String role;
+    private Date dataNascimento;
+    private String sexo;
 
     public Usuario() {
     }
@@ -97,6 +101,22 @@ public class Usuario extends Entidade implements Serializable {
     public void setRole(String role) {
         this.role = role;
     }
+
+    public Date getDataNascimento() {
+        return dataNascimento;
+    }
+
+    public void setDataNascimento(Date dataNascimento) {
+        this.dataNascimento = dataNascimento;
+    }
+
+    public String getSexo() {
+        return sexo;
+    }
+
+    public void setSexo(String sexo) {
+        this.sexo = sexo;
+    }
     @Transient
     public static final String ROLE_USER = "role_user";
     @Transient
@@ -104,22 +124,26 @@ public class Usuario extends Entidade implements Serializable {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(id);
-        sb.append(",");
-        sb.append(cpf);
-        sb.append(",");
-        sb.append(email);
-        sb.append(",");
-        sb.append(login);
-        sb.append(",");
-        sb.append(matricula);
-        sb.append(",");
-        sb.append(nome);
-        sb.append(",");
-        sb.append(role);
-        sb.append(",");
-        sb.append(senha);
+        StringBuilder sb = new StringBuilder()
+                .append(id)
+                .append(",")
+                .append(cpf)
+                .append(",")
+                .append(email)
+                .append(",")
+                .append(login)
+                .append(",")
+                .append(matricula)
+                .append(",")
+                .append(nome)
+                .append(",")
+                .append(role)
+                .append(",")
+                .append(senha)
+                .append(",")
+                .append(dataNascimento)
+                .append(",")
+                .append(sexo);
         return sb.toString();
     }
 }

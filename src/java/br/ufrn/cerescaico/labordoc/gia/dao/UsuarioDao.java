@@ -24,6 +24,8 @@ public class UsuarioDao extends MongoDao<Usuario> implements Serializable {
             new CriteriaUsuarioId();
     private CriteriaUsuarioConj buscaConjutiva = new CriteriaUsuarioConj();
     private CriteriaAutentica autenticaCriteria = new CriteriaAutentica();
+    private CriteriaUsuarioLogin buscaLogin =
+            new CriteriaUsuarioLogin();
     private NullCriteria nullCriteria = new NullCriteria();
 
     public UsuarioDao() throws UnknownHostException {
@@ -51,11 +53,11 @@ public class UsuarioDao extends MongoDao<Usuario> implements Serializable {
         criteriaStrategyIF.operationCriteria(e, query);
         return query.asList();
     }
-    
+
     public long contar(
             Usuario e,
             Integer criteria) {
-        
+
         Query<Usuario> query = dataStore.find(Usuario.class);
         mudarCriteria(criteria);
         criteriaStrategyIF.operationCriteria(e, query);
@@ -71,6 +73,8 @@ public class UsuarioDao extends MongoDao<Usuario> implements Serializable {
             criteriaStrategyIF = buscaUsuario;
         } else if (criteria == Consts.CRITERIA_USUARIO_CONJUNTIVA) {
             criteriaStrategyIF = buscaConjutiva;
+        } else if (criteria == Consts.CRITERIA_USUARIO_LOGIN) {
+            criteriaStrategyIF = buscaLogin;
         } else {
             criteriaStrategyIF = nullCriteria;
         }

@@ -46,8 +46,8 @@ public class UsuarioMB extends AbstractUsuarioMB implements Serializable {
     }
 
     public void pesquisarDocumentos() {
-        pesquisaCtrl.setOffset(0);
-        pesquisaCtrl.setLimit(10);
+        paginacaoCtrl.setOffset(0);
+        paginacaoCtrl.setLimit(10);
         documento.setTipo(tipo);
         for (Campo c : tipo.getCampos()) {
             documento.getCampos().put(c.getNome(), c.getValor());
@@ -55,8 +55,8 @@ public class UsuarioMB extends AbstractUsuarioMB implements Serializable {
         try {
             documentos = documentoDao.pesquisar(
                     documento, 
-                    pesquisaCtrl.getOffset(), 
-                    pesquisaCtrl.getLimit(), 
+                    paginacaoCtrl.getOffset(), 
+                    paginacaoCtrl.getLimit(), 
                     Consts.CRITERIA_DOCUMENTO);
         } catch (Exception e) {
             Util.addMsg(null, e.getMessage(), FacesMessage.SEVERITY_WARN);

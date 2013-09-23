@@ -35,10 +35,23 @@ public class Consts implements Serializable {
     public static final Integer CRITERIA_DOCUMENTO = 6;
     public static final Integer CRITERIA_USUARIO_CONJUNTIVA = 7;
     public static final Integer CRITERIA_DOCUMENTO_CONJUNTIVA = 8;
+    public static final Integer CRITERIA_USUARIO_LOGIN = 9;
     //Tipos de dados
+    /**
+     * String: nume
+     */
     public static final String INTEIRO = "nume";
+    /**
+     * String: real
+     */
     public static final String REAL = "real";
+    /**
+     * String: data
+     */
     public static final String DATA = "data";
+    /**
+     * String: text
+     */
     public static final String TEXTO = "text";
     /**
      * String: "_id"

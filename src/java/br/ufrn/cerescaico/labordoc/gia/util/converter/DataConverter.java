@@ -4,6 +4,7 @@
  */
 package br.ufrn.cerescaico.labordoc.gia.util.converter;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.faces.component.UIComponent;
@@ -16,7 +17,7 @@ import javax.faces.convert.FacesConverter;
  * @author Rummenigge
  */
 @FacesConverter(value="data")
-public class DataConverter implements Converter {
+public class DataConverter implements Converter, Serializable {
 
     private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 

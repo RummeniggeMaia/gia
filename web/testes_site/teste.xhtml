@@ -21,24 +21,30 @@
                              action="#{testeMB.pesquisar()}"
                              update=":f1:tbl :msgs :f1:pag"/>
             <p:panel id="pag"
-                     styleClass="ui-paginator ui-paginator-top ui-widget-header ui-corner-top">
+                     styleClass="ui-paginator ui-widget-header ui-corner-top">
+                
+                 <p:outputLabel style="margin: -10px 20px -10px 0px;"
+                        value="(#{testeMB.pesquisaCtrl.totalLidos()} de #{testeMB.pesquisaCtrl.cont})"/>
                 <p:commandButton id="primeira"
                                  icon="ui-icon ui-icon-seek-first"
                                  styleClass="botPag"
                                  actionListener="#{testeMB.paginar}"
                                  disabled="#{!testeMB.pesquisaCtrl.podeVoltar()}"
                                  action="#{testeMB.realizarPesquisaUsuarios()}"
-                                 update=":f1:pag :f1:tbl"/>
+                                 update=":f1:pag :f1:tbl"
+                                 process="@this"/>
                 <p:commandButton id="anterior" 
                                  icon="ui-icon ui-icon-seek-prev"
                                  styleClass="botPag"
                                  actionListener="#{testeMB.paginar}"
                                  disabled="#{!testeMB.pesquisaCtrl.podeVoltar()}"
                                  action="#{testeMB.realizarPesquisaUsuarios()}"
-                                 update=":f1:pag :f1:tbl"/>
+                                 update=":f1:pag :f1:tbl"
+                                 process="@this"/>
                 <p:inputText id="pular"
                              style="margin: -10px 5px -10px 5px;text-align: center"
-                             value="#{testeMB.pesquisaCtrl.pagina}">
+                             value="#{testeMB.pesquisaCtrl.pagina}"
+                             onkeypress="if (event.keyCode == 13) {this.blur();return false;}">
                     <p:ajax event="blur" 
                             process="@this" 
                             update=":f1:pag :f1:tbl"
@@ -50,14 +56,16 @@
                                  actionListener="#{testeMB.paginar}"
                                  disabled="#{!testeMB.pesquisaCtrl.podeSeguir()}"
                                  action="#{testeMB.realizarPesquisaUsuarios()}"
-                                 update=":f1:pag :f1:tbl"/>
+                                 update=":f1:pag :f1:tbl"
+                                 process="@this"/>
                 <p:commandButton id="ultima"
                                  icon="ui-icon ui-icon-seek-end"
                                  styleClass="botPag"
                                  actionListener="#{testeMB.paginar}"
                                  disabled="#{!testeMB.pesquisaCtrl.podeSeguir()}"
                                  action="#{testeMB.realizarPesquisaUsuarios()}"
-                                 update=":f1:pag :f1:tbl"/>
+                                 update=":f1:pag :f1:tbl"
+                                 process="@this"/>
                 
                 <p:selectOneMenu value="#{testeMB.pesquisaCtrl.limit}"
                                  converter="#{testeMB.ic}"
