@@ -1,13 +1,9 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.ufrn.cerescaico.labordoc.gia.negocio;
 
+import br.ufrn.cerescaico.labordoc.gia.converter.*;
 import br.ufrn.cerescaico.labordoc.gia.dao.*;
 import br.ufrn.cerescaico.labordoc.gia.modelo.*;
 import br.ufrn.cerescaico.labordoc.gia.util.*;
-import br.ufrn.cerescaico.labordoc.gia.util.converter.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

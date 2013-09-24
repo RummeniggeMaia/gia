@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.ufrn.cerescaico.labordoc.gia.util.converter;
+package br.ufrn.cerescaico.labordoc.gia.converter;
 
 import br.ufrn.cerescaico.labordoc.gia.negocio.PaginacaoCtrl;
 import java.io.Serializable;

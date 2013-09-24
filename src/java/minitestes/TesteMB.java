@@ -9,15 +9,18 @@ import br.ufrn.cerescaico.labordoc.gia.modelo.Usuario;
 import br.ufrn.cerescaico.labordoc.gia.negocio.PaginacaoCtrl;
 import br.ufrn.cerescaico.labordoc.gia.util.Consts;
 import br.ufrn.cerescaico.labordoc.gia.util.Util;
-import br.ufrn.cerescaico.labordoc.gia.util.converter.NumeConverter;
+import br.ufrn.cerescaico.labordoc.gia.converter.NumeConverter;
+import br.ufrn.cerescaico.labordoc.gia.validator.ValidarUsuarioCPF;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.event.ActionEvent;
+import javax.faces.validator.Validator;
 
 /**
  *
@@ -32,16 +35,30 @@ public class TesteMB implements Serializable {
     private List<Usuario> users;
     private PaginacaoCtrl paginacaoCtrl;
     private Converter ic = new NumeConverter();
+    private Validator v = new ValidarUsuarioCPF();
+    private Converter c;
 
     public TesteMB() {
-        try {
-            usuario = new Usuario();
-            usuarioDao = new UsuarioDao();
-            users = new ArrayList<Usuario>();
-            paginacaoCtrl = new PaginacaoCtrl();
-        } catch (Exception e) {
-            Util.addMsg(null, e.getMessage(), FacesMessage.SEVERITY_ERROR);
-        }
+        c = new Converter() {
+
+            @Override
+            public Object getAsObject(FacesContext context, UIComponent component, String value) {
+                return value == null ? "null" : value.trim();
+            }
+
+            @Override
+            public String getAsString(FacesContext context, UIComponent component, Object value) {
+                return value.toString();
+            }
+        };
+//        try {
+//            usuario = new Usuario();
+//            usuarioDao = new UsuarioDao();
+//            users = new ArrayList<Usuario>();
+//            paginacaoCtrl = new PaginacaoCtrl();
+//        } catch (Exception e) {
+//            Util.addMsg(null, e.getMessage(), FacesMessage.SEVERITY_ERROR);
+//        }
     }
 
     public Usuario getUsuario() {
@@ -126,5 +143,21 @@ public class TesteMB implements Serializable {
         } else if (cmd.equals("ultima")) {
             paginacaoCtrl.ultima();
         }
+    }
+
+    public Validator getV() {
+        return v;
+    }
+
+    public void setV(Validator v) {
+        this.v = v;
+    }
+
+    public Converter getC() {
+        return c;
+    }
+
+    public void setC(Converter c) {
+        this.c = c;
     }
 }

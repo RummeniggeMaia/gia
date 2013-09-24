@@ -16,6 +16,9 @@
                 top:5px;
                 margin: -15px 2px -5px 2px;
             }
+            .ui-widget {
+                font-size: 100% !important;
+            }
         </style>
     </h:head>
     <h:body onload="#{administradorMB.iniciarUsuarios()}">
@@ -35,6 +38,11 @@
                     <p:inputText value="#{administradorMB.usuario.cpf}"/>
                     <p:outputLabel value="Matricula:"/>
                     <p:inputText value="#{administradorMB.usuario.matricula}"/>
+                    <p:outputLabel value="Nascimento:"/>
+                    <p:inputText value="#{administradorMB.usuario.dataNascimento}"
+                                 converter="#{administradorMB.converters['data']}"/>
+                    <p:outputLabel value="Sexo:"/>
+                    <p:inputText value="#{administradorMB.usuario.sexo}"/>
                     <p:outputLabel value="Funcionalidade:"/>
                     <p:selectOneMenu 
                         value="#{administradorMB.usuario.role}">
@@ -136,7 +144,8 @@
                 <p:dataTable id="tabela_usuario"
                              value="#{administradorMB.usuarios}"
                              var="usuarioAtual" 
-                             emptyMessage="Não há usuários">
+                             emptyMessage="Não há usuários"
+                             resizableColumns="true">
                     <p:column>
                         <f:facet name="header">
                             <p:outputLabel value="Nome"/>
@@ -160,6 +169,27 @@
                             <p:outputLabel value="Matrícula"/>
                         </f:facet>
                         <p:outputLabel value="#{usuarioAtual.matricula}"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <p:outputLabel value="Matrícula"/>
+                        </f:facet>
+                        <p:outputLabel value="#{usuarioAtual.matricula}"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <p:outputLabel value="Nascimento"/>
+                        </f:facet>
+                        <h:outputLabel value="#{usuarioAtual.dataNascimento}"
+                                       converter="#{administradorMB.converters['data']}"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <p:outputLabel value="Sexo"/>
+                        </f:facet>
+                        <p:outputLabel value="Masculino" rendered="#{usuarioAtual.sexo eq 'M'}"/>
+                        <p:outputLabel value="Feminino" rendered="#{usuarioAtual.sexo eq 'F'}"/>
+                        <p:outputLabel value="Outro" rendered="#{usuarioAtual.sexo eq 'O'}"/>
                     </p:column>
                     <p:column>
                         <f:facet name="header">

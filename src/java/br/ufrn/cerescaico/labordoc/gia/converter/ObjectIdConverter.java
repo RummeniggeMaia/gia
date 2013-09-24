@@ -2,19 +2,20 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.ufrn.cerescaico.labordoc.gia.util.converter;
+package br.ufrn.cerescaico.labordoc.gia.converter;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
+import org.bson.types.ObjectId;
 
 /**
  *
  * @author Rummenigge
  */
-@FacesConverter(value="real")
-public class RealConverter implements Converter {
+@FacesConverter(value="objectIdConverter")
+public class ObjectIdConverter implements Converter {
 
     @Override
     public Object getAsObject(
@@ -22,24 +23,18 @@ public class RealConverter implements Converter {
             UIComponent component, 
             String value) {
         
-        try {
-            return new Double(value);
-        } catch (Exception e) {
-            return null;
+        if (ObjectId.isValid(value)) {
+            return new ObjectId(value);
         }
+        return null;
     }
-
+    
     @Override
     public String getAsString(
             FacesContext context, 
             UIComponent component, 
             Object value) {
         
-        try {
-            return new Double(value.toString()).toString();
-        } catch (Exception e) {
-            return null;
-        }
+        return value == null ? null : value.toString();
     }
-    
 }

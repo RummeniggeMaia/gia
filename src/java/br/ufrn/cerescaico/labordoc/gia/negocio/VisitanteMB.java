@@ -1,15 +1,17 @@
 package br.ufrn.cerescaico.labordoc.gia.negocio;
 
-import br.ufrn.cerescaico.labordoc.gia.dao.*;
+import br.ufrn.cerescaico.labordoc.gia.converter.CampoVazioConverter;
+import br.ufrn.cerescaico.labordoc.gia.converter.DataConverter;
+import br.ufrn.cerescaico.labordoc.gia.dao.UsuarioDao;
 import br.ufrn.cerescaico.labordoc.gia.modelo.*;
 import br.ufrn.cerescaico.labordoc.gia.util.*;
-import br.ufrn.cerescaico.labordoc.gia.util.converter.DataConverter;
-import br.ufrn.cerescaico.labordoc.gia.validator.ValidarUsuarioNome;
+import br.ufrn.cerescaico.labordoc.gia.validator.*;
 import com.mongodb.MongoException;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.UnknownHostException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.*;
@@ -29,25 +31,21 @@ public class VisitanteMB implements Serializable {
     private Usuario usuario;
     private String data;
     private Converter dataConverter;
-    private Validator validarNome;
+    private Converter campoVazioConverter;
+    private Map<String, Validator> validadores;
 
     public VisitanteMB() {
         try {
-            Map<String, Object> map = Util
-                    .getSessionMap();
-            Object mb = map.get("visitanteMB");
-            VisitanteMB vMB = null;
-            if (mb != null && mb instanceof VisitanteMB) {
-                vMB = (VisitanteMB) mb;
-                usuarioDao = vMB.getUsuarioDao();
-                usuario = (Usuario) map.get(Consts.USUARIO_LOGADO);
-            } else {
-                usuarioDao = new UsuarioDao();
-                usuario = new Usuario();
-            }
+            usuarioDao = new UsuarioDao();
+            usuario = new Usuario();
             dataConverter = new DataConverter();
+            campoVazioConverter = new CampoVazioConverter();
             data = dataConverter.getAsString(null, null, new Date());
-            validarNome = new ValidarUsuarioNome();
+            validadores = new HashMap<String, Validator>();
+            validadores.put("login", new ValidarUsuarioLogin());
+            validadores.put("nome", new ValidarUsuarioNome());
+            validadores.put("email", new ValidarUsuarioEmail());
+            validadores.put("cpf", new ValidarUsuarioCPF());
         } catch (UnknownHostException ex) {
             Util.addMsg(null, ex.getMessage(), FacesMessage.SEVERITY_ERROR);
         } catch (MongoException me) {
@@ -66,8 +64,8 @@ public class VisitanteMB implements Serializable {
                     FacesMessage.SEVERITY_INFO);
             return Consts.USUARIO_CRIADO;
         } catch (Exception me) {
-            Util.addMsg(null, me.getMessage(), FacesMessage.SEVERITY_ERROR);
-            return Consts.HOME;
+            contemLogin(null);
+            return "";
         }
     }
 
@@ -121,12 +119,16 @@ public class VisitanteMB implements Serializable {
         this.dataConverter = dataConverter;
     }
 
-    public Validator getValidarNome() {
-        return validarNome;
+    public Converter getCampoVazioConverter() {
+        return campoVazioConverter;
     }
 
-    public void setValidarNome(Validator validarNome) {
-        this.validarNome = validarNome;
+    public Map<String, Validator> getValidadores() {
+        return validadores;
+    }
+
+    public void setValidadores(Map<String, Validator> validadores) {
+        this.validadores = validadores;
     }
 
     public void contemLogin(AjaxBehaviorEvent abe) {
@@ -134,17 +136,17 @@ public class VisitanteMB implements Serializable {
             Usuario u = usuarioDao
                     .pesquisarUm(usuario, Consts.CRITERIA_USUARIO_LOGIN);
             if (u != null) {
-                Util.addMsg("form_criar_conta:campoLogin", 
-                        "Já existe alguém com esse login, tente outro.", 
+                Util.addMsg("form_criar_conta:campoLogin",
+                        "Já existe alguém com esse login, tente outro.",
                         FacesMessage.SEVERITY_WARN);
             } else {
-                Util.addMsg("form_criar_conta:campoLogin", 
-                        "Login aceito", 
+                Util.addMsg("form_criar_conta:campoLogin",
+                        "Login aceito",
                         FacesMessage.SEVERITY_INFO);
             }
         } catch (Exception ex) {
-            Util.addMsg("form_criar_conta:campoLogin", 
-                    "Erro durante a verificação de login", 
+            Util.addMsg("form_criar_conta:campoLogin",
+                    "Erro durante a verificação de login",
                     FacesMessage.SEVERITY_ERROR);
         }
     }

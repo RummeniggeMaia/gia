@@ -1,4 +1,4 @@
-package br.ufrn.cerescaico.labordoc.gia.util.converter;
+package br.ufrn.cerescaico.labordoc.gia.converter;
 
 import java.io.Serializable;
 import javax.faces.component.UIComponent;

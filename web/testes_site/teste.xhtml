@@ -16,94 +16,13 @@
         </style>
     </h:head>
     <h:body>
-        <h:form id="f1">
-            <p:commandButton value="Pesquisar" 
-                             action="#{testeMB.pesquisar()}"
-                             update=":f1:tbl :msgs :f1:pag"/>
-            <p:panel id="pag"
-                     styleClass="ui-paginator ui-widget-header ui-corner-top">
-                
-                 <p:outputLabel style="margin: -10px 20px -10px 0px;"
-                        value="(#{testeMB.pesquisaCtrl.totalLidos()} de #{testeMB.pesquisaCtrl.cont})"/>
-                <p:commandButton id="primeira"
-                                 icon="ui-icon ui-icon-seek-first"
-                                 styleClass="botPag"
-                                 actionListener="#{testeMB.paginar}"
-                                 disabled="#{!testeMB.pesquisaCtrl.podeVoltar()}"
-                                 action="#{testeMB.realizarPesquisaUsuarios()}"
-                                 update=":f1:pag :f1:tbl"
-                                 process="@this"/>
-                <p:commandButton id="anterior" 
-                                 icon="ui-icon ui-icon-seek-prev"
-                                 styleClass="botPag"
-                                 actionListener="#{testeMB.paginar}"
-                                 disabled="#{!testeMB.pesquisaCtrl.podeVoltar()}"
-                                 action="#{testeMB.realizarPesquisaUsuarios()}"
-                                 update=":f1:pag :f1:tbl"
-                                 process="@this"/>
-                <p:inputText id="pular"
-                             style="margin: -10px 5px -10px 5px;text-align: center"
-                             value="#{testeMB.pesquisaCtrl.pagina}"
-                             onkeypress="if (event.keyCode == 13) {this.blur();return false;}">
-                    <p:ajax event="blur" 
-                            process="@this" 
-                            update=":f1:pag :f1:tbl"
-                            listener="#{testeMB.realizarPesquisaUsuarios()}"/>
-                </p:inputText>
-                <p:commandButton id="proxima"
-                                 icon="ui-icon ui-icon-seek-next"
-                                 styleClass="botPag"
-                                 actionListener="#{testeMB.paginar}"
-                                 disabled="#{!testeMB.pesquisaCtrl.podeSeguir()}"
-                                 action="#{testeMB.realizarPesquisaUsuarios()}"
-                                 update=":f1:pag :f1:tbl"
-                                 process="@this"/>
-                <p:commandButton id="ultima"
-                                 icon="ui-icon ui-icon-seek-end"
-                                 styleClass="botPag"
-                                 actionListener="#{testeMB.paginar}"
-                                 disabled="#{!testeMB.pesquisaCtrl.podeSeguir()}"
-                                 action="#{testeMB.realizarPesquisaUsuarios()}"
-                                 update=":f1:pag :f1:tbl"
-                                 process="@this"/>
-                
-                <p:selectOneMenu value="#{testeMB.pesquisaCtrl.limit}"
-                                 converter="#{testeMB.ic}"
-                                 style="margin: -10px 0px -10px 20px;width: 75px">
-                    <f:selectItem itemValue="3" itemLabel="3"/>
-                    <f:selectItem itemValue="6" itemLabel="6"/>
-                    <f:selectItem itemValue="9" itemLabel="9"/>
-                    <p:ajax update=":f1:pag :f1:tbl"
-                            event="change"
-                            listener="#{testeMB.realizarPesquisaUsuarios()}"/>
-                </p:selectOneMenu>
-            </p:panel>
-            <p:dataTable 
-                id="tbl"
-                value="#{testeMB.users}" 
-                var="var">
-
-                <p:column>
-                    <f:facet name="header">
-                        Nome
-                    </f:facet>
-                    #{var.nome}
-                </p:column>
-                <p:column>
-                    <f:facet name="header">
-                        E-Mail
-                    </f:facet>
-                    #{var.email}
-                </p:column>
-                <p:column>
-                    <f:facet name="header">
-                        CPF
-                    </f:facet>
-                    #{var.cpf}
-                </p:column>
-            </p:dataTable>
+        <h:form>
+            <h:inputText>
+                <f:converter binding="#{testeMB.c}"/>
+                <f:validator binding="#{testeMB.v}"/>
+            </h:inputText>
         </h:form>
-        <p:growl id="msgs"/>
+        <p:growl id="msgs" autoUpdate="true" showDetail="true"/>
     </h:body>
 </html>
 

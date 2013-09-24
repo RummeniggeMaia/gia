@@ -37,7 +37,7 @@
     <filter>
         <filter-name>Charset Filter</filter-name>
         <filter-class>
-            br.ufrn.cerescaico.labordoc.gia.util.filter.CharsetFilter
+            br.ufrn.cerescaico.labordoc.gia.filter.CharsetFilter
         </filter-class>
     </filter>
     <filter-mapping>
@@ -47,7 +47,7 @@
     <!--<filter>
         <filter-name>FdA</filter-name>
         <filter-class>
-            br.ufrn.cerescaico.labordoc.gia.util.filter.FiltroDeAcesso
+            br.ufrn.cerescaico.labordoc.gia.filter.FiltroDeAcesso
         </filter-class>
     </filter>
     <filter-mapping>

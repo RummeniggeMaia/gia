@@ -4,11 +4,7 @@
  */
 package minitestes;
 
-import br.ufrn.cerescaico.labordoc.gia.dao.TipoDao;
-import br.ufrn.cerescaico.labordoc.gia.modelo.Tipo;
-import br.ufrn.cerescaico.labordoc.gia.modelo.Usuario;
 import br.ufrn.cerescaico.labordoc.gia.util.Util;
-import br.ufrn.cerescaico.labordoc.gia.util.converter.TipoConverter;
 import java.net.UnknownHostException;
 
 /**
@@ -67,6 +63,8 @@ public class Teste {
 //        y.setNome("qwe");
 //        y = null;
 //        Util.pf("%s\n", x.getNome());
-        Util.pf("%d\n", 3 % 5);
+//        Util.pf("%d\n", 3 % 5);
+        String x = "123.456.789-01";
+        Util.pf("%s\n", x.matches("\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2}"));
     }
 }
