@@ -6,6 +6,8 @@ package br.ufrn.cerescaico.labordoc.gia.dao;
 
 import br.ufrn.cerescaico.labordoc.gia.dao.criteria.*;
 import br.ufrn.cerescaico.labordoc.gia.modelo.Tipo;
+import br.ufrn.cerescaico.labordoc.gia.modelo.Usuario;
+import br.ufrn.cerescaico.labordoc.gia.util.Consts;
 import com.google.code.morphia.query.Query;
 import java.io.Serializable;
 import java.net.UnknownHostException;
@@ -21,6 +23,8 @@ public class TipoDao extends MongoDao<Tipo>
     private CriteriaStrategyIF<
             Tipo, Query<Tipo>> criteriaStrategyIF;
     private NullCriteria nullCriteria = new NullCriteria();
+    private CriteriaStrategyIF<Tipo, Query<Tipo>> buscaNome =
+            new CriteriaTipoNome();
 
     public TipoDao() throws UnknownHostException {
         super();
@@ -43,7 +47,23 @@ public class TipoDao extends MongoDao<Tipo>
         Query<Tipo> query = dataStore.find(Tipo.class);
         query.offset(offset);
         query.limit(limit);
+        mudarCriteria(criteria);
         criteriaStrategyIF.operationCriteria(e, query);
         return query.asList();
+    }
+    
+    private void mudarCriteria(Integer criteria) {
+        if (criteria == Consts.CRITERIA_TIPO_NOME)  {
+            criteriaStrategyIF = buscaNome;
+        } else {
+            criteriaStrategyIF = nullCriteria;
+        }
+    }
+    
+    public int contar(Tipo t, Integer criteria) {
+        Query<Tipo> query = dataStore.find(Tipo.class);
+        mudarCriteria(criteria);
+        criteriaStrategyIF.operationCriteria(t, query);
+        return (int) query.countAll();
     }
 }

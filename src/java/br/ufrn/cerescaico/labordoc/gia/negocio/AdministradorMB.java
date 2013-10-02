@@ -91,7 +91,14 @@ public class AdministradorMB extends AbstractUsuarioMB
 
     public void pesquisarTipos() {
         try {
-            tipos = tipoDao.pesquisarTodos(Tipo.class);
+            Tipo aux = new Tipo();
+            aux.setNome(tipo.getNome());
+            paginacaoCtrl.setEntidade(aux);
+            paginacaoCtrl.setCont(
+                    (int) tipoDao.contar(tipo,
+                    Consts.CRITERIA_TIPO_NOME));
+            paginacaoCtrl.primeira();
+            realizarPesquisaTipos();
         } catch (Exception e) {
             Util.addMsg(null, e.getMessage(), FacesMessage.SEVERITY_WARN);
         }
@@ -205,6 +212,12 @@ public class AdministradorMB extends AbstractUsuarioMB
 
     public void excluirTipo() {
         try {
+            if (tipoAux.equals(tipo)) {
+                Util.addMsg(null, "Cancele a edição do tipo " 
+                        + tipoAux.getNome() + " para poder removê-lo.",
+                    FacesMessage.SEVERITY_ERROR);
+                return;
+            }
             tipos.remove(tipoAux);
             tipoDao.excluir(tipoAux);
             tipoAux = new Tipo();
@@ -218,6 +231,7 @@ public class AdministradorMB extends AbstractUsuarioMB
     public void editarTipo() {
         try {
             tipoDao.editar(tipo);
+            cancelarEditarTipo();
             Util.addMsg(null, "Tipo de documento editado com sucesso.",
                     FacesMessage.SEVERITY_INFO);
         } catch (Exception e) {
@@ -339,6 +353,18 @@ public class AdministradorMB extends AbstractUsuarioMB
                     paginacaoCtrl.getOffset(),
                     paginacaoCtrl.getLimit(),
                     Consts.CRITERIA_USUARIO_CONJUNTIVA);
+        } catch (Exception e) {
+            Util.addMsg(null, e.getMessage(), FacesMessage.SEVERITY_ERROR);
+        }
+    }
+    
+    public void realizarPesquisaTipos() {
+        try {
+            tipos = tipoDao.pesquisar(
+                    tipo,
+                    paginacaoCtrl.getOffset(),
+                    paginacaoCtrl.getLimit(),
+                    Consts.CRITERIA_TIPO_NOME);
         } catch (Exception e) {
             Util.addMsg(null, e.getMessage(), FacesMessage.SEVERITY_ERROR);
         }

@@ -49,7 +49,7 @@ public abstract class AbstractUsuarioMB {
             documentos = new ArrayList<Documento>(2);
             tipoDao = new TipoDao();
             tipo = new Tipo();
-            tipos = tipos = tipoDao.pesquisarTodos(Tipo.class);
+            tipos = tipoDao.pesquisarTodos(Tipo.class);
             converters = new HashMap<String, Converter>();
             converters.put(Consts.INTEIRO, new NumeConverter());
             converters.put(Consts.REAL, new RealConverter());
@@ -185,5 +185,20 @@ public abstract class AbstractUsuarioMB {
         documentoDao = null;
         tipoDao.close();
         tipoDao = null;
+    }
+    
+    public String sairDoSistema() {
+        Util.fc().getExternalContext().invalidateSession();
+        return Consts.HOME;
+    }
+    
+    public List<String> completeTipoNome(String q) {
+        List<String> lista = new ArrayList<String>();
+        for (Tipo t : tipos) {
+            if (t.getNome().matches(q + ".*")) {
+                lista.add(t.getNome());
+            }
+        }
+        return lista;
     }
 }

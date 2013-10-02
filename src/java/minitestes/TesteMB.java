@@ -12,14 +12,14 @@ import br.ufrn.cerescaico.labordoc.gia.util.Util;
 import br.ufrn.cerescaico.labordoc.gia.converter.NumeConverter;
 import br.ufrn.cerescaico.labordoc.gia.validator.ValidarUsuarioCPF;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.component.UIComponent;
-import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.event.ActionEvent;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.validator.Validator;
 
 /**
@@ -32,25 +32,26 @@ public class TesteMB implements Serializable {
 
     private Usuario usuario;
     private UsuarioDao usuarioDao;
-    private List<Usuario> users;
+    private List<Usuario> users = new ArrayList<Usuario>();
     private PaginacaoCtrl paginacaoCtrl;
     private Converter ic = new NumeConverter();
     private Validator v = new ValidarUsuarioCPF();
     private Converter c;
+    
 
     public TesteMB() {
-        c = new Converter() {
-
-            @Override
-            public Object getAsObject(FacesContext context, UIComponent component, String value) {
-                return value == null ? "null" : value.trim();
-            }
-
-            @Override
-            public String getAsString(FacesContext context, UIComponent component, Object value) {
-                return value.toString();
-            }
-        };
+//        c = new Converter() {
+//
+//            @Override
+//            public Object getAsObject(FacesContext context, UIComponent component, String value) {
+//                return value == null ? "null" : value.trim();
+//            }
+//
+//            @Override
+//            public String getAsString(FacesContext context, UIComponent component, Object value) {
+//                return value.toString();
+//            }
+//        };
 //        try {
 //            usuario = new Usuario();
 //            usuarioDao = new UsuarioDao();
@@ -59,6 +60,21 @@ public class TesteMB implements Serializable {
 //        } catch (Exception e) {
 //            Util.addMsg(null, e.getMessage(), FacesMessage.SEVERITY_ERROR);
 //        }
+        Usuario u1 = new Usuario();
+        u1.setNome("joao");
+        Usuario u2 = new Usuario();
+        u2.setNome("chico");
+        Usuario u3 = new Usuario();
+        u3.setNome("jose");
+        Usuario u4 = new Usuario();
+        u4.setNome("tereza");
+        Usuario u5 = new Usuario();
+        u5.setNome("tico");
+        users.add(u1);
+        users.add(u2);
+        users.add(u3);
+        users.add(u4);
+        users.add(u5);
     }
 
     public Usuario getUsuario() {
@@ -159,5 +175,15 @@ public class TesteMB implements Serializable {
 
     public void setC(Converter c) {
         this.c = c;
+    }
+    
+    public List<String> completeUsuarioNome(String q) {
+        List<String> lista = new ArrayList<String>();
+        for (Usuario u : users) {
+            if (u.getNome().matches(q + ".*")) {
+                lista.add(u.getNome());
+            }
+        }
+        return lista;
     }
 }

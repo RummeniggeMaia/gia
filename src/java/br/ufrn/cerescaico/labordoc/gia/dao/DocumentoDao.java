@@ -7,6 +7,7 @@ import com.mongodb.*;
 import java.io.Serializable;
 import java.net.UnknownHostException;
 import java.util.*;
+import java.util.regex.Matcher;
 import org.bson.types.ObjectId;
 
 /**
@@ -47,6 +48,18 @@ public class DocumentoDao extends MongoDao<Documento>
         WriteResult wr =
                 dataStore.getCollection(Documento.class).insert(dBObject);
         return wr;
+    }
+
+    @Override
+    public Object editar(Documento e) throws Exception {
+        DBRef bRef = new DBRef(
+                dataStore.getDB(), 
+                Consts.COLECAO_TIPOS, 
+                e.getTipo().getId());
+        BasicDBObject update = new BasicDBObject(e.getCampos());
+        update.append(Consts.CAMPO_TIPO, bRef);
+        BasicDBObject query = new BasicDBObject(Consts._ID, e.getId());
+        return dataStore.getCollection(Documento.class).update(query, update);
     }
 
     @Override

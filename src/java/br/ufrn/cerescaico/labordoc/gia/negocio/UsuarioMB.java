@@ -3,8 +3,10 @@ package br.ufrn.cerescaico.labordoc.gia.negocio;
 import br.ufrn.cerescaico.labordoc.gia.modelo.*;
 import br.ufrn.cerescaico.labordoc.gia.util.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.*;
+import javax.faces.event.ActionEvent;
 
 /**
  *
@@ -16,11 +18,6 @@ public class UsuarioMB extends AbstractUsuarioMB implements Serializable {
 
     public UsuarioMB() {
         super();
-    }
-
-    public String sairDoSistema() {
-        Util.fc().getExternalContext().invalidateSession();
-        return Consts.HOME;
     }
 
     public void editarConta() {
@@ -44,22 +41,57 @@ public class UsuarioMB extends AbstractUsuarioMB implements Serializable {
             return "";
         }
     }
+    
+    public void iniciarDocumentos() {
+        documento = new Documento();
+        documentos = new ArrayList<Documento>();
+        paginacaoCtrl = new PaginacaoCtrl();
+    }
 
     public void pesquisarDocumentos() {
-        paginacaoCtrl.setOffset(0);
-        paginacaoCtrl.setLimit(10);
-        documento.setTipo(tipo);
-        for (Campo c : tipo.getCampos()) {
-            documento.getCampos().put(c.getNome(), c.getValor());
-        }
         try {
-            documentos = documentoDao.pesquisar(
-                    documento, 
-                    paginacaoCtrl.getOffset(), 
-                    paginacaoCtrl.getLimit(), 
-                    Consts.CRITERIA_DOCUMENTO);
+            documento = new Documento();
+            documentos.clear();
+            if (tipo == null) {
+                return;
+            }
+            documento.setTipo(tipo);
+            for (Campo c : tipo.getCampos()) {
+                documento.getCampos().put(c.getNome(), c.getValor());
+            }
+            paginacaoCtrl.setCont(
+                    documentoDao.contar(documento, 
+                    Consts.CRITERIA_DOCUMENTO_CONJUNTIVA));
+            paginacaoCtrl.setEntidade(documento);
+            paginacaoCtrl.primeira();
+            realizarPesquisaDocumentos();
         } catch (Exception e) {
             Util.addMsg(null, e.getMessage(), FacesMessage.SEVERITY_WARN);
+        }
+    }
+    
+    public void realizarPesquisaDocumentos() {
+        try {
+            documentos = documentoDao.pesquisar(
+                    (Documento) paginacaoCtrl.getEntidade(),
+                    paginacaoCtrl.getOffset(),
+                    paginacaoCtrl.getLimit(),
+                    Consts.CRITERIA_DOCUMENTO_CONJUNTIVA);
+        } catch (Exception e) {
+            Util.addMsg(null, e.getMessage(), FacesMessage.SEVERITY_ERROR);
+        }
+    }
+
+    public void paginar(ActionEvent ae) {
+        String cmd = ae.getComponent().getId();
+        if (cmd.equals("primeira")) {
+            paginacaoCtrl.primeira();
+        } else if (cmd.equals("anterior")) {
+            paginacaoCtrl.anterior();
+        } else if (cmd.equals("proxima")) {
+            paginacaoCtrl.proxima();
+        } else if (cmd.equals("ultima")) {
+            paginacaoCtrl.ultima();
         }
     }
 }

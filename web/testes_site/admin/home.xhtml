@@ -8,7 +8,16 @@
     </h:head>
     <h:body>
         <h:form>
-            <p:outputLabel value="Be welcome ADM #{administradorMB.dono.nome}"/><br />
+            <p:toolbar>
+                <p:toolbarGroup align="right">
+                    <p:menuButton value="#{administradorMB.dono.nome}">
+                        <p:menuitem value="configurações" icon="ui-icon-gear"
+                                    action="config"/>
+                        <p:menuitem value="sair" icon="ui-icon-extlink"
+                                    action="#{administradorMB.sairDoSistema()}"/>
+                    </p:menuButton>
+                </p:toolbarGroup>
+            </p:toolbar><br />
             <p:commandButton 
                 value="Gerenciar documentos" 
                 action="adm_docs"/>

@@ -23,6 +23,20 @@
     </h:head>
     <h:body onload="#{administradorMB.iniciarUsuarios()}">
         <h:form id="form_usuarios">
+            <p:toolbar>
+                <p:toolbarGroup align="right">
+                    <p:menuButton value="#{administradorMB.dono.nome}">
+                        <p:menuitem value="configurações" icon="ui-icon-gear"
+                                    action="config"/>
+                        <p:menuitem value="sair" icon="ui-icon-extlink"
+                                    action="#{administradorMB.sairDoSistema()}"/>
+                    </p:menuButton>
+                </p:toolbarGroup>
+                <p:toolbarGroup align="left">
+                    <p:commandButton value="&lt;&lt; Voltar"
+                                     action="voltar"/>
+                </p:toolbarGroup>
+            </p:toolbar>
             <p:panel 
                 id="grid_usuario"
                 header="Gerenciamento de usuários"
@@ -42,7 +56,11 @@
                     <p:inputText value="#{administradorMB.usuario.dataNascimento}"
                                  converter="#{administradorMB.converters['data']}"/>
                     <p:outputLabel value="Sexo:"/>
-                    <p:inputText value="#{administradorMB.usuario.sexo}"/>
+                    <p:selectOneMenu value="#{administradorMB.usuario.sexo}">
+                        <f:selectItem itemValue="M" itemLabel="Masculino"/>
+                        <f:selectItem itemValue="F" itemLabel="Feminino"/>
+                        <f:selectItem itemValue="O" itemLabel="Outro"/>
+                    </p:selectOneMenu>
                     <p:outputLabel value="Funcionalidade:"/>
                     <p:selectOneMenu 
                         value="#{administradorMB.usuario.role}">
@@ -82,7 +100,7 @@
                         </p:effect>
                     </p:commandButton>
                 </p:panelGrid>
-<!--Paginação-->
+
                 <p:panel id="paginacao"
                          styleClass="ui-paginator ui-widget-header ui-corner-top">
                     <p:outputLabel style="margin-right: 20px;"
@@ -163,12 +181,6 @@
                             <p:outputLabel value="CPF"/>
                         </f:facet>
                         <p:outputLabel value="#{usuarioAtual.cpf}"/>
-                    </p:column>
-                    <p:column>
-                        <f:facet name="header">
-                            <p:outputLabel value="Matrícula"/>
-                        </f:facet>
-                        <p:outputLabel value="#{usuarioAtual.matricula}"/>
                     </p:column>
                     <p:column>
                         <f:facet name="header">

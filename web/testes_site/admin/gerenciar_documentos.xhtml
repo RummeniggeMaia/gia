@@ -16,11 +16,29 @@
                 top:5px;
                 margin: -15px 2px -5px 2px;
             }
+            .ui-widget {
+                font-size: 100% !important;
+            }
         </style>
     </h:head>
-    <h:body onload="#{administradorMB.iniciarDocumentos()}">
-        <p:panel header="Gerenciamento de acervos" toggleable="true">
-            <h:form id="form_docs">
+    <h:body onload="#{usuarioMB.iniciarDocumentos()}">
+        <h:form id="form_docs">
+            <p:toolbar>
+                <p:toolbarGroup align="right">
+                    <p:menuButton value="#{administradorMB.dono.nome}">
+                        <p:menuitem value="configurações" icon="ui-icon-gear"
+                                    action="config"/>
+                        <p:menuitem value="sair" icon="ui-icon-extlink"
+                                    action="#{administradorMB.sairDoSistema()}"/>
+                    </p:menuButton>
+                </p:toolbarGroup>
+                <p:toolbarGroup align="left">
+                    <p:commandButton value="&lt;&lt; Voltar"
+                                     action="voltar"/>
+                </p:toolbarGroup>
+            </p:toolbar>
+            <p:panel header="Gerenciamento de acervos">
+
                 <h:panelGrid columns="2">
                     <p:commandButton 
                         value="Gerenciar tipos de documento"
@@ -228,8 +246,9 @@
                     </p:panel>
                 </p:confirmDialog>
                 <p:growl id="msgs" sticky="true" autoUpdate="true" globalOnly="true"/>
-            </h:form>
-        </p:panel>
+
+            </p:panel>
+        </h:form>
     </h:body>
 </html>
 

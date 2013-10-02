@@ -5,7 +5,10 @@
 package minitestes;
 
 import br.ufrn.cerescaico.labordoc.gia.util.Util;
+import java.io.FileNotFoundException;
 import java.net.UnknownHostException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -13,7 +16,7 @@ import java.net.UnknownHostException;
  */
 public class Teste {
 
-    public static void main(String[] asd) throws UnknownHostException {
+    public static void main(String[] asd) throws UnknownHostException, FileNotFoundException {
 //        UsuarioMB umb = new UsuarioMB(null);
 //        umb.setPesquisaCtrl(new PesquisaCtrl());
 //        umb.setDocumento(new Documento());
@@ -64,7 +67,17 @@ public class Teste {
 //        y = null;
 //        Util.pf("%s\n", x.getNome());
 //        Util.pf("%d\n", 3 % 5);
-        String x = "123.456.789-01";
-        Util.pf("%s\n", x.matches("\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2}"));
+//        String x = "123.456.789-01";
+//        Util.pf("%s\n", x.matches("\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2}"));
+//        MongoClient mc = MongoClientSingleton.getInstance();
+//        DB db = mc.getDB("test");
+//        DBCollection dbc = db.getCollection("pessoa");
+//        
+//        BasicDBObject bdbo = new BasicDBObject();
+//        bdbo.append("endereco.logradouro", "rua X");
+//        DBCursor c = dbc.find(bdbo);
+//        while (c.hasNext()) {
+//            Util.pf(c.next().toString());
+//        }
     }
 }
