@@ -4,11 +4,21 @@
  */
 package minitestes;
 
+import br.ufrn.cerescaico.labordoc.gia.dao.DocumentoDao;
+import br.ufrn.cerescaico.labordoc.gia.dao.ImagemDao;
+import br.ufrn.cerescaico.labordoc.gia.modelo.Imagem;
+import br.ufrn.cerescaico.labordoc.gia.negocio.AdministradorMB;
 import br.ufrn.cerescaico.labordoc.gia.util.Util;
-import java.io.FileNotFoundException;
-import java.net.UnknownHostException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import com.mongodb.gridfs.GridFS;
+import com.mongodb.gridfs.GridFSDBFile;
+import com.mongodb.gridfs.GridFSFile;
+import com.mongodb.gridfs.GridFSInputFile;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 
 /**
  *
@@ -16,7 +26,7 @@ import java.util.regex.Pattern;
  */
 public class Teste {
 
-    public static void main(String[] asd) throws UnknownHostException, FileNotFoundException {
+    public static void main(String[] asd) throws Exception {
 //        UsuarioMB umb = new UsuarioMB(null);
 //        umb.setPesquisaCtrl(new PesquisaCtrl());
 //        umb.setDocumento(new Documento());
@@ -79,5 +89,44 @@ public class Teste {
 //        while (c.hasNext()) {
 //            Util.pf(c.next().toString());
 //        }
+//        DocumentoDao dao = new DocumentoDao();
+//        GridFS gfs = dao.getGridFS();
+//        GridFSDBFile fSFile = gfs.findOne("violao");
+//        Util.pf("%s\n", fSFile.getUploadDate());
+//        GridFSDBFile bFile = gfs.findOne("violao.jpg");
+//        System.out.println(bFile);
+//        ImagemDao dao = new ImagemDao();
+//        File f1 = new File("d:/output/DSC05749.JPG");
+//        File f2 = new File("d:/output/DSC05751.JPG");
+//        File f3 = new File("d:/output/DSC05752.JPG");
+//        File f4 = new File("d:/output/DSC05753.JPG");
+//        File f5 = new File("d:/output/DSC05754.JPG");
+//        FileInputStream fis = new FileInputStream(f1);
+//        Imagem i = new Imagem(f1.getName(), fis);
+//        dao.criar(i);
+//        fis = new FileInputStream(f2);
+//        i = new Imagem(f2.getName(), fis);
+//        dao.criar(i);
+//        fis = new FileInputStream(f3);
+//        i = new Imagem(f3.getName(), fis);
+//        dao.criar(i);
+//        fis = new FileInputStream(f4);
+//        i = new Imagem(f4.getName(), fis);
+//        dao.criar(i);
+//        fis = new FileInputStream(f5);
+//        i = new Imagem(f5.getName(), fis);
+//        dao.criar(i);
+        File f = new File(AdministradorMB.class.getResource("./_temp/").toURI());
+        ImagemDao dao = new ImagemDao();
+        Imagem i = dao.pesquisar(new Imagem("DSC05751.JPG", null), 0, 0, 0).get(0);
+        OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(f));
+        InputStreamReader isr = new InputStreamReader(i.getInputStream());
+        char[] buffer = new char[4096];
+        int pos = 0;
+        while ((pos = isr.read(buffer, pos, buffer.length)) != 0) {
+            osw.write(buffer, pos - buffer.length, buffer.length);
+        }
+        osw.close();
+        isr.close();
     }
 }

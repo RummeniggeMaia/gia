@@ -1,14 +1,21 @@
 package br.ufrn.cerescaico.labordoc.gia.negocio;
 
+import br.ufrn.cerescaico.labordoc.gia.dao.ImagemDao;
 import br.ufrn.cerescaico.labordoc.gia.modelo.*;
 import br.ufrn.cerescaico.labordoc.gia.util.Consts;
 import br.ufrn.cerescaico.labordoc.gia.util.Util;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.Serializable;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.*;
 import javax.faces.event.ActionEvent;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 
 /**
  *
@@ -23,12 +30,20 @@ public class AdministradorMB extends AbstractUsuarioMB
     private Tipo tipoAux = new Tipo();
     private Usuario usuarioAux = new Usuario();
     private Documento docAux = new Documento();
+    private List<StreamedContent> imagens = new ArrayList<StreamedContent>();
+    private ImagemDao imagemDao;
     private boolean editarUsuario;
     private boolean editarDocumento;
     private boolean editarTipo;
 
+
     public AdministradorMB() {
         super();
+        try {
+            imagemDao = new ImagemDao();
+        } catch (Exception ex) {
+            Util.addMsg(null, ex.getMessage(), FacesMessage.SEVERITY_ERROR);
+        }
     }
 
     public Campo getCampo() {
@@ -73,6 +88,10 @@ public class AdministradorMB extends AbstractUsuarioMB
 
     public boolean isEditarTipo() {
         return editarTipo;
+    }
+
+    public List<StreamedContent> getImagens() {
+        return imagens;
     }
 
     public void deletarCampo() {
@@ -181,7 +200,7 @@ public class AdministradorMB extends AbstractUsuarioMB
                 documento.getCampos().put(c.getNome(), c.getValor());
             }
             paginacaoCtrl.setCont(
-                    documentoDao.contar(documento, 
+                    documentoDao.contar(documento,
                     Consts.CRITERIA_DOCUMENTO_CONJUNTIVA));
             paginacaoCtrl.setEntidade(documento);
             paginacaoCtrl.primeira();
@@ -213,9 +232,9 @@ public class AdministradorMB extends AbstractUsuarioMB
     public void excluirTipo() {
         try {
             if (tipoAux.equals(tipo)) {
-                Util.addMsg(null, "Cancele a edição do tipo " 
+                Util.addMsg(null, "Cancele a edição do tipo "
                         + tipoAux.getNome() + " para poder removê-lo.",
-                    FacesMessage.SEVERITY_ERROR);
+                        FacesMessage.SEVERITY_ERROR);
                 return;
             }
             tipos.remove(tipoAux);
@@ -357,7 +376,7 @@ public class AdministradorMB extends AbstractUsuarioMB
             Util.addMsg(null, e.getMessage(), FacesMessage.SEVERITY_ERROR);
         }
     }
-    
+
     public void realizarPesquisaTipos() {
         try {
             tipos = tipoDao.pesquisar(
@@ -393,5 +412,18 @@ public class AdministradorMB extends AbstractUsuarioMB
         } else if (cmd.equals("ultima")) {
             paginacaoCtrl.ultima();
         }
+    }
+
+    public void carregarImagens(ActionEvent ae) {
+        Map<String, Object> attribs = ae.getComponent().getAttributes();
+        Documento doc = (Documento) attribs.get("documento");
+        List<Imagem> imgs = imagemDao.pesquisarImagens(doc.getImagens());
+        for (Imagem i : imgs) {
+            imagens.add(new DefaultStreamedContent(
+                    i.getInputStream(),
+                    "image/jpeg",
+                    i.getNome()));
+        }
+        docAux = doc;
     }
 }

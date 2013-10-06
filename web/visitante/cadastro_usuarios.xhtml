@@ -1,0 +1,142 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>Criar conta no sistema GIA</title>
+        <style>
+            .semBorda tr, .semBorda td {
+                border: none !important;
+            }
+            .ui-widget {
+                font-size: 100% !important;
+            }
+            .ui-message-info, .ui-message-warn, .ui-message-error, .ui-message-fatal {
+                background-color: transparent;
+                border: 0px
+            }
+        </style>
+    </h:head>
+    <h:body>
+        <h:form id="form_criar_conta">
+            <p:panel header="Criar conta no sistema GIA">
+                <p:panelGrid columns="3" styleClass="semBorda">
+
+                    <p:outputLabel value="Login:"/>
+                    <p:inputText id="campoLogin" 
+                                 value="#{visitanteMB.usuario.login}">
+                        <p:watermark value="login" for="campoLogin"/>
+                        <p:ajax event="blur" process="@this" update="msgLogin"
+                                listener="#{visitanteMB.contemLogin}"/>
+                        <f:validator binding="#{visitanteMB.validadores['login']}"/>
+                        <f:converter binding="#{visitanteMB.campoVazioConverter}"/>
+                    </p:inputText>
+                    <p:message id="msgLogin" for="campoLogin"/>
+
+                    <p:outputLabel value="Senha:"/>
+                    <p:password id="campoSenha" 
+                                value="#{visitanteMB.usuario.senha}"
+                                feedback="true"
+                                goodLabel="Boa"
+                                promptLabel="Digite a senha"
+                                strongLabel="Forte"
+                                weakLabel="Fraca"
+                                match="campoConfirmSenha"
+                                validatorMessage="Senha com no mínimo 4 caracteres."
+                                required="true">
+                        <p:watermark value="digite sua senha" for="campoSenha"/>
+                        <f:validateLength minimum="4"/>
+                    </p:password>
+                    <p:message for="campoSenha"/>
+
+                    <p:outputLabel value="Confirme sua senha:"/>
+                    <p:password id="campoConfirmSenha"
+                                value="#{visitanteMB.usuario.senha}">
+                        <p:watermark value="confirme a senha" for="campoConfirmSenha"/>
+                    </p:password>
+                    <p:message for="campoConfirmSenha"/>
+
+                    <h:panelGroup layout="block"/>
+                    <h:panelGroup layout="block" style="margin-bottom: 30px"/>
+                    <h:panelGroup layout="block"/>
+
+                    <p:outputLabel value="Nome:"/>
+                    <p:inputText id="campoNome"
+                                 value="#{visitanteMB.usuario.nome}"
+                                 size="50"
+                                 required="true">
+                        <p:watermark value="nome e sobrenome" for="campoNome"/>
+                        <f:validator binding="#{visitanteMB.validadores['nome']}"/>
+                        <f:converter binding="#{visitanteMB.campoVazioConverter}"/>
+                    </p:inputText>
+                    <p:message for="campoNome"/>
+
+                    <p:outputLabel value="E-mail:"/>
+                    <p:inputText id="campoEmail"
+                                 value="#{visitanteMB.usuario.email}"
+                                 size="50"
+                                 required="true"
+                                 validatorMessage="Email inválido.">
+                        <p:watermark value="exemplo@meuemail.com" for="campoEmail"/>
+                        <f:validator binding="#{visitanteMB.validadores['email']}"/>
+                    </p:inputText>
+                    <p:message for="campoEmail"/>
+
+                    <p:outputLabel value="CPF:"/>
+                    <p:inputMask id="campoCpf"
+                                 value="#{visitanteMB.usuario.cpf}" 
+                                 mask="999.999.999-99"
+                                 required="true"
+                                 validatorMessage="CPF inválido. Preencha o campo completamente">
+                        <p:watermark value="___.___.___-__" for="campoCpf"/>
+                        <f:validator binding="#{visitanteMB.validadores['cpf']}"/>
+                    </p:inputMask>
+                    <p:message for="campoCpf"/>
+
+                    <p:outputLabel value="Matricula:"/>
+                    <p:inputMask id="campoMatricula"
+                                 value="#{visitanteMB.usuario.matricula}"
+                                 mask="9999999999">
+                        <p:watermark value="matrícula" for="campoMatricula"/>
+                    </p:inputMask>
+                    <p:message for="campoMatricula"/>
+
+                    <p:outputLabel value="Data de nascimento:"/>
+                    <p:calendar id="campoDataNasc"
+                                mindate="01/01/1800" 
+                                effect="drop"
+                                locale="pt"
+                                navigator="true"
+                                title="Data de nascimento"
+                                pattern="dd/MM/yyyy"
+                                value="#{visitanteMB.usuario.dataNascimento}"
+                                converter="#{visitanteMB.dataConverter}"
+                                required="true">
+                        <p:watermark value="#{visitanteMB.data}" 
+                                     for="campoDataNasc"/>
+                    </p:calendar>
+                    <p:message for="campoDataNasc"/>
+
+                    <p:outputLabel value="Sexo:"/>
+                    <p:selectOneMenu id="comboSexo"
+                                     value="#{visitanteMB.usuario.sexo}">
+                        <f:selectItem itemValue="#{null}" 
+                                      itemLabel="Selecione uma opção"/>
+                        <f:selectItem itemValue="M" itemLabel="Masculino"/>
+                        <f:selectItem itemValue="F" itemLabel="Feminino"/>
+                        <f:selectItem itemValue="O" itemLabel="Outro"/>
+                    </p:selectOneMenu>
+                    <p:message for="comboSexo"/>
+
+                    <p:commandButton value="Criar conta" 
+                                     ajax="true"
+                                     update="@all"
+                                     action="#{visitanteMB.criarUsuario()}"/>
+                </p:panelGrid>
+            </p:panel>
+        </h:form>
+    </h:body>
+</html>
+

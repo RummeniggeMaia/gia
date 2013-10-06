@@ -19,8 +19,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.convert.Converter;
 import javax.faces.event.ActionEvent;
-import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.validator.Validator;
+import org.primefaces.model.StreamedContent;
 
 /**
  *
@@ -37,9 +37,20 @@ public class TesteMB implements Serializable {
     private Converter ic = new NumeConverter();
     private Validator v = new ValidarUsuarioCPF();
     private Converter c;
-    
+    private StreamedContent img;
 
+    public StreamedContent getImg() {
+        return img;
+    }
+    
     public TesteMB() {
+//        try {
+//            GridFS fS = new DocumentoDao().getGridFS();
+//            GridFSDBFile dBFile = fS.findOne("violao");
+//            img = new DefaultStreamedContent(dBFile.getInputStream(), "image/jpeg");
+//        } catch (Exception ex) {
+//            Logger.getLogger(TesteMB.class.getName()).log(Level.SEVERE, null, ex);
+//        }
 //        c = new Converter() {
 //
 //            @Override

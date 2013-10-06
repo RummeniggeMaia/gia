@@ -7,7 +7,6 @@ import com.mongodb.*;
 import java.io.Serializable;
 import java.net.UnknownHostException;
 import java.util.*;
-import java.util.regex.Matcher;
 import org.bson.types.ObjectId;
 
 /**
@@ -91,6 +90,9 @@ public class DocumentoDao extends MongoDao<Documento>
             atual.getTipo().setId((ObjectId) ref.getId());
             campos.remove(Consts.CAMPO_TIPO);
             atual.setCampos(campos);
+            List<String> imgs = (List<String>) campos.get("imagens");
+            atual.setImagens(imgs);
+            campos.remove("imagens");
             documentos.add(atual);
         }
         return documentos;
@@ -109,59 +111,3 @@ public class DocumentoDao extends MongoDao<Documento>
         return dBCursor.count();
     }
 }
-
-/*
- * private CriteriaStrategyIF<Documento, DBObject> criteriaStrategyIF;
- private CriteriaTipoDocumento criteriaTipoDocumento =
- new CriteriaTipoDocumento();
- private NullCriteria nullCriteria = new NullCriteria();
-
- public DocumentoDao() throws UnknownHostException {
- super();
- criteriaStrategyIF = nullCriteria;
- }
-
- @Override
- public void criar(Documento t) {
- DBCollection dBCollection =
- dataStore.getCollection(Documento.class);
-
- BasicDBObject basicDBObject = new BasicDBObject(t.getCampos());
- dBCollection.insert(basicDBObject);
- }
-
- @Override
- public List<Documento> pesquisar(
- Documento t,
- int offset,
- int limit,
- int criteria) {
-
- List<Documento> documentos = new ArrayList<Documento>(2);
- DBCollection dBCollection = dataStore.getCollection(Documento.class);
- BasicDBObject basicDBObject = new BasicDBObject(t.getCampos());
- DBCursor dBCursor = dBCollection.find(basicDBObject);
- criarCriteria(t, dBCollection, criteria);
- dBCursor.limit(limit);
- dBCursor.skip(offset);
- while (dBCursor.hasNext()) {
- DBObject atual = dBCursor.next();
- Documento d = new Documento();
- d.setCampos(atual.toMap());
- documentos.add(d);
- }
- return documentos;
- }
-
- @Override
- protected void criarCriteria(
- Documento t,
- Object q,
- int criteria) {
-
- if (criteria == Consts.CRITERIA_TIPO_DOCUMENTO) {
- criteriaStrategyIF = criteriaTipoDocumento;
- }
- criteriaStrategyIF.operationCriteria(t, q);
- }
- */

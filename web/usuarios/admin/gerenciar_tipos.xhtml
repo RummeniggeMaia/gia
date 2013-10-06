@@ -1,0 +1,313 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Criar novos tipos de documentos</title>
+        <style>
+            .semBorda tr, .semBorda td {
+                border: none !important;
+            }
+            .ui-widget {
+                font-size: 100% !important;
+            }
+            .botPag {
+                width: 30px;
+                height: 30px;
+                top:5px;
+                margin: -15px 2px -5px 2px;
+            }
+        </style>
+    </h:head>
+    <h:body onload="#{administradorMB.iniciarTipos()}">
+        <h:form id="form_tipos">
+            <p:toolbar>
+                <p:toolbarGroup align="right">
+                    <p:menuButton value="#{administradorMB.dono.nome}">
+                        <p:menuitem value="configurações" icon="ui-icon-gear"
+                                    action="config"/>
+                        <p:menuitem value="sair" icon="ui-icon-extlink"
+                                    action="#{administradorMB.sairDoSistema()}"/>
+                    </p:menuButton>
+                </p:toolbarGroup>
+                <p:toolbarGroup align="left">
+                    <p:commandButton value="&lt;&lt; Voltar"
+                                     action="voltar"/>
+                </p:toolbarGroup>
+            </p:toolbar>
+            <p:panel header="Gerenciamento dos tipos de documentos">
+                <!-- Controle -->
+                <p:panelGrid columns="4" id="grid_menu" styleClass="semBorda">
+                    <p:outputLabel value="Novo tipo: "/>
+                    <p:inputText 
+                        value="#{administradorMB.tipo.nome}"
+                        size="50">
+                        <p:ajax event="blur" process="@this"/>
+                    </p:inputText>
+                    <p:commandButton 
+                        update=":form_tipos:tabela_campos"
+                        value="Inserir novo campo"
+                        action="#{administradorMB.inserirCampo}">
+                    </p:commandButton>
+                    <p:commandButton 
+                        update=":form_tipos:tabela_campos"
+                        value="Limpar campos" 
+                        action="#{administradorMB.limparCampos}">
+                    </p:commandButton>
+                </p:panelGrid>
+                <br />
+                <!-- Campos a serem exibidos -->
+                <p:dataTable 
+                    id="tabela_campos"
+                    value="#{administradorMB.tipo.campos}"
+                    var="campoAtual"
+                    emptyMessage="Insira um novo campo">
+                    <h:inputHidden 
+                        value="#{campoAtual.id}" 
+                        converter="objectIdConverter"/>
+                    <p:column >
+                        <p:outputLabel value="Nome:"/>
+                    </p:column>
+                    <p:column>
+                        <p:inputText value="#{campoAtual.nome}">
+                            <p:ajax event="blur" process="@this"/>
+                        </p:inputText>
+                    </p:column>
+                    <p:column>
+                        <p:outputLabel value="Tipo de dado:"/>
+                    </p:column>
+                    <p:column>
+                        <p:selectOneMenu value="#{campoAtual.tipoDeDado}">
+                            <f:selectItem 
+                                itemLabel="Selecione..." 
+                                itemValue="#{null}"/>
+                            <f:selectItem itemLabel="Texto" itemValue="text"/>
+                            <f:selectItem itemLabel="Data" itemValue="data"/>
+                            <f:selectItem itemLabel="Número" itemValue="nume"/>
+                            <f:selectItem itemLabel="Número real" itemValue="real"/>
+                            <p:ajax process="@this"/>
+                        </p:selectOneMenu>
+                    </p:column>
+                    <p:column style="text-align: center">
+                        <p:commandButton value="x" 
+                                         action="#{administradorMB.deletarCampo}"
+                                         update=":form_tipos:tabela_campos"
+                                         >
+                            <f:setPropertyActionListener 
+                                value="#{campoAtual}"
+                                target="#{administradorMB.campo}"/>
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable>
+                <br />
+                <p:panelGrid id="grid_botoes" columns="2" styleClass="semBorda">
+                    <p:commandButton 
+                        value="Cadastrar tipo"
+                        update=":form_tipos:tabela_campos :form_tipos:paginacao"
+                        action="#{administradorMB.criarTipoDeDocumento()}"
+                        rendered="#{!administradorMB.editarTipo}">
+                        <p:effect type="slide" event="load">
+                            <f:param name="mode" value="'show'"/>
+                        </p:effect>
+                    </p:commandButton>
+                    <p:commandButton value="Pesquisar tipos"
+                                     update=":form_tipos:tabela_tipos :form_tipos:paginacao"
+                                     action="#{administradorMB.pesquisarTipos()}"
+                                     rendered="#{!administradorMB.editarTipo}">
+                        <p:effect type="drop" event="load">
+                            <f:param name="mode" value="'show'"/>
+                        </p:effect>
+                    </p:commandButton>
+                    <p:commandButton value="Editar tipo"
+                                     update=":form_tipos:tabela_tipos :form_tipos:grid_botoes"
+                                     action="#{administradorMB.editarTipo()}"
+                                     rendered="#{administradorMB.editarTipo}">
+                        <p:effect type="drop" event="load">
+                            <f:param name="mode" value="'show'"/>
+                        </p:effect>
+                    </p:commandButton>
+                    <p:commandButton value="Cancelar edição"
+                                     update=":form_tipos:grid_botoes :form_tipos:grid_menu :form_tipos:tabela_campos"
+                                     action="#{administradorMB.cancelarEditarTipo()}"
+                                     rendered="#{administradorMB.editarTipo}">
+                        <p:effect type="drop" event="load">
+                            <f:param name="mode" value="'show'"/>
+                        </p:effect>
+                    </p:commandButton>
+                </p:panelGrid>
+                <br />
+                <p:panel id="paginacao"
+                         styleClass="ui-paginator ui-widget-header ui-corner-top">
+                    <p:outputLabel style="margin-right: 20px;"
+                                   value="(#{administradorMB.paginacaoCtrl.totalLidos()} de #{administradorMB.paginacaoCtrl.cont})"/>
+                    <p:commandButton id="primeira"
+                                     icon="ui-icon ui-icon-seek-first"
+                                     styleClass="botPag"
+                                     actionListener="#{administradorMB.paginar}"
+                                     disabled="#{!administradorMB.paginacaoCtrl.podeVoltar()}"
+                                     action="#{administradorMB.realizarPesquisaTipos()}"
+                                     update=":form_tipos:paginacao :form_tipos:tabela_tipos"
+                                     process="@this"/>
+                    <p:commandButton id="anterior" 
+                                     icon="ui-icon ui-icon-seek-prev"
+                                     styleClass="botPag"
+                                     actionListener="#{administradorMB.paginar}"
+                                     disabled="#{!administradorMB.paginacaoCtrl.podeVoltar()}"
+                                     action="#{administradorMB.realizarPesquisaTipos()}"
+                                     update=":form_tipos:paginacao :form_tipos:tabela_tipos"
+                                     process="@this"/>
+                    <p:inputText id="pular"
+                                 style="margin: -10px 5px -10px 5px;text-align: center"
+                                 value="#{administradorMB.paginacaoCtrl.pagina}"
+                                 onkeypress="if (event.keyCode == 13) {this.blur();return false;}">
+                        <p:ajax event="blur" 
+                                process="@this" 
+                                update=":form_tipos:paginacao :form_tipos:tabela_tipos"
+                                listener="#{administradorMB.realizarPesquisaUsuarios()}"/>
+                    </p:inputText>
+                    <p:commandButton id="proxima"
+                                     icon="ui-icon ui-icon-seek-next"
+                                     styleClass="botPag"
+                                     actionListener="#{administradorMB.paginar}"
+                                     disabled="#{!administradorMB.paginacaoCtrl.podeSeguir()}"
+                                     action="#{administradorMB.realizarPesquisaUsuarios()}"
+                                     update=":form_tipos:paginacao :form_tipos:tabela_tipos"
+                                     process="@this"/>
+                    <p:commandButton id="ultima"
+                                     icon="ui-icon ui-icon-seek-end"
+                                     styleClass="botPag"
+                                     actionListener="#{administradorMB.paginar}"
+                                     disabled="#{!administradorMB.paginacaoCtrl.podeSeguir()}"
+                                     action="#{administradorMB.realizarPesquisaUsuarios()}"
+                                     update=":form_tipos:paginacao :form_tipos:tabela_tipos"
+                                     process="@this"/>
+
+                    <p:selectOneMenu value="#{administradorMB.paginacaoCtrl.limit}"
+                                     converter="#{administradorMB.converters['nume']}"
+                                     style="margin: -10px 0px -10px 20px;width: 75px">
+                        <f:selectItem itemValue="5" itemLabel="5"/>
+                        <f:selectItem itemValue="10" itemLabel="10"/>
+                        <f:selectItem itemValue="15" itemLabel="15"/>
+                        <p:ajax update=":form_tipos:paginacao :form_tipos:tabela_tipos"
+                                event="change"
+                                listener="#{administradorMB.realizarPesquisaUsuarios()}"/>
+                    </p:selectOneMenu>
+                </p:panel>
+                <!-- Tabela tipos -->
+                <p:dataTable 
+                    id="tabela_tipos"
+                    value="#{administradorMB.tipos}" 
+                    var="tipoAtual">
+
+                    <p:column>
+                        <f:facet name="header">
+                            <p:outputLabel value="Nome"/>
+                        </f:facet>
+                        <p:outputLabel value="#{tipoAtual.nome}"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <p:outputLabel value="Campos"/>
+                        </f:facet>
+                        <p:commandLink 
+                            value="Exibir campos..."
+                            update=":form_tipos:tabela_detalhe" 
+                            oncomplete="tipoDialog.show()">
+                            <f:setPropertyActionListener 
+                                value="#{tipoAtual}"
+                                target="#{administradorMB.tipoAux}"/>
+                        </p:commandLink>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <p:outputLabel value="Editar"/>
+                        </f:facet>
+                        <p:commandLink 
+                            value="editar"
+                            update=":form_tipos:tabela_campos :form_tipos:grid_menu :form_tipos:grid_botoes"
+                            action="#{administradorMB.iniciarEdidarTipo()}">
+                            <f:setPropertyActionListener 
+                                value="#{tipoAtual}"
+                                target="#{administradorMB.tipo}"/>
+                        </p:commandLink>
+                    </p:column>
+                    <p:column style="text-align: center">
+                        <f:facet name="header">
+                            <p:outputLabel value="Excluir"/>
+                        </f:facet>
+                        <p:commandButton 
+                            icon="ui-icon-close"
+                            oncomplete="confirmExcluirTipo.show()">
+                            <f:setPropertyActionListener 
+                                value="#{tipoAtual}" 
+                                target="#{administradorMB.tipoAux}"/>
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable>
+                <!-- dialogos -->
+                <p:dialog
+                    header="Campos" 
+                    widgetVar="tipoDialog"
+                    showEffect="explode" 
+                    hideEffect="puff">
+
+                    <p:dataTable
+                        id="tabela_detalhe"
+                        value="#{administradorMB.tipoAux.campos}"
+                        var="campoDialog">
+                        <p:column>
+                            <f:facet name="header">
+                                <p:outputLabel value="Nome"/>
+                            </f:facet>
+                            <p:outputLabel value="#{campoDialog.nome}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <p:outputLabel value="Tipo de dado"/>
+                            </f:facet>
+                            <p:outputLabel 
+                                value="Número" 
+                                rendered="#{campoDialog.tipoDeDado eq 'nume'}"/>
+                            <p:outputLabel 
+                                value="Número real" 
+                                rendered="#{campoDialog.tipoDeDado eq 'real'}"/>
+                            <p:outputLabel 
+                                value="Texto" 
+                                rendered="#{campoDialog.tipoDeDado eq 'text'}"/>
+                            <p:outputLabel 
+                                value="Data" 
+                                rendered="#{campoDialog.tipoDeDado eq 'data'}"/>
+                        </p:column>
+                    </p:dataTable>
+                </p:dialog> 
+                <p:confirmDialog
+                    message="Deseja excluir este tipo de documento?"
+                    header="Excluir tipo de documento"
+                    widgetVar="confirmExcluirTipo"
+                    showEffect="explode"
+                    hideEffect="puff"
+                    appendToBody="true">
+                    <p:panel 
+                        style="border: none;text-align: center">
+                        <p:commandButton 
+                            value="Sim"
+                            styleClass="ui-confirmdialog-yes"
+                            oncomplete="confirmExcluirTipo.hide()"
+                            action="#{administradorMB.excluirTipo}"
+                            update=":form_tipos:tabela_tipos"/>
+                        <p:commandButton 
+                            value="Não" 
+                            type="button"
+                            styleClass="ui-confirmdialog-no"
+                            onclick="confirmExcluirTipo.hide()"/>
+                    </p:panel>
+                </p:confirmDialog>
+                <p:growl id="mensagens" autoUpdate="true" sticky="true" 
+                         showDetail="true"/>
+            </p:panel>
+        </h:form>
+    </h:body>
+</html>
+

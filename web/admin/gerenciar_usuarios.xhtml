@@ -1,0 +1,269 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>Gerenciar usuários</title>
+        <style>
+            .semBorda tr, .semBorda td {
+                border: none !important;
+            }
+            .botPag {
+                width: 30px;
+                height: 30px;
+                top:5px;
+                margin: -15px 2px -5px 2px;
+            }
+            .ui-widget {
+                font-size: 100% !important;
+            }
+        </style>
+    </h:head>
+    <h:body onload="#{administradorMB.iniciarUsuarios()}">
+        <h:form id="form_usuarios">
+            <p:toolbar>
+                <p:toolbarGroup align="right">
+                    <p:menuButton value="#{administradorMB.dono.nome}">
+                        <p:menuitem value="configurações" icon="ui-icon-gear"
+                                    action="config"/>
+                        <p:menuitem value="sair" icon="ui-icon-extlink"
+                                    action="#{administradorMB.sairDoSistema()}"/>
+                    </p:menuButton>
+                </p:toolbarGroup>
+                <p:toolbarGroup align="left">
+                    <p:commandButton value="&lt;&lt; Voltar"
+                                     action="voltar"/>
+                </p:toolbarGroup>
+            </p:toolbar>
+            <p:panel 
+                id="grid_usuario"
+                header="Gerenciamento de usuários"
+                styleClass="semBorda">
+                <h:inputHidden value="#{administradorMB.usuario.id}"
+                               converter="objectIdConverter"/>
+                <p:panelGrid columns="2">
+                    <p:outputLabel value="Nome:"/>
+                    <p:inputText value="#{administradorMB.usuario.nome}" />
+                    <p:outputLabel value="E-Mail:"/>
+                    <p:inputText value="#{administradorMB.usuario.email}"/>
+                    <p:outputLabel value="CPF:"/>
+                    <p:inputText value="#{administradorMB.usuario.cpf}"/>
+                    <p:outputLabel value="Matricula:"/>
+                    <p:inputText value="#{administradorMB.usuario.matricula}"/>
+                    <p:outputLabel value="Nascimento:"/>
+                    <p:inputText value="#{administradorMB.usuario.dataNascimento}"
+                                 converter="#{administradorMB.converters['data']}"/>
+                    <p:outputLabel value="Sexo:"/>
+                    <p:selectOneMenu value="#{administradorMB.usuario.sexo}">
+                        <f:selectItem itemValue="M" itemLabel="Masculino"/>
+                        <f:selectItem itemValue="F" itemLabel="Feminino"/>
+                        <f:selectItem itemValue="O" itemLabel="Outro"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel value="Funcionalidade:"/>
+                    <p:selectOneMenu 
+                        value="#{administradorMB.usuario.role}">
+                        <f:selectItem itemValue="#{null}" 
+                                      itemLabel="Selecione..."
+                                      noSelectionOption="true"/>
+                        <f:selectItem itemValue="role_user" 
+                                      itemLabel="Usuário"/>
+                        <f:selectItem itemValue="role_admin" 
+                                      itemLabel="Administrador"/>
+                    </p:selectOneMenu>
+                </p:panelGrid>
+                <br />
+                <p:panelGrid id="grid_botoes" columns="2">
+                    <p:commandButton value="Pesquisar usuários"
+                                     update=":form_usuarios:tabela_usuario :form_usuarios:msgs :form_usuarios:paginacao"
+                                     action="#{administradorMB.pesquisarUsuarios()}"
+                                     rendered="#{!administradorMB.editarUsuario}">
+                        <p:effect type="drop" event="load">
+                            <f:param name="mode" value="'show'"/>
+                        </p:effect>
+                    </p:commandButton>
+                    <p:commandButton value="Editar usuário"
+                                     update=":form_usuarios:tabela_usuario :form_usuarios:grid_botoes :form_usuarios:grid_usuario :form_usuarios:msgs"
+                                     action="#{administradorMB.editarUsuario()}"
+                                     rendered="#{administradorMB.editarUsuario}">
+                        <p:effect type="drop" event="load">
+                            <f:param name="mode" value="'show'"/>
+                        </p:effect>
+                    </p:commandButton>
+                    <p:commandButton value="Cancelar"
+                                     update=":form_usuarios:grid_botoes :form_usuarios:grid_usuario"
+                                     action="#{administradorMB.cancelarEditarUsuario()}"
+                                     rendered="#{administradorMB.editarUsuario}">
+                        <p:effect type="drop" event="load">
+                            <f:param name="mode" value="'show'"/>
+                        </p:effect>
+                    </p:commandButton>
+                </p:panelGrid>
+
+                <p:panel id="paginacao"
+                         styleClass="ui-paginator ui-widget-header ui-corner-top">
+                    <p:outputLabel style="margin-right: 20px;"
+                        value="(#{administradorMB.paginacaoCtrl.totalLidos()} de #{administradorMB.paginacaoCtrl.cont})"/>
+                    <p:commandButton id="primeira"
+                                     icon="ui-icon ui-icon-seek-first"
+                                     styleClass="botPag"
+                                     actionListener="#{administradorMB.paginar}"
+                                     disabled="#{!administradorMB.paginacaoCtrl.podeVoltar()}"
+                                     action="#{administradorMB.realizarPesquisaUsuarios()}"
+                                     update=":form_usuarios:paginacao :form_usuarios:tabela_usuario"
+                                     process="@this"/>
+                    <p:commandButton id="anterior" 
+                                     icon="ui-icon ui-icon-seek-prev"
+                                     styleClass="botPag"
+                                     actionListener="#{administradorMB.paginar}"
+                                     disabled="#{!administradorMB.paginacaoCtrl.podeVoltar()}"
+                                     action="#{administradorMB.realizarPesquisaUsuarios()}"
+                                     update=":form_usuarios:paginacao :form_usuarios:tabela_usuario"
+                                     process="@this"/>
+                    <p:inputText id="pular"
+                                 style="margin: -10px 5px -10px 5px;text-align: center"
+                                 value="#{administradorMB.paginacaoCtrl.pagina}"
+                                 onkeypress="if (event.keyCode == 13) {this.blur();return false;}">
+                        <p:ajax event="blur" 
+                                process="@this" 
+                                update=":form_usuarios:paginacao :form_usuarios:tabela_usuario"
+                                listener="#{administradorMB.realizarPesquisaUsuarios()}"/>
+                    </p:inputText>
+                    <p:commandButton id="proxima"
+                                     icon="ui-icon ui-icon-seek-next"
+                                     styleClass="botPag"
+                                     actionListener="#{administradorMB.paginar}"
+                                     disabled="#{!administradorMB.paginacaoCtrl.podeSeguir()}"
+                                     action="#{administradorMB.realizarPesquisaUsuarios()}"
+                                     update=":form_usuarios:paginacao :form_usuarios:tabela_usuario"
+                                     process="@this"/>
+                    <p:commandButton id="ultima"
+                                     icon="ui-icon ui-icon-seek-end"
+                                     styleClass="botPag"
+                                     actionListener="#{administradorMB.paginar}"
+                                     disabled="#{!administradorMB.paginacaoCtrl.podeSeguir()}"
+                                     action="#{administradorMB.realizarPesquisaUsuarios()}"
+                                     update=":form_usuarios:paginacao :form_usuarios:tabela_usuario"
+                                     process="@this"/>
+
+                    <p:selectOneMenu value="#{administradorMB.paginacaoCtrl.limit}"
+                                     converter="#{administradorMB.converters['nume']}"
+                                     style="margin: -10px 0px -10px 20px;width: 75px">
+                        <f:selectItem itemValue="5" itemLabel="5"/>
+                        <f:selectItem itemValue="10" itemLabel="10"/>
+                        <f:selectItem itemValue="15" itemLabel="15"/>
+                        <p:ajax update=":form_usuarios:paginacao :form_usuarios:tabela_usuario"
+                                event="change"
+                                listener="#{administradorMB.realizarPesquisaUsuarios()}"/>
+                    </p:selectOneMenu>
+                </p:panel>
+<!-- Tabela de usuários -->
+                <p:dataTable id="tabela_usuario"
+                             value="#{administradorMB.usuarios}"
+                             var="usuarioAtual" 
+                             emptyMessage="Não há usuários"
+                             resizableColumns="true">
+                    <p:column>
+                        <f:facet name="header">
+                            <p:outputLabel value="Nome"/>
+                        </f:facet>
+                        <p:outputLabel value="#{usuarioAtual.nome}"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <p:outputLabel value="E-mail"/>
+                        </f:facet>
+                        <p:outputLabel value="#{usuarioAtual.email}"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <p:outputLabel value="CPF"/>
+                        </f:facet>
+                        <p:outputLabel value="#{usuarioAtual.cpf}"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <p:outputLabel value="Matrícula"/>
+                        </f:facet>
+                        <p:outputLabel value="#{usuarioAtual.matricula}"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <p:outputLabel value="Nascimento"/>
+                        </f:facet>
+                        <h:outputLabel value="#{usuarioAtual.dataNascimento}"
+                                       converter="#{administradorMB.converters['data']}"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <p:outputLabel value="Sexo"/>
+                        </f:facet>
+                        <p:outputLabel value="Masculino" rendered="#{usuarioAtual.sexo eq 'M'}"/>
+                        <p:outputLabel value="Feminino" rendered="#{usuarioAtual.sexo eq 'F'}"/>
+                        <p:outputLabel value="Outro" rendered="#{usuarioAtual.sexo eq 'O'}"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <p:outputLabel value="Funcionalidade"/>
+                        </f:facet>
+                        <p:outputLabel 
+                            value="Usuário"
+                            rendered="#{usuarioAtual.role eq 'role_user'}"/>
+                        <p:outputLabel 
+                            value="Administrador"
+                            rendered="#{usuarioAtual.role eq 'role_admin'}"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <p:outputLabel value="Editar"/>
+                        </f:facet>
+                        <p:commandLink value="editar"
+                                       update=":form_usuarios:grid_usuario :form_usuarios:grid_botoes"
+                                       action="#{administradorMB.iniciarEdidarUsuario()}">
+                            <f:setPropertyActionListener 
+                                value="#{usuarioAtual}"
+                                target="#{administradorMB.usuario}"/>
+                        </p:commandLink>
+                    </p:column>
+                    <p:column style="text-align: center">
+                        <f:facet name="header">
+                            <p:outputLabel value="Excluir"/>
+                        </f:facet>
+                        <p:commandButton 
+                            icon="ui-icon-closethick"
+                            oncomplete="confirmExcluirUsuario.show()">
+                            <f:setPropertyActionListener 
+                                value="#{usuarioAtual}" 
+                                target="#{administradorMB.usuarioAux}"/>
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable>
+            </p:panel>
+            <p:confirmDialog
+                message="Deseja excluir este usuário?"
+                header="Excluir usuário"
+                widgetVar="confirmExcluirUsuario"
+                showEffect="explode"
+                hideEffect="puff"
+                appendToBody="true">
+                <p:panel 
+                    style="border: none;text-align: center">
+                    <p:commandButton 
+                        value="Sim"
+                        styleClass="ui-confirmdialog-yes"
+                        oncomplete="confirmExcluirUsuario.hide()"
+                        action="#{administradorMB.excluirUsuario}"
+                        update=":form_usuarios:tabela_usuario :form_usuarios:msgs"/>
+                    <p:commandButton 
+                        value="Não" 
+                        type="button"
+                        styleClass="ui-confirmdialog-no"
+                        onclick="confirmExcluirUsuario.hide()"/>
+                </p:panel>
+            </p:confirmDialog>
+            <p:growl id="msgs" sticky="true" autoUpdate="true" globalOnly="true"/>
+        </h:form>
+    </h:body>
+</html>
+

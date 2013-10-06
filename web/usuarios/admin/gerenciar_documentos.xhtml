@@ -1,0 +1,279 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>Gerenciar documentos</title>
+        <style>
+            .semBorda tr, .semBorda td {
+                border: none !important;
+            }
+            .botPag {
+                width: 30px;
+                height: 30px;
+                top:5px;
+                margin: -15px 2px -5px 2px;
+            }
+            .ui-widget {
+                font-size: 100% !important;
+            }
+        </style>
+    </h:head>
+    <h:body onload="#{usuarioMB.iniciarDocumentos()}">
+        <h:form id="form_docs">
+            <p:toolbar>
+                <p:toolbarGroup align="right">
+                    <p:menuButton value="#{administradorMB.dono.nome}">
+                        <p:menuitem value="configurações" icon="ui-icon-gear"
+                                    action="config"/>
+                        <p:menuitem value="sair" icon="ui-icon-extlink"
+                                    action="#{administradorMB.sairDoSistema()}"/>
+                    </p:menuButton>
+                </p:toolbarGroup>
+                <p:toolbarGroup align="left">
+                    <p:commandButton value="&lt;&lt; Voltar"
+                                     action="voltar"/>
+                </p:toolbarGroup>
+            </p:toolbar>
+            <p:panel header="Gerenciamento de acervos">
+
+                <h:panelGrid columns="2">
+                    <p:commandButton 
+                        value="Gerenciar tipos de documento"
+                        action="adm_tipos"/>
+                </h:panelGrid><br />
+                <p:selectOneMenu
+                    id="select_tipo"
+                    value="#{administradorMB.tipo}"
+                    converter="#{administradorMB.converters['tipoConverter']}"
+                    disabled="#{administradorMB.editarDocumento}">
+
+                    <f:selectItem 
+                        itemLabel="Selecione..."
+                        itemValue="#{null}"
+                        noSelectionOption="true"/>
+                    <f:selectItems 
+                        value="#{administradorMB.tipos}"
+                        var="tipoAtual"
+                        itemLabel="#{tipoAtual.nome}"
+                        itemValue="#{tipoAtual}"/>
+                    <p:ajax process="@this" update=":form_docs:grid_campos :form_docs:paginacao :form_docs:tabela_docs"/>
+                </p:selectOneMenu><br /><br />
+                <!-- Campos -->
+                <p:dataTable 
+                    id="grid_campos"
+                    value="#{administradorMB.tipo.campos}"
+                    var="campoAtual"
+                    emptyMessage="Selecione um tipo de documento."
+                    styleClass="semBorda">
+
+                    <p:column>
+                        <p:outputLabel value="#{campoAtual.nome}"/>
+                    </p:column>
+                    <p:column>
+                        <p:inputText 
+                            value="#{campoAtual.valor}"
+                            converter="#{administradorMB.converters[campoAtual.tipoDeDado]}"
+                            size="#{campoAtual.tipoDeDado eq 'text' ? '75' : '10'}"
+                            rendered="#{campoAtual.tipoDeDado ne 'data'}">
+                            <p:ajax process="@this" event="blur"/>
+                        </p:inputText>
+                        <p:calendar value="#{campoAtual.valor}"
+                                    effect="drop"
+                                    locale="pt"
+                                    navigator="true"
+                                    title="Data de nascimento"
+                                    pattern="dd/MM/yyyy"
+                                    converter="#{administradorMB.converters[campoAtual.tipoDeDado]}"
+                                    rendered="#{campoAtual.tipoDeDado eq 'data'}"/>
+                    </p:column>
+                </p:dataTable>
+                <!-- Botoes -->
+                <p:panelGrid columns="2" styleClass="semBorda" id="grid_botoes">
+                    <p:commandButton 
+                        value="Cadastrar documento"
+                        update=":form_docs:grid_campos :form_docs:select_tipo :form_docs:msgs"
+                        action="#{administradorMB.criarDocumento}"
+                        rendered="#{!administradorMB.editarDocumento}">
+                        <p:effect type="slide" event="load">
+                            <f:param name="mode" value="'show'"/>
+                        </p:effect>
+                    </p:commandButton>
+                    <p:commandButton 
+                        value="Pesquisar documentos"
+                        update=":form_docs:tabela_docs :form_docs:paginacao"
+                        action="#{administradorMB.pesquisarDocumentos}"
+                        rendered="#{!administradorMB.editarDocumento}">
+                        <p:effect type="slide" event="load">
+                            <f:param name="mode" value="'show'"/>
+                        </p:effect>
+                    </p:commandButton>
+                    <p:commandButton 
+                        value="Editar documento"
+                        update=":form_docs:tabela_docs :form_docs:select_tipo :form_docs:grid_campos :form_docs:grid_botoes"
+                        action="#{administradorMB.editarDocumento}"
+                        rendered="#{administradorMB.editarDocumento}">
+                        <p:effect type="slide" event="load">
+                            <f:param name="mode" value="'show'"/>
+                        </p:effect>
+                    </p:commandButton>
+                    <p:commandButton value="Cancelar edição"
+                                     action="#{administradorMB.cancelarEditarDocumento()}"
+                                     update=":form_docs:grid_botoes :form_docs:grid_campos :form_docs:select_tipo"
+                                     rendered="#{administradorMB.editarDocumento}">
+                        <p:effect type="slide" event="load">
+                            <f:param name="mode" value="'show'"/>
+                        </p:effect>
+                    </p:commandButton> 
+                </p:panelGrid>
+                <!-- Paginacao -->
+                <p:panel id="paginacao"
+                         styleClass="ui-paginator ui-paginator-top ui-widget-header ui-corner-top">
+                    <p:outputLabel style="margin-right: 20px;"
+                                   value="(#{administradorMB.paginacaoCtrl.totalLidos()} de #{administradorMB.paginacaoCtrl.cont})"/>
+                    <p:commandButton id="primeira"
+                                     icon="ui-icon ui-icon-seek-first"
+                                     styleClass="botPag"
+                                     actionListener="#{administradorMB.paginar}"
+                                     disabled="#{!administradorMB.paginacaoCtrl.podeVoltar()}"
+                                     action="#{administradorMB.realizarPesquisaDocumentos()}"
+                                     update=":form_docs:paginacao :form_docs:tabela_docs"
+                                     process="@this"/>
+                    <p:commandButton id="anterior" 
+                                     icon="ui-icon ui-icon-seek-prev"
+                                     styleClass="botPag"
+                                     actionListener="#{administradorMB.paginar}"
+                                     disabled="#{!administradorMB.paginacaoCtrl.podeVoltar()}"
+                                     action="#{administradorMB.realizarPesquisaDocumentos()}"
+                                     update=":form_docs:paginacao :form_docs:tabela_docs"
+                                     process="@this"/>
+                    <p:inputText id="pular"
+                                 style="margin: -10px 5px -10px 5px;text-align: center"
+                                 value="#{administradorMB.paginacaoCtrl.pagina}"
+                                 onkeypress="if (event.keyCode == 13) {this.blur();return false;}">
+                        <p:ajax event="blur" 
+                                process="@this" 
+                                update=":form_docs:paginacao :form_docs:tabela_docs"
+                                listener="#{administradorMB.realizarPesquisaDocumentos()}"/>
+                    </p:inputText>
+                    <p:commandButton id="proxima"
+                                     icon="ui-icon ui-icon-seek-next"
+                                     styleClass="botPag"
+                                     actionListener="#{administradorMB.paginar}"
+                                     disabled="#{!administradorMB.paginacaoCtrl.podeSeguir()}"
+                                     action="#{administradorMB.realizarPesquisaDocumentos()}"
+                                     update=":form_docs:paginacao :form_docs:tabela_docs"
+                                     process="@this"/>
+                    <p:commandButton id="ultima"
+                                     icon="ui-icon ui-icon-seek-end"
+                                     styleClass="botPag"
+                                     actionListener="#{administradorMB.paginar}"
+                                     disabled="#{!administradorMB.paginacaoCtrl.podeSeguir()}"
+                                     action="#{administradorMB.realizarPesquisaDocumentos()}"
+                                     update=":form_docs:paginacao :form_docs:tabela_docs"
+                                     process="@this"/>
+
+                    <p:selectOneMenu value="#{administradorMB.paginacaoCtrl.limit}"
+                                     converter="#{administradorMB.converters['nume']}"
+                                     style="margin: -10px 0px -10px 20px;width: 75px">
+                        <f:selectItem itemValue="5" itemLabel="5"/>
+                        <f:selectItem itemValue="10" itemLabel="10"/>
+                        <f:selectItem itemValue="15" itemLabel="15"/>
+                        <p:ajax update=":form_docs:paginacao :form_docs:tabela_docs"
+                                event="change"
+                                listener="#{administradorMB.realizarPesquisaDocumentos()}"/>
+                    </p:selectOneMenu>
+                </p:panel>
+                <!-- Tabela de documentos-->
+                <p:dataTable 
+                    id="tabela_docs"
+                    value="#{administradorMB.documentos}"
+                    var="linha"
+                    emptyMessage="Não há documentos.">
+
+                    <f:facet name="header">
+                        <p:outputLabel value="Tabela vazia" rendered="#{administradorMB.tipo == null}"/>
+                    </f:facet>
+                    <h:inputHidden value="#{linha.id}"
+                                   converter="objectIdConverter"/>
+                    <p:columns value="#{administradorMB.tipo.campos}" 
+                               var="coluna">
+                        <f:facet name="header">
+                            <p:outputLabel value="#{coluna.nome}"/>
+                        </f:facet>
+                        <h:outputLabel 
+                            value="#{linha.campos[coluna.nome]}"
+                            converter="#{administradorMB.converters[coluna.tipoDeDado]}"/>
+                    </p:columns>
+                    <p:column rendered="#{administradorMB.tipo != null}">
+                        <f:facet name="header">
+                            <p:outputLabel value="Editar"/>
+                        </f:facet>
+                        <p:commandLink value="editar"
+                                       action="#{administradorMB.iniciarEdidarDocumento()}"
+                                       update=":form_docs:select_tipo :form_docs:grid_campos :form_docs:grid_botoes"
+                                       actionListener="#{administradorMB.carregarDocumento}">
+                            <f:attribute name="documento" value="#{linha}"/>
+                        </p:commandLink>
+                    </p:column>
+                    <p:column style="text-align: center" 
+                              rendered="#{administradorMB.tipo != null}">
+                        <f:facet name="header">
+                            <p:outputLabel value="Excluir"/>
+                        </f:facet>
+                        <p:commandButton 
+                            icon="ui-icon-closethick"
+                            oncomplete="confirmExcluirDoc.show()">
+                            <f:setPropertyActionListener 
+                                value="#{linha}" 
+                                target="#{administradorMB.docAux}"/>
+                        </p:commandButton>
+                    </p:column>
+                    <p:column>
+                        <p:commandLink value="Img"
+                                       actionListener="#{administradorMB.carregarImagens}"
+                                       oncomplete="dialogImagens.show()">
+                            <f:attribute name="documento" value="#{linha}"/>
+                        </p:commandLink>
+                    </p:column>
+                </p:dataTable>
+            </p:panel>
+            <!-- Dialogs -->
+            <p:confirmDialog
+                message="Deseja excluir este documento?"
+                header="Excluir documento"
+                widgetVar="confirmExcluirDoc"
+                showEffect="explode"
+                hideEffect="puff"
+                appendToBody="true">
+                <p:panel 
+                    style="border: none;text-align: center">
+                    <p:commandButton 
+                        value="Sim"
+                        styleClass="ui-confirmdialog-yes"
+                        oncomplete="confirmExcluirDoc.hide()"
+                        action="#{administradorMB.excluirDocumento}"
+                        update=":form_docs:tabela_docs :form_docs:msgs"/>
+                    <p:commandButton 
+                        value="Não" 
+                        type="button"
+                        styleClass="ui-confirmdialog-no"
+                        onclick="confirmExcluirDoc.hide()"/>
+                </p:panel>
+            </p:confirmDialog>
+            <p:dialog header="Imagens"
+                      widgetVar="dialogImagens"
+                      showEffect="explode"
+                      hideEffect="puff">
+                
+                <p:galleria value="#{administradorMB.imagens}" var="img">
+                    <p:graphicImage value="#{img}" width="300" height="400"/>
+                </p:galleria>
+            </p:dialog>
+            <p:growl id="msgs" sticky="true" autoUpdate="true"/>
+        </h:form>
+    </h:body>
+</html>
+

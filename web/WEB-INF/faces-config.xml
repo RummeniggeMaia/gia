@@ -9,77 +9,83 @@
     <navigation-rule>
         <navigation-case>
             <from-outcome>home</from-outcome>
-            <to-view-id>/testes_site/visitante/login.xhtml</to-view-id>
+            <to-view-id>/visitante/login.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>config</from-outcome>
+            <to-view-id>/usuarios/config.xhtml</to-view-id>
         </navigation-case>
     </navigation-rule>
     <!--Páginas dos visitantes-->
     <navigation-rule> 
-        <from-view-id>/testes_site/visitante/login.xhtml</from-view-id>
+        <from-view-id>/visitante/login.xhtml</from-view-id>
         <navigation-case>
             <from-outcome>criar_users</from-outcome>
-            <to-view-id>/testes_site/visitante/cadastro_usuarios.xhtml</to-view-id>
+            <to-view-id>/visitante/cadastro_usuarios.xhtml</to-view-id>
         </navigation-case>
         <navigation-case>
             <from-action>#{visitanteMB.entrarNoSistema()}</from-action>
             <from-outcome>role_user</from-outcome>
-            <to-view-id>/testes_site/usuario/home.xhtml</to-view-id>
+            <to-view-id>/usuarios/usuario/home.xhtml</to-view-id>
         </navigation-case>
         <navigation-case>
             <from-action>#{visitanteMB.entrarNoSistema()}</from-action>
             <from-outcome>role_admin</from-outcome>
-            <to-view-id>/testes_site/admin/home.xhtml</to-view-id>
+            <to-view-id>/usuarios/admin/home.xhtml</to-view-id>
         </navigation-case>
     </navigation-rule>
     <navigation-rule>
-        <from-view-id>/testes_site/visitante/cadastro_usuarios.xhtml</from-view-id>
+        <from-view-id>/visitante/cadastro_usuarios.xhtml</from-view-id>
         <navigation-case>
             <from-outcome>usuario_criado</from-outcome>
-            <to-view-id>/testes_site/visitante/usuario_criado.xhtml</to-view-id>
+            <to-view-id>/visitante/usuario_criado.xhtml</to-view-id>
         </navigation-case> 
     </navigation-rule>
     <!--Páginas dos usuários-->
     <navigation-rule>
-        <from-view-id>/testes_site/usuario/home.xhtml</from-view-id>
-        <navigation-case>
-            <from-outcome>usuario_config</from-outcome>
-            <to-view-id>/testes_site/usuario/config.xhtml</to-view-id>
-        </navigation-case>
-    </navigation-rule>
-    <navigation-rule>
-        <from-view-id>/testes_site/usuario/config.xhtml</from-view-id>
+        <from-view-id>/usuarios/config.xhtml</from-view-id>
         <navigation-case>
             <from-outcome>editar_conta</from-outcome>
-            <to-view-id>/testes_site/usuario/editar_conta.xhtml</to-view-id>
+            <to-view-id>/usuarios/editar_conta.xhtml</to-view-id>
         </navigation-case>
     </navigation-rule>
     <!--Páginas dos administradores-->
     <navigation-rule>
-        <from-view-id>/testes_site/admin/home.xhtml</from-view-id>
+        <from-view-id>/usuarios/admin/home.xhtml</from-view-id>
         <navigation-case>
             <from-outcome>adm_docs</from-outcome>
-            <to-view-id>/testes_site/admin/gerenciar_documentos.xhtml</to-view-id>
+            <to-view-id>/usuarios/admin/gerenciar_documentos.xhtml</to-view-id>
         </navigation-case>
         <navigation-case>
             <from-outcome>adm_usuarios</from-outcome>
-            <to-view-id>/testes_site/admin/gerenciar_usuarios.xhtml</to-view-id>
+            <to-view-id>/usuarios/admin/gerenciar_usuarios.xhtml</to-view-id>
         </navigation-case>
     </navigation-rule>
     <navigation-rule>
-        <from-view-id>/testes_site/admin/gerenciar_documentos.xhtml</from-view-id>
+        <from-view-id>/usuarios/admin/gerenciar_documentos.xhtml</from-view-id>
         <navigation-case>
             <from-outcome>adm_tipos</from-outcome>
-            <to-view-id>/testes_site/admin/gerenciar_tipos.xhtml</to-view-id>
+            <to-view-id>/usuarios/admin/gerenciar_tipos.xhtml</to-view-id>
         </navigation-case>
         <navigation-case>
-            <from-outcome>criar_editar_docs</from-outcome>
-            <to-view-id>/testes_site/admin/criar_editar_documentos.xhtml</to-view-id>
+            <from-outcome>voltar</from-outcome>
+            <to-view-id>/usuarios/admin/home.xhtml</to-view-id>
         </navigation-case>
     </navigation-rule>
     <navigation-rule>
-        <from-view-id>/testes_site/admin/gerenciar_tipos.xhtml</from-view-id>
+        <from-view-id>/usuarios/admin/gerenciar_tipos.xhtml</from-view-id>
         <navigation-case>
-            <from-outcome>cancelar</from-outcome>
-            <to-view-id>/testes_site/admin/gerenciar_documentos.xhtml</to-view-id>
+            <from-outcome>voltar</from-outcome>
+            <to-view-id>/usuarios/admin/gerenciar_documentos.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>/usuarios/admin/gerenciar_usuarios.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>voltar</from-outcome>
+            <to-view-id>/usuarios/admin/home.xhtml</to-view-id>
         </navigation-case>
     </navigation-rule>
 </faces-config>

@@ -1,0 +1,179 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Usuário home</title>
+        <style>
+            .semBorda tr, .semBorda td {
+                border: none !important;
+            }
+            .botPag {
+                width: 30px;
+                height: 30px;
+                top:5px;
+                margin: -15px 2px -5px 2px;
+            }
+            .ui-widget {
+                font-size: 100% !important;
+            }
+        </style>
+    </h:head>
+    <h:body>
+        <h:form id="form_docs">
+            <p:toolbar>
+                <p:toolbarGroup align="right">
+                    <p:menuButton value="#{usuarioMB.dono.nome}">
+                        <p:menuitem value="configurações" icon="ui-icon-gear"
+                                    action="config"
+                                    ajax="false"/>
+                        <p:menuitem value="sair" icon="ui-icon-extlink"
+                                    action="#{usuarioMB.sairDoSistema()}"
+                                    ajax="false"/>
+                    </p:menuButton>
+                </p:toolbarGroup>
+            </p:toolbar><br />
+            <p:selectOneMenu
+                id="select_tipo"
+                value="#{usuarioMB.tipo}"
+                converter="#{usuarioMB.converters['tipoConverter']}">
+
+                <f:selectItem 
+                    itemLabel="Selecione um tipo de documento..."
+                    itemValue="#{null}"
+                    noSelectionOption="true"/>
+                <f:selectItems 
+                    value="#{usuarioMB.tipos}"
+                    var="tipoAtual"
+                    itemLabel="#{tipoAtual.nome}"
+                    itemValue="#{tipoAtual}"/>
+                <p:ajax process="@this" update=":form_docs:grid_campos :form_docs:paginacao :form_docs:tabela_docs"/>
+            </p:selectOneMenu>
+            <br /><br />
+            <!-- Campos -->
+            <p:dataTable 
+                id="grid_campos"
+                value="#{usuarioMB.tipo.campos}"
+                var="campoAtual"
+                emptyMessage="Selecione um tipo de documento.">
+
+                <p:column>
+                    <p:outputLabel value="#{campoAtual.nome}:"/>
+                </p:column>
+                <p:column>
+                    <p:inputText 
+                        value="#{campoAtual.valor}"
+                        converter="#{usuarioMB.converters[campoAtual.tipoDeDado]}"
+                        size="#{campoAtual.tipoDeDado eq 'text' ? '75' : '10'}"
+                        rendered="#{campoAtual.tipoDeDado ne 'data'}">
+                        <p:ajax process="@this" event="blur"/>
+                    </p:inputText>
+                    <p:calendar value="#{campoAtual.valor}"
+                                effect="drop"
+                                locale="pt"
+                                navigator="true"
+                                title="Data de nascimento"
+                                pattern="dd/MM/yyyy"
+                                converter="#{usuarioMB.converters[campoAtual.tipoDeDado]}"
+                                rendered="#{campoAtual.tipoDeDado eq 'data'}"/>
+                </p:column>
+            </p:dataTable><br />
+            <!-- Botoes -->
+            <p:panelGrid columns="2" styleClass="semBorda" id="grid_botoes">
+                <p:commandButton 
+                    value="Pesquisar documentos"
+                    update=":form_docs:tabela_docs :form_docs:paginacao"
+                    action="#{usuarioMB.pesquisarDocumentos}">
+                    <p:effect type="slide" event="load">
+                        <f:param name="mode" value="'show'"/>
+                    </p:effect>
+                </p:commandButton> 
+            </p:panelGrid>
+            <!-- Paginacao -->
+            <p:panel id="paginacao"
+                     styleClass="ui-paginator ui-paginator-top ui-widget-header ui-corner-top">
+                <p:outputLabel style="margin-right: 20px;"
+                               value="(#{usuarioMB.paginacaoCtrl.totalLidos()} de #{usuarioMB.paginacaoCtrl.cont})"/>
+                <p:commandButton id="primeira"
+                                 icon="ui-icon ui-icon-seek-first"
+                                 styleClass="botPag"
+                                 actionListener="#{usuarioMB.paginar}"
+                                 disabled="#{!usuarioMB.paginacaoCtrl.podeVoltar()}"
+                                 action="#{usuarioMB.realizarPesquisaDocumentos()}"
+                                 update=":form_docs:paginacao :form_docs:tabela_docs"
+                                 process="@this"/>
+                <p:commandButton id="anterior" 
+                                 icon="ui-icon ui-icon-seek-prev"
+                                 styleClass="botPag"
+                                 actionListener="#{usuarioMB.paginar}"
+                                 disabled="#{!usuarioMB.paginacaoCtrl.podeVoltar()}"
+                                 action="#{usuarioMB.realizarPesquisaDocumentos()}"
+                                 update=":form_docs:paginacao :form_docs:tabela_docs"
+                                 process="@this"/>
+                <p:inputText id="pular"
+                             style="margin: -10px 5px -10px 5px;text-align: center"
+                             value="#{usuarioMB.paginacaoCtrl.pagina}"
+                             onkeypress="if (event.keyCode == 13) {this.blur();return false;}">
+                    <p:ajax event="blur" 
+                            process="@this" 
+                            update=":form_docs:paginacao :form_docs:tabela_docs"
+                            listener="#{usuarioMB.realizarPesquisaDocumentos()}"/>
+                </p:inputText>
+                <p:commandButton id="proxima"
+                                 icon="ui-icon ui-icon-seek-next"
+                                 styleClass="botPag"
+                                 actionListener="#{usuarioMB.paginar}"
+                                 disabled="#{!usuarioMB.paginacaoCtrl.podeSeguir()}"
+                                 action="#{usuarioMB.realizarPesquisaDocumentos()}"
+                                 update=":form_docs:paginacao :form_docs:tabela_docs"
+                                 process="@this"/>
+                <p:commandButton id="ultima"
+                                 icon="ui-icon ui-icon-seek-end"
+                                 styleClass="botPag"
+                                 actionListener="#{usuarioMB.paginar}"
+                                 disabled="#{!usuarioMB.paginacaoCtrl.podeSeguir()}"
+                                 action="#{usuarioMB.realizarPesquisaDocumentos()}"
+                                 update=":form_docs:paginacao :form_docs:tabela_docs"
+                                 process="@this"/>
+
+                <p:selectOneMenu value="#{usuarioMB.paginacaoCtrl.limit}"
+                                 converter="#{usuarioMB.converters['nume']}"
+                                 style="margin: -10px 0px -10px 20px;width: 75px">
+                    <f:selectItem itemValue="5" itemLabel="5"/>
+                    <f:selectItem itemValue="10" itemLabel="10"/>
+                    <f:selectItem itemValue="15" itemLabel="15"/>
+                    <p:ajax update=":form_docs:paginacao :form_docs:tabela_docs"
+                            event="change"
+                            listener="#{usuarioMB.realizarPesquisaDocumentos()}"/>
+                </p:selectOneMenu>
+            </p:panel>
+            <!-- Tabela de documentos-->
+            <p:dataTable 
+                id="tabela_docs"
+                value="#{usuarioMB.documentos}"
+                var="linha"
+                emptyMessage="Não há documentos."
+                resizableColumns="true" >
+
+                <f:facet name="header">
+                    <p:outputLabel value="Tabela vazia" rendered="#{usuarioMB.tipo == null}"/>
+                </f:facet>
+                <h:inputHidden value="#{linha.id}"
+                               converter="objectIdConverter"/>
+                <p:columns value="#{usuarioMB.tipo.campos}" 
+                           var="coluna">
+                    <f:facet name="header">
+                        <p:outputLabel value="#{coluna.nome}"/>
+                    </f:facet>
+                    <h:outputLabel 
+                        value="#{linha.campos[coluna.nome]}"
+                        converter="#{usuarioMB.converters[coluna.tipoDeDado]}"/>
+                </p:columns>
+            </p:dataTable>
+            <p:growl autoUpdate="true" sticky="true"/>
+        </h:form>
+    </h:body>
+</html>
+

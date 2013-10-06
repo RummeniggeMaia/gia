@@ -20,6 +20,5 @@ public class CriteriaUsuarioLogin
             return;
         }
         query.and(query.criteria("login").equal(entity.getLogin()));
-//        query.retrievedFields(true, "login");
     }
 }

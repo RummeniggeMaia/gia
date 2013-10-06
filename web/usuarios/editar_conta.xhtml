@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html">
+    <h:head>
+        <title>Editar usuário</title>
+    </h:head>
+    <h:body>
+        <h:form>
+            <h:inputHidden value="#{usuarioMB.dono.id}"
+                           converter="objectIdConverter"/>
+            <h:panelGrid columns="2">
+                <h:outputLabel value="Login:"/>
+                <h:inputText value="#{usuarioMB.dono.login}"/>
+                <h:outputLabel value="Nome:"/>
+                <h:inputText value="#{usuarioMB.dono.nome}"/>
+                <h:outputLabel value="E-mail:"/>
+                <h:inputText value="#{usuarioMB.dono.email}"/>
+                <h:outputLabel value="CPF:"/>
+                <h:inputText value="#{usuarioMB.dono.cpf}"/>
+                <h:outputLabel value="Matrícula:"/>
+                <h:inputText value="#{usuarioMB.dono.matricula}"/>
+            </h:panelGrid>
+            <h:commandButton value="Editar conta" action="#{usuarioMB.editarConta()}"/>
+        </h:form>
+    </h:body>
+</html>
+
