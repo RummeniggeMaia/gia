@@ -4,21 +4,12 @@
  */
 package minitestes;
 
-import br.ufrn.cerescaico.labordoc.gia.dao.DocumentoDao;
 import br.ufrn.cerescaico.labordoc.gia.dao.ImagemDao;
 import br.ufrn.cerescaico.labordoc.gia.modelo.Imagem;
-import br.ufrn.cerescaico.labordoc.gia.negocio.AdministradorMB;
-import br.ufrn.cerescaico.labordoc.gia.util.Util;
-import com.mongodb.gridfs.GridFS;
-import com.mongodb.gridfs.GridFSDBFile;
-import com.mongodb.gridfs.GridFSFile;
-import com.mongodb.gridfs.GridFSInputFile;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 
 /**
  *
@@ -101,32 +92,94 @@ public class Teste {
 //        File f3 = new File("d:/output/DSC05752.JPG");
 //        File f4 = new File("d:/output/DSC05753.JPG");
 //        File f5 = new File("d:/output/DSC05754.JPG");
+//        
 //        FileInputStream fis = new FileInputStream(f1);
-//        Imagem i = new Imagem(f1.getName(), fis);
+//        Imagem i = new Imagem();
+//        StreamedContent sc = new DefaultStreamedContent(fis, "image/jpeg", f1.getName());
+//        i.setStreamedContent(sc);
 //        dao.criar(i);
+//        fis.close();
+//        
 //        fis = new FileInputStream(f2);
-//        i = new Imagem(f2.getName(), fis);
+//        i = new Imagem();
+//        sc = new DefaultStreamedContent(fis, "image/jpeg", f2.getName());
+//        i.setStreamedContent(sc);
 //        dao.criar(i);
+//        fis.close();
+//        
 //        fis = new FileInputStream(f3);
-//        i = new Imagem(f3.getName(), fis);
+//        i = new Imagem();
+//        sc = new DefaultStreamedContent(fis, "image/jpeg", f3.getName());
+//        i.setStreamedContent(sc);
 //        dao.criar(i);
+//        fis.close();
+//        
 //        fis = new FileInputStream(f4);
-//        i = new Imagem(f4.getName(), fis);
+//        i = new Imagem();
+//        sc = new DefaultStreamedContent(fis, "image/jpeg", f4.getName());
+//        i.setStreamedContent(sc);
 //        dao.criar(i);
+//        fis.close();
+//        
 //        fis = new FileInputStream(f5);
-//        i = new Imagem(f5.getName(), fis);
+//        i = new Imagem();
+//        sc = new DefaultStreamedContent(fis, "image/jpeg", f5.getName());
+//        i.setStreamedContent(sc);
 //        dao.criar(i);
-        File f = new File(AdministradorMB.class.getResource("./_temp/").toURI());
-        ImagemDao dao = new ImagemDao();
-        Imagem i = dao.pesquisar(new Imagem("DSC05751.JPG", null), 0, 0, 0).get(0);
-        OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(f));
-        InputStreamReader isr = new InputStreamReader(i.getInputStream());
-        char[] buffer = new char[4096];
-        int pos = 0;
-        while ((pos = isr.read(buffer, pos, buffer.length)) != 0) {
-            osw.write(buffer, pos - buffer.length, buffer.length);
-        }
-        osw.close();
-        isr.close();
+//        fis.close();
+        
+//        File f = new File(AdministradorMB.class.getResource("./_temp/").toURI() + "\\img.jpg");
+//        ImagemDao dao = new ImagemDao();
+//        Imagem i = dao.pesquisar(new Imagem("DSC05751.JPG", null), 0, 0, 0).get(0);
+//        OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(f));
+//        InputStreamReader isr = new InputStreamReader(i.getInputStream());
+//        char[] buffer = new char[4096];
+//        int pos = 0;
+//        while ((pos = isr.read(buffer, pos, buffer.length)) != 0) {
+//            osw.write(buffer, pos - buffer.length, buffer.length);
+//        }
+//        osw.close();
+//        isr.close();
+//        InputStream is = null;
+//
+//        try {
+//            // new input stream created
+//            is = new FileInputStream("D:/teste.txt");
+//            BufferedInputStream bis = new BufferedInputStream(is);
+//
+//            System.out.println("Characters printed:");
+//            // create new buffered reader
+//
+//            bis.mark(0);
+//            // reads and prints BufferedReader
+//            System.out.println((char) bis.read());
+//            System.out.println((char) bis.read());
+//
+//            // mark invoked at this position
+////            bis.mark(0);
+//            System.out.println("mark() invoked");
+//            System.out.println((char) bis.read());
+//            System.out.println((char) bis.read());
+//
+//            // reset() repositioned the stream to the mark
+//            if (bis.markSupported()) {
+//                bis.reset();
+//                System.out.println("reset() invoked");
+//                System.out.println((char) bis.read());
+//                System.out.println((char) bis.read());
+//            } else {
+//                System.out.print("InputStream does not support reset()");
+//            }
+//        } catch (Exception e) {
+//
+//            // if any I/O error occurs
+//            e.printStackTrace();
+//        } finally {
+//
+//            // releases system resources associated with this stream
+//            if (is != null) {
+//                is.close();
+//            }
+//        }
     }
 }

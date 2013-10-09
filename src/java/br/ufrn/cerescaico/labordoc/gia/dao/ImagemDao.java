@@ -4,10 +4,17 @@ import br.ufrn.cerescaico.labordoc.gia.modelo.Imagem;
 import br.ufrn.cerescaico.labordoc.gia.negocio.MongoClientSingleton;
 import com.mongodb.DB;
 import com.mongodb.gridfs.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.imageio.ImageIO;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 
 /**
  *
@@ -24,9 +31,39 @@ public class ImagemDao implements DaoIF<Imagem>, Serializable {
 
     @Override
     public Object criar(Imagem e) throws Exception {
-        GridFSInputFile gfsif = gridFS.createFile(e.getInputStream());
-        gfsif.setFilename(e.getNome());
+        StreamedContent sc = e.getStreamedContent();
+        InputStream is = sc.getStream();
+        byte[] buffer = new byte[4096];
+        int pos = 0;
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        while ((pos = is.read(buffer, 0, buffer.length)) != -1) {
+            baos.write(buffer, 0, pos);
+        }
+        ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+        BufferedImage bi = ImageIO.read(bais);
+        String width = String.valueOf(bi.getWidth());
+        String height = String.valueOf(bi.getHeight());
+        bais.close();
+
+        bais = new ByteArrayInputStream(baos.toByteArray());
+        GridFSInputFile gfsif = gridFS.createFile(bais);
+        gfsif.setFilename(sc.getName());
+        gfsif.setContentType(sc.getContentType());
+        gfsif.put("width", width);
+        gfsif.put("height", height);
         gfsif.save();
+        bais.close();
+        baos.close();
+//        BufferedInputStream bis = new BufferedInputStream(e.getInputStream());
+//        BufferedImage bi = ImageIO.read(bis);
+//        int width = bi.getWidth();
+//        int height = bi.getHeight();
+//        GridFSInputFile gfsif = gridFS.createFile(bis);
+//        gfsif.setFilename(e.getNome());
+//        gfsif.setContentType(e.getContentType());
+//        gfsif.put("width", width);
+//        gfsif.put("height", height);
+//        gfsif.save();
         return null;
     }
 
@@ -37,7 +74,7 @@ public class ImagemDao implements DaoIF<Imagem>, Serializable {
 
     @Override
     public Object excluir(Imagem e) throws Exception {
-        gridFS.remove(e.getNome());
+        gridFS.remove(e.getStreamedContent().getName());
         return null;
     }
 
@@ -48,9 +85,20 @@ public class ImagemDao implements DaoIF<Imagem>, Serializable {
             Integer criteria) throws Exception {
 
         List<Imagem> lista = new ArrayList<Imagem>();
-        List<GridFSDBFile> bFiles = gridFS.find(e.getNome());
+        StreamedContent sc = e.getStreamedContent();
+        List<GridFSDBFile> bFiles = gridFS.find(sc.getName());
         for (GridFSDBFile atual : bFiles) {
-            lista.add(new Imagem(atual.getFilename(), atual.getInputStream()));
+            Imagem i = new Imagem();
+            sc = new DefaultStreamedContent(
+                    atual.getInputStream(),
+                    atual.getContentType(),
+                    atual.getFilename());
+            i.setStreamedContent(sc);
+            Object width = atual.get("width");
+            i.setWidth(width == null ? "0" : width.toString());
+            Object height = atual.get("height");
+            i.setHeight(height == null ? "0" : height.toString());
+            lista.add(i);
         }
         return lista;
     }
@@ -58,8 +106,18 @@ public class ImagemDao implements DaoIF<Imagem>, Serializable {
     public List<Imagem> pesquisarImagens(List<String> imagens) {
         List<Imagem> imgs = new ArrayList<Imagem>();
         for (String s : imagens) {
-            GridFSDBFile bFile = gridFS.findOne(s);
-            imgs.add(new Imagem(bFile.getFilename(), bFile.getInputStream()));
+            GridFSDBFile atual = gridFS.findOne(s);
+            Imagem i = new Imagem();
+            StreamedContent sc = new DefaultStreamedContent(
+                    atual.getInputStream(),
+                    atual.getContentType(),
+                    atual.getFilename());
+            i.setStreamedContent(sc);
+            Object width = atual.get("width");
+            i.setWidth(width == null ? "0" : width.toString());
+            Object height = atual.get("height");
+            i.setHeight(height == null ? "0" : height.toString());
+            imgs.add(i);
         }
         return imgs;
     }

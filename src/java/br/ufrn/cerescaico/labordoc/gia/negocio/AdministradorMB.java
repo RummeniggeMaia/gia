@@ -4,18 +4,14 @@ import br.ufrn.cerescaico.labordoc.gia.dao.ImagemDao;
 import br.ufrn.cerescaico.labordoc.gia.modelo.*;
 import br.ufrn.cerescaico.labordoc.gia.util.Consts;
 import br.ufrn.cerescaico.labordoc.gia.util.Util;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.Serializable;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.*;
 import javax.faces.event.ActionEvent;
-import org.primefaces.model.DefaultStreamedContent;
-import org.primefaces.model.StreamedContent;
+import javax.faces.event.AjaxBehaviorEvent;
 
 /**
  *
@@ -30,12 +26,12 @@ public class AdministradorMB extends AbstractUsuarioMB
     private Tipo tipoAux = new Tipo();
     private Usuario usuarioAux = new Usuario();
     private Documento docAux = new Documento();
-    private List<StreamedContent> imagens = new ArrayList<StreamedContent>();
+    private List<Imagem> imagens = new ArrayList<Imagem>();
+    private Imagem imagem = new Imagem();
     private ImagemDao imagemDao;
     private boolean editarUsuario;
     private boolean editarDocumento;
     private boolean editarTipo;
-
 
     public AdministradorMB() {
         super();
@@ -90,8 +86,16 @@ public class AdministradorMB extends AbstractUsuarioMB
         return editarTipo;
     }
 
-    public List<StreamedContent> getImagens() {
+    public List<Imagem> getImagens() {
         return imagens;
+    }
+
+    public Imagem getImagem() {
+        return imagem;
+    }
+
+    public void setImagem(Imagem imagem) {
+        this.imagem = imagem;
     }
 
     public void deletarCampo() {
@@ -414,16 +418,16 @@ public class AdministradorMB extends AbstractUsuarioMB
         }
     }
 
-    public void carregarImagens(ActionEvent ae) {
-        Map<String, Object> attribs = ae.getComponent().getAttributes();
-        Documento doc = (Documento) attribs.get("documento");
-        List<Imagem> imgs = imagemDao.pesquisarImagens(doc.getImagens());
-        for (Imagem i : imgs) {
-            imagens.add(new DefaultStreamedContent(
-                    i.getInputStream(),
-                    "image/jpeg",
-                    i.getNome()));
+    public void carregarImagens() {
+        try {
+            imagens = imagemDao.pesquisarImagens(docAux.getImagens());
+        } catch (Exception e) {
+            Util.addMsg(null, e.getMessage(), FacesMessage.SEVERITY_ERROR);
         }
-        docAux = doc;
+    }
+
+    public void limparImagens(AjaxBehaviorEvent abe) {
+        imagens.clear();
+        imagem = new Imagem();
     }
 }

@@ -14,7 +14,7 @@
                         <p:menuitem value="configurações" icon="ui-icon-gear"
                                     action="config"/>
                         <p:menuitem value="sair" icon="ui-icon-extlink"
-                                    action="#{administradorMB.sairDoSistema()}"/>
+                                    onclick="confirmSair.show()"/>
                     </p:menuButton>
                 </p:toolbarGroup>
             </p:toolbar><br />
@@ -24,6 +24,26 @@
             <p:commandButton 
                 value="Gerenciar usuários" 
                 action="adm_usuarios"/>
+            <p:confirmDialog message="Deseja sair do sistema?"
+                             header="Sair do sistema GIA"
+                             widgetVar="confirmSair"
+                             showEffect="explode"
+                             hideEffect="puff"
+                             appendToBody="true">
+                <p:panel 
+                    style="border: none;text-align: center">
+                    <p:commandButton 
+                        value="Sim"
+                        styleClass="ui-confirmdialog-yes"
+                        oncomplete="confirmSair.hide()"
+                        action="#{administradorMB.sairDoSistema()}"/>
+                    <p:commandButton 
+                        value="Não" 
+                        type="button"
+                        styleClass="ui-confirmdialog-no"
+                        onclick="confirmSair.hide()"/>
+                </p:panel>
+            </p:confirmDialog>
         </h:form>
     </h:body>
 </html>

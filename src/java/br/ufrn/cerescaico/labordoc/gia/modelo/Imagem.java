@@ -1,7 +1,7 @@
 package br.ufrn.cerescaico.labordoc.gia.modelo;
 
-import java.io.InputStream;
 import java.io.Serializable;
+import org.primefaces.model.StreamedContent;
 
 /**
  *
@@ -9,30 +9,40 @@ import java.io.Serializable;
  */
 public class Imagem implements Serializable {
 
-    private String nome;
-    private InputStream inputStream;
+    private StreamedContent streamedContent;
+    private String width = "1024";
+    private String height = "768";
 
     public Imagem() {
     }
 
-    public Imagem(String nome, InputStream inputStream) {
-        this.nome = nome;
-        this.inputStream = inputStream;
+    public Imagem(StreamedContent streamedContent, String width, String height) {
+        this.streamedContent = streamedContent;
+        this.width = width;
+        this.height = height;
     }
 
-    public String getNome() {
-        return nome;
+    public StreamedContent getStreamedContent() {
+        return streamedContent;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setStreamedContent(StreamedContent streamedContent) {
+        this.streamedContent = streamedContent;
     }
 
-    public InputStream getInputStream() {
-        return inputStream;
+    public String getWidth() {
+        return width;
     }
 
-    public void setInputStream(InputStream inputStream) {
-        this.inputStream = inputStream;
+    public void setWidth(String width) {
+        this.width = width;
+    }
+
+    public String getHeight() {
+        return height;
+    }
+
+    public void setHeight(String height) {
+        this.height = height;
     }
 }
