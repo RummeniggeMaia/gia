@@ -5,9 +5,13 @@
 package minitestes;
 
 import br.ufrn.cerescaico.labordoc.gia.dao.ImagemDao;
+import br.ufrn.cerescaico.labordoc.gia.modelo.Documento;
 import br.ufrn.cerescaico.labordoc.gia.modelo.Imagem;
+import br.ufrn.cerescaico.labordoc.gia.util.Util;
 import java.io.File;
 import java.io.FileInputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 
@@ -181,5 +185,13 @@ public class Teste {
 //                is.close();
 //            }
 //        }
+//        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+//        Date dt1 = new Date();
+//        Documento d1 = new Documento();
+//        d1.getCampos().put("data", dt1);
+//        Documento d2 = d1.clonar();
+//        Date dt2 = (Date) d2.getCampos().get("data");
+//        dt2.setTime(3556436536586435465L);
+//        Util.pf("%s %s\n", sdf.format(dt1), sdf.format(dt2));
     }
 }

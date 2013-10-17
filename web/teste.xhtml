@@ -16,29 +16,15 @@
         </style>
     </h:head>
     <h:body>
-        <h:form>
-            <p:panelGrid columns="2">
-                <p:dataTable value="1">
-                    <p:column>
-                        <p:outputLabel value="asdasd"/>
-                    </p:column>
-                    <p:column>
-                        <p:inputText size="75"/><br /><br />
-                        <p:inputText size="75"/><br /><br />
-                        <p:inputText size="75"/><br /><br />
-                        <p:inputText size="75"/><br /><br />
-                        <p:inputText size="75"/>
-                    </p:column>
-                </p:dataTable>
-                <p:dataTable value="1">
-                    <p:column>
-                        <p:outputLabel value="asdasd"/>
-                    </p:column>
-                    <p:column>
-                        <p:outputLabel value="asdasd"/>
-                    </p:column>
-                </p:dataTable>
-            </p:panelGrid>
+        <h:form id="f1">
+            <p:autoComplete value="#{testeMB.tipo}"
+                            completeMethod="#{testeMB.completeTipoNome}"
+                            dropdown="true"
+                            
+                            converter="#{testeMB.tipoConverter}">
+                <p:ajax event="change" update=":f1:x"/>
+            </p:autoComplete>
+            <p:outputLabel id="x" value=">>> #{testeMB.tipo.nome}"/>
         </h:form>
         <p:growl id="msgs" autoUpdate="true" showDetail="true"/>
     </h:body>

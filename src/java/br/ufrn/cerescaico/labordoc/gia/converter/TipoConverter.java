@@ -21,6 +21,9 @@ public class TipoConverter implements Converter {
 
     private List<Tipo> tipos = new ArrayList<Tipo>();
 
+    public TipoConverter() {
+    }
+
     public TipoConverter(List<Tipo> tipos) {
         this.tipos = tipos;
     }

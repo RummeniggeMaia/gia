@@ -11,7 +11,7 @@
                 border: none !important;
             }
             .ui-widget {
-                font-size: 100% !important;
+                font-size: 14px !important;
             }
             .botPag {
                 width: 30px;
@@ -54,7 +54,7 @@
                     <p:commandButton 
                         update=":form_tipos:tabela_campos"
                         value="Limpar campos" 
-                        action="#{administradorMB.limparCampos}">
+                        action="#{administradorMB.limparCampos()}">
                     </p:commandButton>
                 </p:panelGrid>
                 <br />
@@ -92,7 +92,7 @@
                     </p:column>
                     <p:column style="text-align: center">
                         <p:commandButton value="x" 
-                                         action="#{administradorMB.deletarCampo}"
+                                         action="#{administradorMB.deletarCampo()}"
                                          update=":form_tipos:tabela_campos"
                                          >
                             <f:setPropertyActionListener 
@@ -184,15 +184,17 @@
                                      update=":form_tipos:paginacao :form_tipos:tabela_tipos"
                                      process="@this"/>
 
-                    <p:selectOneMenu value="#{administradorMB.paginacaoCtrl.limit}"
+                    <p:selectOneMenu id="limit_tipo"
+                                     value="#{administradorMB.paginacaoCtrl.limit}"
                                      converter="#{administradorMB.converters['nume']}"
-                                     style="margin: -10px 0px -10px 20px;width: 75px">
+                                     style="margin: -10px 0px -10px 20px;width: 75px"
+                                     >
                         <f:selectItem itemValue="5" itemLabel="5"/>
                         <f:selectItem itemValue="10" itemLabel="10"/>
                         <f:selectItem itemValue="15" itemLabel="15"/>
                         <p:ajax update=":form_tipos:paginacao :form_tipos:tabela_tipos"
                                 event="change"
-                                listener="#{administradorMB.realizarPesquisaUsuarios()}"/>
+                                listener="#{administradorMB.limitAlterado}"/>
                     </p:selectOneMenu>
                 </p:panel>
                 <!-- Tabela tipos -->
@@ -327,6 +329,7 @@
                         onclick="confirmSair.hide()"/>
                 </p:panel>
             </p:confirmDialog>
+            <p:growl autoUpdate="true" sticky="true"/>
         </h:form>
     </h:body>
 </html>

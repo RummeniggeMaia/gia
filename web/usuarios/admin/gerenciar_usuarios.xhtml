@@ -147,7 +147,8 @@
                                      update=":form_usuarios:paginacao :form_usuarios:tabela_usuario"
                                      process="@this"/>
 
-                    <p:selectOneMenu value="#{administradorMB.paginacaoCtrl.limit}"
+                    <p:selectOneMenu id="limit_usuario"
+                                     value="#{administradorMB.paginacaoCtrl.limit}"
                                      converter="#{administradorMB.converters['nume']}"
                                      style="margin: -10px 0px -10px 20px;width: 75px">
                         <f:selectItem itemValue="5" itemLabel="5"/>

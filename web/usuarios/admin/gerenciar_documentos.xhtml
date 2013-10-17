@@ -21,8 +21,17 @@
             }
         </style>
     </h:head>
-    <h:body onload="#{usuarioMB.iniciarDocumentos()}">
+    <h:body onload="#{administradorMB.iniciarDocumentos()}">
         <h:form id="form_docs">
+            <p:ajaxStatus 
+                style="position:fixed;right:5px;bottom:5px;z-index: 9999">
+                <f:facet name="start">  
+                    <p:graphicImage value="/imgs/livro.gif"/>  
+                </f:facet>
+                <f:facet name="complete">  
+                    <h:outputText value="" />  
+                </f:facet>  
+            </p:ajaxStatus>
             <p:toolbar>
                 <p:toolbarGroup align="right">
                     <p:menuButton value="#{administradorMB.dono.nome}">
@@ -44,6 +53,7 @@
                         value="Gerenciar tipos de documento"
                         action="adm_tipos"/>
                 </h:panelGrid><br />
+                <!-- Selecionar tipos-->
                 <p:selectOneMenu
                     id="select_tipo"
                     value="#{administradorMB.tipo}"
@@ -80,14 +90,19 @@
                             rendered="#{campoAtual.tipoDeDado ne 'data'}">
                             <p:ajax process="@this" event="blur"/>
                         </p:inputText>
-                        <p:calendar value="#{campoAtual.valor}"
+                        <p:calendar id="data_doc" 
+                                    value="#{campoAtual.valor}"
                                     effect="drop"
                                     locale="pt"
                                     navigator="true"
                                     title="Data de nascimento"
                                     pattern="dd/MM/yyyy"
                                     converter="#{administradorMB.converters[campoAtual.tipoDeDado]}"
-                                    rendered="#{campoAtual.tipoDeDado eq 'data'}"/>
+                                    rendered="#{campoAtual.tipoDeDado eq 'data'}">
+                            <p:watermark 
+                                value="01/01/1970" 
+                                for="data_doc"/>
+                        </p:calendar>
                     </p:column>
                 </p:dataTable><br />
                 <!-- Botoes -->
@@ -114,7 +129,7 @@
                     <p:commandButton 
                         value="Editar documento"
                         update=":form_docs:tabela_docs :form_docs:select_tipo :form_docs:grid_campos :form_docs:grid_botoes"
-                        action="#{administradorMB.editarDocumento}"
+                        action="#{administradorMB.editarDocumento()}"
                         rendered="#{administradorMB.editarDocumento}">
                         <p:effect type="slide" event="load">
                             <f:param name="mode" value="'show'"/>
@@ -176,15 +191,16 @@
                                      update=":form_docs:paginacao :form_docs:tabela_docs"
                                      process="@this"/>
 
-                    <p:selectOneMenu value="#{administradorMB.paginacaoCtrl.limit}"
+                    <p:selectOneMenu id="limit_doc"
+                                     value="#{administradorMB.paginacaoCtrl.limit}"
                                      converter="#{administradorMB.converters['nume']}"
                                      style="margin: -10px 0px -10px 20px;width: 75px">
-                        <f:selectItem itemValue="5" itemLabel="5"/>
+                        <f:selectItem itemValue="5" itemLabel="5"/>  
                         <f:selectItem itemValue="10" itemLabel="10"/>
                         <f:selectItem itemValue="15" itemLabel="15"/>
                         <p:ajax update=":form_docs:paginacao :form_docs:tabela_docs"
                                 event="change"
-                                listener="#{administradorMB.realizarPesquisaDocumentos()}"/>
+                                listener="#{administradorMB.limitAlterado}"/>
                     </p:selectOneMenu>
                 </p:panel>
                 <!-- Tabela de documentos-->
@@ -193,12 +209,14 @@
                     value="#{administradorMB.documentos}"
                     var="linha"
                     emptyMessage="Não há documentos.">
-
+                    <!-- Cabeçalho-->
                     <f:facet name="header">
                         <p:outputLabel value="Tabela vazia" rendered="#{administradorMB.tipo == null}"/>
                     </f:facet>
+                    <!-- Id-->
                     <h:inputHidden value="#{linha.id}"
                                    converter="objectIdConverter"/>
+                    <!-- Colunas-->
                     <p:columns value="#{administradorMB.tipo.campos}" 
                                var="coluna">
                         <f:facet name="header">
@@ -208,17 +226,20 @@
                             value="#{linha.campos[coluna.nome]}"
                             converter="#{administradorMB.converters[coluna.tipoDeDado]}"/>
                     </p:columns>
-                    <p:column rendered="#{administradorMB.tipo != null}">
+                    <!-- Editar -->
+                    <p:column rendered="#{administradorMB.tipo != null}"
+                              style="text-align: center">
                         <f:facet name="header">
                             <p:outputLabel value="Editar"/>
                         </f:facet>
-                        <p:commandLink value="editar"
-                                       action="#{administradorMB.iniciarEdidarDocumento()}"
+                        <p:commandLink action="#{administradorMB.iniciarEdidarDocumento()}"
                                        update=":form_docs:select_tipo :form_docs:grid_campos :form_docs:grid_botoes"
                                        actionListener="#{administradorMB.carregarDocumento}">
                             <f:attribute name="documento" value="#{linha}"/>
+                            <p:graphicImage value="/imgs/24.png" width="32" height="32"/>
                         </p:commandLink>
                     </p:column>
+                    <!-- Excluir -->
                     <p:column style="text-align: center" 
                               rendered="#{administradorMB.tipo != null}">
                         <f:facet name="header">
@@ -232,13 +253,17 @@
                                 target="#{administradorMB.docAux}"/>
                         </p:commandButton>
                     </p:column>
-                    <p:column>
-                        <p:commandLink value="Img"
-                                       oncomplete="dialogImagens.show()"
+                    <!-- Imagem -->
+                    <p:column style="text-align: center">
+                        <f:facet name="header">
+                            <p:outputLabel value="Imagens"/>
+                        </f:facet>
+                        <p:commandLink oncomplete="dialogImagens.show()"
                                        action="#{administradorMB.carregarImagens()}"
                                        update=":form_docs:lista_imgs">
                             <f:setPropertyActionListener value="#{linha}"
                                                          target="#{administradorMB.docAux}"/>
+                            <p:graphicImage value="/imgs/jpeg.png" width="32" height="32"/>
                         </p:commandLink>
                     </p:column>
                 </p:dataTable>
@@ -246,6 +271,7 @@
 
             <p:growl id="msgs" sticky="true" autoUpdate="true"/>
             <!-- Dialogs -->
+            <!-- Confirm excluir documento -->
             <p:confirmDialog
                 message="Deseja excluir este documento?"
                 header="Excluir documento"
@@ -268,38 +294,7 @@
                         onclick="confirmExcluirDoc.hide()"/>
                 </p:panel>
             </p:confirmDialog>
-            <p:dialog header="Imagens"
-                      widgetVar="dialogImagens"
-                      showEffect="explode"
-                      hideEffect="puff"
-                      modal="true"
-                      appendToBody="true"
-                      width="1024"
-                      height="600" >
-
-                <p:layout>
-                    <p:layoutUnit position="center">
-                        <p:graphicImage id="imagem" value="#{administradorMB.imagem.streamedContent}"
-                                        width="#{administradorMB.imagem.width}" 
-                                        height="#{administradorMB.imagem.height}"/>
-                    </p:layoutUnit>
-                    <p:layoutUnit position="west" 
-                                  header="Links das imagens"
-                                  size="200">
-                        <p:dataList id="lista_imgs" 
-                                    value="#{administradorMB.imagens}" 
-                                    var="img">
-                            <p:commandLink value="#{img.streamedContent.name}"
-                                           update=":form_docs:imagem">
-                                <f:setPropertyActionListener value="#{img}"
-                                                             target="#{administradorMB.imagem}"/>
-                            </p:commandLink>
-                        </p:dataList>
-                    </p:layoutUnit>
-                    
-                </p:layout>
-                <p:ajax event="close" listener="#{administradorMB.limparImagens}"/>
-            </p:dialog>
+            <!-- Confirm sair do sistema -->
             <p:confirmDialog message="Deseja sair do sistema?"
                              header="Sair do sistema GIA"
                              widgetVar="confirmSair"
@@ -318,6 +313,99 @@
                         type="button"
                         styleClass="ui-confirmdialog-no"
                         onclick="confirmSair.hide()"/>
+                </p:panel>
+            </p:confirmDialog>
+            <!-- Dialog imagem -->
+            <p:dialog header="Imagens"
+                      widgetVar="dialogImagens"
+                      showEffect="explode"
+                      hideEffect="puff"
+                      modal="true"
+                      width="90%"
+                      height="600" 
+                      resizable="false">
+
+                <p:layout>
+                    <p:layoutUnit position="west" 
+                                  size="25%" 
+                                  header="Links das imagens"
+                                  resizable="true" 
+                                  collapsible="true">
+                        <p:dataTable id="lista_imgs" 
+                                     value="#{administradorMB.imagens}" 
+                                     var="img"
+                                     resizableColumns="true" 
+                                     emptyMessage="Não há imagens">
+                            <p:column width="85%">
+                                <p:commandLink value="#{img.nome}" 
+                                               update=":form_docs:imagem">
+                                    <f:setPropertyActionListener value="#{img}"
+                                                                 target="#{administradorMB.imagem}"/>
+                                </p:commandLink>
+                            </p:column>
+                            <p:column>
+                                <p:commandButton icon="ui-icon-close"
+                                                 oncomplete="confirmApagarImagem.show()">
+                                    <f:setPropertyActionListener value="#{img}"
+                                                                 target="#{administradorMB.imagemAux}"/>
+                                </p:commandButton>
+                            </p:column>
+                        </p:dataTable>
+                        <p:commandButton value="Carregar imagens..."
+                                         onclick="dialogUpload.show()"/>
+                    </p:layoutUnit>
+                    <p:layoutUnit position="center" size="75%">
+                        <p:graphicImage id="imagem" value="#{administradorMB.imagemStreamedContent()}"
+                                        width="#{administradorMB.imagem.width}" 
+                                        height="#{administradorMB.imagem.height}"/>
+                    </p:layoutUnit>
+                </p:layout>
+                <p:ajax event="close" 
+                        update=":form_docs:paginacao :form_docs:tabela_docs"
+                        listener="#{administradorMB.limparImagens}"/>
+            </p:dialog>
+            <p:dialog widgetVar="dialogUpload"
+                      header="Carregar Imagens"
+                      width="60%"
+                      height="400"
+                      modal="true"
+                      showEffect="explode"
+                      hideEffect="puff">
+
+                <p:fileUpload multiple="true" 
+                              fileUploadListener="#{administradorMB.handleFileUpload}"
+                              label="Escolher..."
+                              cancelLabel="Cancelar"
+                              uploadLabel="Carregar"
+                              allowTypes="/(\.|\/)(jpe?g|png)$/"
+                              mode="advanced"
+                              invalidFileMessage="Arquivo inválido. Use apenas imagens .jpg e .png"
+                              invalidSizeMessage="Imagem grande demais. Máximo 10 MB."
+                              sizeLimit="10485760"
+                              update=":form_docs:lista_imgs">
+
+                    Escolha as imagens
+                </p:fileUpload>
+            </p:dialog>
+            <p:confirmDialog message="Deseja apagar esta imagem?"
+                             header="Deletar iamgem"
+                             widgetVar="confirmApagarImagem"
+                             showEffect="explode"
+                             hideEffect="puff"
+                             appendToBody="true">
+                <p:panel 
+                    style="border: none;text-align: center">
+                    <p:commandButton 
+                        value="Sim"
+                        styleClass="ui-confirmdialog-yes"
+                        oncomplete="confirmApagarImagem.hide()"
+                        action="#{administradorMB.deletarImagem()}"
+                        update=":form_docs:lista_imgs"/>
+                    <p:commandButton 
+                        value="Não" 
+                        type="button"
+                        styleClass="ui-confirmdialog-no"
+                        onclick="confirmApagarImagem.hide()"/>
                 </p:panel>
             </p:confirmDialog>
         </h:form>

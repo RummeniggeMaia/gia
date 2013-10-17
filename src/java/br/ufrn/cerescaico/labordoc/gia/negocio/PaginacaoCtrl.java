@@ -31,7 +31,6 @@ public class PaginacaoCtrl implements Serializable {
 
     public void setLimit(int limit) {
         this.limit = limit;
-        primeira();
     }
 
     public int getCont() {
@@ -128,4 +127,4 @@ public class PaginacaoCtrl implements Serializable {
         }
         return 0;
     }
-}
+} 

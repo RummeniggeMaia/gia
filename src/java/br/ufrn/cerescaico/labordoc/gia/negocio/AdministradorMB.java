@@ -4,14 +4,13 @@ import br.ufrn.cerescaico.labordoc.gia.dao.ImagemDao;
 import br.ufrn.cerescaico.labordoc.gia.modelo.*;
 import br.ufrn.cerescaico.labordoc.gia.util.Consts;
 import br.ufrn.cerescaico.labordoc.gia.util.Util;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.io.*;
+import java.util.*;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.*;
-import javax.faces.event.ActionEvent;
-import javax.faces.event.AjaxBehaviorEvent;
+import javax.faces.event.*;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.*;
 
 /**
  *
@@ -27,7 +26,8 @@ public class AdministradorMB extends AbstractUsuarioMB
     private Usuario usuarioAux = new Usuario();
     private Documento docAux = new Documento();
     private List<Imagem> imagens = new ArrayList<Imagem>();
-    private Imagem imagem = new Imagem();
+    private Imagem imagem = new Imagem("1024", "600");
+    private Imagem imagemAux;
     private ImagemDao imagemDao;
     private boolean editarUsuario;
     private boolean editarDocumento;
@@ -72,6 +72,27 @@ public class AdministradorMB extends AbstractUsuarioMB
 
     public void setDocAux(Documento docAux) {
         this.docAux = docAux;
+    }
+
+    public Imagem getImagemAux() {
+        return imagemAux;
+    }
+
+    public StreamedContent imagemStreamedContent() {
+        StreamedContent sc = null;
+        if (imagem.getConteudo() != null) {
+            ByteArrayInputStream bais =
+                    new ByteArrayInputStream(imagem.getConteudo());
+            sc = new DefaultStreamedContent(
+                    bais,
+                    imagem.getContentType(),
+                    imagem.getNome());
+        }
+        return sc;
+    }
+
+    public void setImagemAux(Imagem imagemAux) {
+        this.imagemAux = imagemAux;
     }
 
     public boolean isEditarUsuario() {
@@ -271,7 +292,6 @@ public class AdministradorMB extends AbstractUsuarioMB
         } catch (Exception e) {
             Util.addMsg(null, e.getMessage(), FacesMessage.SEVERITY_WARN);
         }
-
     }
 
     public void iniciarUsuarios() {
@@ -287,6 +307,7 @@ public class AdministradorMB extends AbstractUsuarioMB
         paginacaoCtrl = new PaginacaoCtrl();
         cancelarEditarDocumento();
         docAux = new Documento();
+        tipo = null;
     }
 
     public void pesquisarUsuarios() {
@@ -428,6 +449,46 @@ public class AdministradorMB extends AbstractUsuarioMB
 
     public void limparImagens(AjaxBehaviorEvent abe) {
         imagens.clear();
-        imagem = new Imagem();
+        imagem = new Imagem("1024", "600");
+    }
+
+    public void handleFileUpload(FileUploadEvent fue) {
+        try {
+            Imagem nova = new Imagem();
+            UploadedFile uf = fue.getFile();
+            nova.setNome(uf.getFileName());
+            nova.setContentType(uf.getContentType());
+            nova.setConteudo(uf.getContents());
+            imagemDao.criar(nova);
+            docAux.getImagens().add(uf.getFileName());
+            documentoDao.editarImagens(docAux);
+            imagens.add(nova);
+        } catch (Exception e) {
+            Util.addMsg(null, e.getMessage(), FacesMessage.SEVERITY_ERROR);
+        }
+    }
+
+    public void deletarImagem() {
+        try {
+            String img = imagemAux.getNome();
+            docAux.getImagens().remove(img);
+            imagemDao.excluir(imagemAux);
+            documentoDao.editarImagens(docAux);
+            imagens.remove(imagemAux);
+        } catch (Exception e) {
+            Util.addMsg(null, e.getMessage(), FacesMessage.SEVERITY_ERROR);
+        }
+    }
+
+    public void limitAlterado(AjaxBehaviorEvent abe) {
+        paginacaoCtrl.primeira();
+        String cmd = abe.getComponent().getId();
+        if (cmd.equals("limit_usuario")) {
+            realizarPesquisaUsuarios();
+        } else if (cmd.equals("limit_tipo")) {
+            realizarPesquisaTipos();
+        } else if (cmd.equals("limit_doc")) {
+            realizarPesquisaDocumentos();
+        }
     }
 }

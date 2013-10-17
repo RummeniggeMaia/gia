@@ -1,7 +1,6 @@
 package br.ufrn.cerescaico.labordoc.gia.modelo;
 
 import java.io.Serializable;
-import org.primefaces.model.StreamedContent;
 
 /**
  *
@@ -9,25 +8,43 @@ import org.primefaces.model.StreamedContent;
  */
 public class Imagem implements Serializable {
 
-    private StreamedContent streamedContent;
-    private String width = "1024";
-    private String height = "768";
+    private String nome;
+    private String contentType;
+    private String width;
+    private String height;
+    private byte[] conteudo;
 
     public Imagem() {
     }
 
-    public Imagem(StreamedContent streamedContent, String width, String height) {
-        this.streamedContent = streamedContent;
+    public Imagem(String width, String height) {
         this.width = width;
         this.height = height;
     }
 
-    public StreamedContent getStreamedContent() {
-        return streamedContent;
+    public Imagem(String nome, String contentType, String width, String height, 
+            byte[] conteudo) {
+        this.nome = nome;
+        this.contentType = contentType;
+        this.width = width;
+        this.height = height;
+        this.conteudo = conteudo;
     }
 
-    public void setStreamedContent(StreamedContent streamedContent) {
-        this.streamedContent = streamedContent;
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getContentType() {
+        return contentType;
+    }
+
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
     }
 
     public String getWidth() {
@@ -44,5 +61,13 @@ public class Imagem implements Serializable {
 
     public void setHeight(String height) {
         this.height = height;
+    }
+
+    public byte[] getConteudo() {
+        return conteudo;
+    }
+
+    public void setConteudo(byte[] conteudo) {
+        this.conteudo = conteudo;
     }
 }

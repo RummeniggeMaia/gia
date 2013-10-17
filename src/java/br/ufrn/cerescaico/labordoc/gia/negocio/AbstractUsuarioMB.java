@@ -4,10 +4,7 @@ import br.ufrn.cerescaico.labordoc.gia.converter.*;
 import br.ufrn.cerescaico.labordoc.gia.dao.*;
 import br.ufrn.cerescaico.labordoc.gia.modelo.*;
 import br.ufrn.cerescaico.labordoc.gia.util.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import javax.faces.application.FacesMessage;
 import javax.faces.convert.Converter;
 
@@ -70,13 +67,6 @@ public abstract class AbstractUsuarioMB {
     }
 
     public Usuario getUsuario() {
-//        if (usuarios != null && usuario != null) {
-//            for (Usuario atual : usuarios) {
-//                if (usuario.equals(atual)) {
-//                    usuario = atual;
-//                }
-//            }
-//        }
         return usuario;
     }
 
@@ -101,13 +91,6 @@ public abstract class AbstractUsuarioMB {
     }
 
     public Documento getDocumento() {
-//        if (documentos != null && documento != null) {
-//            for (Documento atual : documentos) {
-//                if (documento.equals(atual)) {
-//                    documento = atual;
-//                }
-//            }
-//        }
         return documento;
     }
 
@@ -131,14 +114,7 @@ public abstract class AbstractUsuarioMB {
         this.documentoDao = documentoDao;
     }
 
-    public Tipo getTipo() {
-//        if (tipo != null && tipos != null) {
-//            for (Tipo atual : tipos) {
-//                if (tipo.equals(atual)) {
-//                    tipo = atual;
-//                }
-//            }
-//        }
+    public Tipo getTipo() { 
         return tipo;
     }
 

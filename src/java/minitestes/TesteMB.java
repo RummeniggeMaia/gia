@@ -10,10 +10,15 @@ import br.ufrn.cerescaico.labordoc.gia.negocio.PaginacaoCtrl;
 import br.ufrn.cerescaico.labordoc.gia.util.Consts;
 import br.ufrn.cerescaico.labordoc.gia.util.Util;
 import br.ufrn.cerescaico.labordoc.gia.converter.NumeConverter;
+import br.ufrn.cerescaico.labordoc.gia.converter.TipoConverter;
+import br.ufrn.cerescaico.labordoc.gia.dao.TipoDao;
+import br.ufrn.cerescaico.labordoc.gia.modelo.Tipo;
 import br.ufrn.cerescaico.labordoc.gia.validator.ValidarUsuarioCPF;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -32,60 +37,61 @@ public class TesteMB implements Serializable {
 
     private Usuario usuario;
     private UsuarioDao usuarioDao;
-    private List<Usuario> users = new ArrayList<Usuario>();
+    public static List<Usuario> users = new ArrayList<Usuario>();
     private PaginacaoCtrl paginacaoCtrl;
     private Converter ic = new NumeConverter();
     private Validator v = new ValidarUsuarioCPF();
-    private Converter c;
+    private Converter c = new TesteConv();
     private StreamedContent img;
+    private TipoDao tipoDao;
+    private Tipo tipo;
+    private List<Tipo> tipos;
+    private Converter tipoConverter;
 
     public StreamedContent getImg() {
         return img;
     }
     
     public TesteMB() {
-//        try {
-//            GridFS fS = new DocumentoDao().getGridFS();
-//            GridFSDBFile dBFile = fS.findOne("violao");
-//            img = new DefaultStreamedContent(dBFile.getInputStream(), "image/jpeg");
-//        } catch (Exception ex) {
-//            Logger.getLogger(TesteMB.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        c = new Converter() {
-//
-//            @Override
-//            public Object getAsObject(FacesContext context, UIComponent component, String value) {
-//                return value == null ? "null" : value.trim();
-//            }
-//
-//            @Override
-//            public String getAsString(FacesContext context, UIComponent component, Object value) {
-//                return value.toString();
-//            }
-//        };
-//        try {
-//            usuario = new Usuario();
-//            usuarioDao = new UsuarioDao();
-//            users = new ArrayList<Usuario>();
-//            paginacaoCtrl = new PaginacaoCtrl();
-//        } catch (Exception e) {
-//            Util.addMsg(null, e.getMessage(), FacesMessage.SEVERITY_ERROR);
-//        }
-        Usuario u1 = new Usuario();
-        u1.setNome("joao");
-        Usuario u2 = new Usuario();
-        u2.setNome("chico");
-        Usuario u3 = new Usuario();
-        u3.setNome("jose");
-        Usuario u4 = new Usuario();
-        u4.setNome("tereza");
-        Usuario u5 = new Usuario();
-        u5.setNome("tico");
-        users.add(u1);
-        users.add(u2);
-        users.add(u3);
-        users.add(u4);
-        users.add(u5);
+        try {
+            tipoDao = new TipoDao();
+            tipo = new Tipo();
+            tipos = new ArrayList<Tipo>();
+            tipoConverter = new TipoConverter(tipos);
+            tipos = tipoDao.pesquisarTodos(Tipo.class);
+    //        try {
+    //            GridFS fS = new DocumentoDao().getGridFS();
+    //            GridFSDBFile dBFile = fS.findOne("violao");
+    //            img = new DefaultStreamedContent(dBFile.getInputStream(), "image/jpeg");
+    //        } catch (Exception ex) {
+    //            Logger.getLogger(TesteMB.class.getName()).log(Level.SEVERE, null, ex);
+    //        }
+    //        try {
+    //            usuario = new Usuario();
+    //            usuarioDao = new UsuarioDao();
+    //            users = new ArrayList<Usuario>();
+    //            paginacaoCtrl = new PaginacaoCtrl();
+    //        } catch (Exception e) {
+    //            Util.addMsg(null, e.getMessage(), FacesMessage.SEVERITY_ERROR);
+    //        }
+    //        Usuario u1 = new Usuario();
+    //        u1.setNome("joao");
+    //        Usuario u2 = new Usuario();
+    //        u2.setNome("chico");
+    //        Usuario u3 = new Usuario();
+    //        u3.setNome("jose");
+    //        Usuario u4 = new Usuario();
+    //        u4.setNome("tereza");
+    //        Usuario u5 = new Usuario();
+    //        u5.setNome("tico");
+    //        users.add(u1);
+    //        users.add(u2);
+    //        users.add(u3);
+    //        users.add(u5);
+    //        users.add(u5);
+        } catch (Exception ex) {
+            Logger.getLogger(TesteMB.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public Usuario getUsuario() {
@@ -196,5 +202,39 @@ public class TesteMB implements Serializable {
             }
         }
         return lista;
+    }
+    
+    public List<String> completeTipoNome(String q) {
+        List<String> lista = new ArrayList<String>();
+        for (Tipo t : tipos) {
+            if (t.getNome().matches(q + ".*")) {
+                lista.add(t.getNome());
+            }
+        }
+        return lista;
+    }
+
+    public Tipo getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(Tipo tipo) {
+        this.tipo = tipo;
+    }
+
+    public List<Tipo> getTipos() {
+        return tipos;
+    }
+
+    public void setTipos(List<Tipo> tipos) {
+        this.tipos = tipos;
+    }
+
+    public Converter getTipoConverter() {
+        return tipoConverter;
+    }
+
+    public void setTipoConverter(Converter tipoConverter) {
+        this.tipoConverter = tipoConverter;
     }
 }

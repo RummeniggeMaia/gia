@@ -44,6 +44,7 @@ public class DocumentoDao extends MongoDao<Documento>
                 e.getTipo().getId());
         BasicDBObject dBObject = new BasicDBObject(e.getCampos());
         dBObject.append(Consts.CAMPO_TIPO, bRef);
+        dBObject.append("imagens", e.getImagens());
         WriteResult wr =
                 dataStore.getCollection(Documento.class).insert(dBObject);
         return wr;
@@ -56,6 +57,7 @@ public class DocumentoDao extends MongoDao<Documento>
                 Consts.COLECAO_TIPOS, 
                 e.getTipo().getId());
         BasicDBObject update = new BasicDBObject(e.getCampos());
+        update.put("imagens", e.getImagens());
         update.append(Consts.CAMPO_TIPO, bRef);
         BasicDBObject query = new BasicDBObject(Consts._ID, e.getId());
         return dataStore.getCollection(Documento.class).update(query, update);
@@ -91,7 +93,7 @@ public class DocumentoDao extends MongoDao<Documento>
             campos.remove(Consts.CAMPO_TIPO);
             atual.setCampos(campos);
             List<String> imgs = (List<String>) campos.get("imagens");
-            atual.setImagens(imgs);
+            atual.setImagens(imgs == null ? new ArrayList<String>() : imgs);
             campos.remove("imagens");
             documentos.add(atual);
         }
@@ -109,5 +111,12 @@ public class DocumentoDao extends MongoDao<Documento>
         DBCollection dBCollection = dataStore.getCollection(Documento.class);
         DBCursor dBCursor = dBCollection.find(dBObject);
         return dBCursor.count();
+    }
+    
+    public void editarImagens(Documento d) {
+        BasicDBObject update = new BasicDBObject(
+                "$set", new BasicDBObject("imagens", d.getImagens()));
+        BasicDBObject query = new BasicDBObject(Consts._ID, d.getId());
+        dataStore.getCollection(Documento.class).update(query, update);
     }
 }

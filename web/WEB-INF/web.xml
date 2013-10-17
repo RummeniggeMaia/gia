@@ -27,7 +27,7 @@
         <param-value>server</param-value>  
     </context-param>  
     <welcome-file-list>
-        <welcome-file>/visitante/login.jsf</welcome-file>
+        <welcome-file>visitante/login.jsf</welcome-file>
     </welcome-file-list>
     <context-param>
         <param-name>javax.faces.INTERPRET_EMPTY_STRING_SUBMITTED_VALUES_AS_NULL</param-name>
