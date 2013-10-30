@@ -6,7 +6,6 @@ package br.ufrn.cerescaico.labordoc.gia.dao;
 
 import br.ufrn.cerescaico.labordoc.gia.dao.criteria.*;
 import br.ufrn.cerescaico.labordoc.gia.modelo.Tipo;
-import br.ufrn.cerescaico.labordoc.gia.modelo.Usuario;
 import br.ufrn.cerescaico.labordoc.gia.util.Consts;
 import com.google.code.morphia.query.Query;
 import java.io.Serializable;

@@ -6,7 +6,7 @@ package minitestes;
 
 import br.ufrn.cerescaico.labordoc.gia.dao.UsuarioDao;
 import br.ufrn.cerescaico.labordoc.gia.modelo.Usuario;
-import br.ufrn.cerescaico.labordoc.gia.negocio.PaginacaoCtrl;
+import br.ufrn.cerescaico.labordoc.gia.negocio.Paginacao;
 import br.ufrn.cerescaico.labordoc.gia.util.Consts;
 import br.ufrn.cerescaico.labordoc.gia.util.Util;
 import br.ufrn.cerescaico.labordoc.gia.converter.NumeConverter;
@@ -38,7 +38,7 @@ public class TesteMB implements Serializable {
     private Usuario usuario;
     private UsuarioDao usuarioDao;
     public static List<Usuario> users = new ArrayList<Usuario>();
-    private PaginacaoCtrl paginacaoCtrl;
+    private Paginacao paginacaoCtrl;
     private Converter ic = new NumeConverter();
     private Validator v = new ValidarUsuarioCPF();
     private Converter c = new TesteConv();
@@ -57,7 +57,7 @@ public class TesteMB implements Serializable {
             tipoDao = new TipoDao();
             tipo = new Tipo();
             tipos = new ArrayList<Tipo>();
-            tipoConverter = new TipoConverter(tipos);
+//            tipoConverter = new TipoConverter(tipos);
             tipos = tipoDao.pesquisarTodos(Tipo.class);
     //        try {
     //            GridFS fS = new DocumentoDao().getGridFS();
@@ -70,7 +70,7 @@ public class TesteMB implements Serializable {
     //            usuario = new Usuario();
     //            usuarioDao = new UsuarioDao();
     //            users = new ArrayList<Usuario>();
-    //            paginacaoCtrl = new PaginacaoCtrl();
+    //            paginacaoCtrl = new Paginacao();
     //        } catch (Exception e) {
     //            Util.addMsg(null, e.getMessage(), FacesMessage.SEVERITY_ERROR);
     //        }
@@ -129,11 +129,11 @@ public class TesteMB implements Serializable {
         }
     }
 
-    public PaginacaoCtrl getPesquisaCtrl() {
+    public Paginacao getPesquisaCtrl() {
         return paginacaoCtrl;
     }
 
-    public void setPesquisaCtrl(PaginacaoCtrl pesquisaCtrl) {
+    public void setPesquisaCtrl(Paginacao pesquisaCtrl) {
         this.paginacaoCtrl = pesquisaCtrl;
     }
 

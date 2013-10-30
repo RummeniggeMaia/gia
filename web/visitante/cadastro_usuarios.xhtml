@@ -21,90 +21,85 @@
     </h:head>
     <h:body>
         <h:form id="form_criar_conta">
-            <p:panel header="Criar conta no sistema GIA">
+            <p:toolbar>
+                <p:toolbarGroup align="left">
+                    <p:commandButton value="&lt;&lt; Voltar"
+                                     action="voltar"/>
+                </p:toolbarGroup>
+            </p:toolbar>
+            <p:panel header="Criar conta no sistema GIA" >
                 <p:panelGrid columns="3" styleClass="semBorda">
 
                     <p:outputLabel value="Login:"/>
-                    <p:inputText id="campoLogin" 
+                    <p:inputText id="campo_login" 
                                  value="#{visitanteMB.usuario.login}">
-                        <p:watermark value="login" for="campoLogin"/>
+                        <p:watermark value="login" for="campo_login"/>
                         <p:ajax event="blur" process="@this" update="msgLogin"
                                 listener="#{visitanteMB.contemLogin}"/>
-                        <f:validator binding="#{visitanteMB.validadores['login']}"/>
-                        <f:converter binding="#{visitanteMB.campoVazioConverter}"/>
                     </p:inputText>
-                    <p:message id="msgLogin" for="campoLogin"/>
+                    <p:message id="msgLogin" for="campo_login"/>
 
                     <p:outputLabel value="Senha:"/>
-                    <p:password id="campoSenha" 
+                    <p:password id="campo_senha" 
                                 value="#{visitanteMB.usuario.senha}"
                                 feedback="true"
                                 goodLabel="Boa"
                                 promptLabel="Digite a senha"
                                 strongLabel="Forte"
-                                weakLabel="Fraca"
-                                match="campoConfirmSenha"
-                                validatorMessage="Senha com no mínimo 4 caracteres."
-                                required="true">
-                        <p:watermark value="digite sua senha" for="campoSenha"/>
-                        <f:validateLength minimum="4"/>
+                                weakLabel="Fraca">
+                        <p:watermark value="digite sua senha" for="campo_senha"/>
                     </p:password>
-                    <p:message for="campoSenha"/>
+                    <p:message for="campo_senha"/>
 
                     <p:outputLabel value="Confirme sua senha:"/>
-                    <p:password id="campoConfirmSenha"
-                                value="#{visitanteMB.usuario.senha}">
-                        <p:watermark value="confirme a senha" for="campoConfirmSenha"/>
+                    <p:password id="campo_confirm_senha" 
+                                value="#{visitanteMB.confirmSenha}">
+                        <p:watermark value="confirme a senha" 
+                                     for="campo_confirm_senha"/>
                     </p:password>
-                    <p:message for="campoConfirmSenha"/>
+                    <p:message for="campo_confirm_senha"/>
 
                     <h:panelGroup layout="block"/>
                     <h:panelGroup layout="block" style="margin-bottom: 30px"/>
                     <h:panelGroup layout="block"/>
 
                     <p:outputLabel value="Nome:"/>
-                    <p:inputText id="campoNome"
+                    <p:inputText id="campo_nome"
                                  value="#{visitanteMB.usuario.nome}"
-                                 size="50"
-                                 required="true">
-                        <p:watermark value="nome e sobrenome" for="campoNome"/>
-                        <f:validator binding="#{visitanteMB.validadores['nome']}"/>
-                        <f:converter binding="#{visitanteMB.campoVazioConverter}"/>
+                                 size="50">
+                        <p:watermark value="nome e sobrenome" for="campo_nome"/>
                     </p:inputText>
-                    <p:message for="campoNome"/>
+                    <p:message for="campo_nome"/>
 
                     <p:outputLabel value="E-mail:"/>
-                    <p:inputText id="campoEmail"
+                    <p:inputText id="campo_email"
                                  value="#{visitanteMB.usuario.email}"
                                  size="50"
-                                 required="true"
                                  validatorMessage="Email inválido.">
-                        <p:watermark value="exemplo@meuemail.com" for="campoEmail"/>
-                        <f:validator binding="#{visitanteMB.validadores['email']}"/>
+                        <p:watermark value="exemplo@meuemail.com" 
+                                     for="campo_email"/>
                     </p:inputText>
-                    <p:message for="campoEmail"/>
+                    <p:message for="campo_email"/>
 
                     <p:outputLabel value="CPF:"/>
-                    <p:inputMask id="campoCpf"
+                    <p:inputMask id="campo_cpf"
                                  value="#{visitanteMB.usuario.cpf}" 
                                  mask="999.999.999-99"
-                                 required="true"
                                  validatorMessage="CPF inválido. Preencha o campo completamente">
-                        <p:watermark value="___.___.___-__" for="campoCpf"/>
-                        <f:validator binding="#{visitanteMB.validadores['cpf']}"/>
+                        <p:watermark value="___.___.___-__" for="campo_cpf"/>
                     </p:inputMask>
-                    <p:message for="campoCpf"/>
+                    <p:message for="campo_cpf"/>
 
                     <p:outputLabel value="Matricula:"/>
-                    <p:inputMask id="campoMatricula"
+                    <p:inputMask id="campo_matricula"
                                  value="#{visitanteMB.usuario.matricula}"
                                  mask="9999999999">
-                        <p:watermark value="matrícula" for="campoMatricula"/>
+                        <p:watermark value="matrícula" for="campo_matricula"/>
                     </p:inputMask>
-                    <p:message for="campoMatricula"/>
+                    <p:message for="campo_matricula"/>
 
                     <p:outputLabel value="Data de nascimento:"/>
-                    <p:calendar id="campoDataNasc"
+                    <p:calendar id="campo_data_nasc"
                                 mindate="01/01/1800" 
                                 effect="drop"
                                 locale="pt"
@@ -112,30 +107,37 @@
                                 title="Data de nascimento"
                                 pattern="dd/MM/yyyy"
                                 value="#{visitanteMB.usuario.dataNascimento}"
-                                converter="#{visitanteMB.dataConverter}"
-                                required="true">
+                                converter="#{visitanteMB.dataConverter}">
                         <p:watermark value="#{visitanteMB.data}" 
-                                     for="campoDataNasc"/>
+                                     for="campo_data_nasc"/>
                     </p:calendar>
-                    <p:message for="campoDataNasc"/>
+                    <p:message for="campo_data_nasc"/>
 
                     <p:outputLabel value="Sexo:"/>
-                    <p:selectOneMenu id="comboSexo"
+                    <p:selectOneMenu id="combo_sexo"
                                      value="#{visitanteMB.usuario.sexo}">
                         <f:selectItem itemValue="#{null}" 
                                       itemLabel="Selecione uma opção"/>
                         <f:selectItem itemValue="M" itemLabel="Masculino"/>
                         <f:selectItem itemValue="F" itemLabel="Feminino"/>
-                        <f:selectItem itemValue="O" itemLabel="Outro"/>
                     </p:selectOneMenu>
-                    <p:message for="comboSexo"/>
+                    <p:message for="combo_sexo"/>
 
-                    <p:commandButton value="Criar conta" 
-                                     ajax="true"
-                                     update="@all"
-                                     action="#{visitanteMB.criarUsuario()}"/>
+                    <p:commandButton id="bot_criar_conta"
+                                     value="Criar conta"
+                                     action="#{visitanteMB.criarUsuario()}"
+                                     oncomplete="dlg.show()"/>
                 </p:panelGrid>
             </p:panel>
+            <p:growl sticky="true" autoUpdate="true"/>
+            <p:defaultCommand target="bot_criar_conta"/>
+            <p:dialog widgetVar="dlg"
+                      width="300"
+                      height="400">
+
+                    <p:outputLabel value="ok"/>
+
+            </p:dialog>
         </h:form>
     </h:body>
 </html>

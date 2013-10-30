@@ -19,13 +19,7 @@ import org.bson.types.ObjectId;
  */
 public class TipoConverter implements Converter {
 
-    private List<Tipo> tipos = new ArrayList<Tipo>();
-
     public TipoConverter() {
-    }
-
-    public TipoConverter(List<Tipo> tipos) {
-        this.tipos = tipos;
     }
 
     @Override
@@ -68,13 +62,5 @@ public class TipoConverter implements Converter {
             Object value) {
 
         return value == null ? "" : value.toString();
-    }
-
-    public List<Tipo> getTipos() {
-        return tipos;
-    }
-
-    public void setTipos(List<Tipo> tipos) {
-        this.tipos = tipos;
     }
 }

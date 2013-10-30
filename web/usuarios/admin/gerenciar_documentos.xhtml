@@ -21,7 +21,7 @@
             }
         </style>
     </h:head>
-    <h:body onload="#{administradorMB.iniciarDocumentos()}">
+    <h:body onload="#{administradorMB.preencherDocTipos()}">
         <h:form id="form_docs">
             <p:ajaxStatus 
                 style="position:fixed;right:5px;bottom:5px;z-index: 9999">
@@ -34,7 +34,7 @@
             </p:ajaxStatus>
             <p:toolbar>
                 <p:toolbarGroup align="right">
-                    <p:menuButton value="#{administradorMB.dono.nome}">
+                    <p:menuButton value="#{administradorMB.usuarioModel.dono.nome}">
                         <p:menuitem value="configurações" icon="ui-icon-gear"
                                     action="config"/>
                         <p:menuitem value="sair" icon="ui-icon-extlink"
@@ -56,16 +56,16 @@
                 <!-- Selecionar tipos-->
                 <p:selectOneMenu
                     id="select_tipo"
-                    value="#{administradorMB.tipo}"
+                    value="#{administradorMB.documentoModel.tipo}"
                     converter="#{administradorMB.converters['tipoConverter']}"
-                    disabled="#{administradorMB.editarDocumento}">
+                    disabled="#{administradorMB.documentoModel.editarDocumento}">
 
                     <f:selectItem 
                         itemLabel="Selecione..."
                         itemValue="#{null}"
                         noSelectionOption="true"/>
                     <f:selectItems 
-                        value="#{administradorMB.tipos}"
+                        value="#{administradorMB.documentoModel.tipos}"
                         var="tipoAtual"
                         itemLabel="#{tipoAtual.nome}"
                         itemValue="#{tipoAtual}"/>
@@ -74,7 +74,7 @@
                 <!-- Campos -->
                 <p:dataTable 
                     id="grid_campos"
-                    value="#{administradorMB.tipo.campos}"
+                    value="#{administradorMB.documentoModel.tipo.campos}"
                     var="campoAtual"
                     emptyMessage="Selecione um tipo de documento."
                     styleClass="semBorda">
@@ -93,7 +93,7 @@
                         <p:calendar id="data_doc" 
                                     value="#{campoAtual.valor}"
                                     effect="drop"
-                                    locale="pt"
+                                    locale="pt_BR"
                                     navigator="true"
                                     title="Data de nascimento"
                                     pattern="dd/MM/yyyy"
@@ -110,8 +110,8 @@
                     <p:commandButton 
                         value="Cadastrar documento"
                         update=":form_docs:grid_campos :form_docs:select_tipo :form_docs:msgs"
-                        action="#{administradorMB.criarDocumento}"
-                        rendered="#{!administradorMB.editarDocumento}">
+                        action="#{administradorMB.criarDocumento()}"
+                        rendered="#{!administradorMB.documentoModel.editarDocumento}">
                         <p:effect type="slide" event="load">
                             <f:param name="mode" value="'show'"/>
                         </p:effect>
@@ -120,8 +120,8 @@
                         id="bot_pesq"
                         value="Pesquisar documentos"
                         update=":form_docs:tabela_docs :form_docs:paginacao"
-                        action="#{administradorMB.pesquisarDocumentos}"
-                        rendered="#{!administradorMB.editarDocumento}">
+                        action="#{administradorMB.pesquisarDocumentos()}"
+                        rendered="#{!administradorMB.documentoModel.editarDocumento}">
                         <p:effect type="slide" event="load">
                             <f:param name="mode" value="'show'"/>
                         </p:effect>
@@ -130,7 +130,7 @@
                         value="Editar documento"
                         update=":form_docs:tabela_docs :form_docs:select_tipo :form_docs:grid_campos :form_docs:grid_botoes"
                         action="#{administradorMB.editarDocumento()}"
-                        rendered="#{administradorMB.editarDocumento}">
+                        rendered="#{administradorMB.documentoModel.editarDocumento}">
                         <p:effect type="slide" event="load">
                             <f:param name="mode" value="'show'"/>
                         </p:effect>
@@ -138,7 +138,7 @@
                     <p:commandButton value="Cancelar edição"
                                      action="#{administradorMB.cancelarEditarDocumento()}"
                                      update=":form_docs:grid_botoes :form_docs:grid_campos :form_docs:select_tipo"
-                                     rendered="#{administradorMB.editarDocumento}">
+                                     rendered="#{administradorMB.documentoModel.editarDocumento}">
                         <p:effect type="slide" event="load">
                             <f:param name="mode" value="'show'"/>
                         </p:effect>
@@ -148,26 +148,27 @@
                 <p:panel id="paginacao"
                          styleClass="ui-paginator ui-paginator-top ui-widget-header ui-corner-top">
                     <p:outputLabel style="margin-right: 20px;"
-                                   value="(#{administradorMB.paginacaoCtrl.totalLidos()} de #{administradorMB.paginacaoCtrl.cont})"/>
+                                   value="(#{administradorMB.documentoModel.paginacao.totalLidos()} 
+                                   de #{administradorMB.documentoModel.paginacao.cont})"/>
                     <p:commandButton id="primeira"
                                      icon="ui-icon ui-icon-seek-first"
                                      styleClass="botPag"
-                                     actionListener="#{administradorMB.paginar}"
-                                     disabled="#{!administradorMB.paginacaoCtrl.podeVoltar()}"
+                                     actionListener="#{administradorMB.documentoModel.paginacao.primeira()}"
+                                     disabled="#{!administradorMB.documentoModel.paginacao.podeVoltar()}"
                                      action="#{administradorMB.realizarPesquisaDocumentos()}"
                                      update=":form_docs:paginacao :form_docs:tabela_docs"
                                      process="@this"/>
                     <p:commandButton id="anterior" 
                                      icon="ui-icon ui-icon-seek-prev"
                                      styleClass="botPag"
-                                     actionListener="#{administradorMB.paginar}"
-                                     disabled="#{!administradorMB.paginacaoCtrl.podeVoltar()}"
+                                     actionListener="#{administradorMB.documentoModel.paginacao.anterior()}"
+                                     disabled="#{!administradorMB.documentoModel.paginacao.podeVoltar()}"
                                      action="#{administradorMB.realizarPesquisaDocumentos()}"
                                      update=":form_docs:paginacao :form_docs:tabela_docs"
                                      process="@this"/>
                     <p:inputText id="pular"
                                  style="margin: -10px 5px -10px 5px;text-align: center"
-                                 value="#{administradorMB.paginacaoCtrl.pagina}"
+                                 value="#{administradorMB.documentoModel.paginacao.pagina}"
                                  onkeypress="if (event.keyCode == 13) {this.blur();return false;}">
                         <p:ajax event="blur" 
                                 process="@this" 
@@ -177,22 +178,22 @@
                     <p:commandButton id="proxima"
                                      icon="ui-icon ui-icon-seek-next"
                                      styleClass="botPag"
-                                     actionListener="#{administradorMB.paginar}"
-                                     disabled="#{!administradorMB.paginacaoCtrl.podeSeguir()}"
+                                     actionListener="#{administradorMB.documentoModel.paginacao.proxima()}"
+                                     disabled="#{!administradorMB.documentoModel.paginacao.podeSeguir()}"
                                      action="#{administradorMB.realizarPesquisaDocumentos()}"
                                      update=":form_docs:paginacao :form_docs:tabela_docs"
                                      process="@this"/>
                     <p:commandButton id="ultima"
                                      icon="ui-icon ui-icon-seek-end"
                                      styleClass="botPag"
-                                     actionListener="#{administradorMB.paginar}"
-                                     disabled="#{!administradorMB.paginacaoCtrl.podeSeguir()}"
+                                     actionListener="#{administradorMB.documentoModel.paginacao.ultima()}"
+                                     disabled="#{!administradorMB.documentoModel.paginacao.podeSeguir()}"
                                      action="#{administradorMB.realizarPesquisaDocumentos()}"
                                      update=":form_docs:paginacao :form_docs:tabela_docs"
                                      process="@this"/>
 
-                    <p:selectOneMenu id="limit_doc"
-                                     value="#{administradorMB.paginacaoCtrl.limit}"
+                    <p:selectOneMenu id="limit"
+                                     value="#{administradorMB.documentoModel.paginacao.limit}"
                                      converter="#{administradorMB.converters['nume']}"
                                      style="margin: -10px 0px -10px 20px;width: 75px">
                         <f:selectItem itemValue="5" itemLabel="5"/>  
@@ -200,24 +201,24 @@
                         <f:selectItem itemValue="15" itemLabel="15"/>
                         <p:ajax update=":form_docs:paginacao :form_docs:tabela_docs"
                                 event="change"
-                                listener="#{administradorMB.limitAlterado}"/>
+                                listener="#{administradorMB.docLimitAlterado}"/>
                     </p:selectOneMenu>
                 </p:panel>
                 <!-- Tabela de documentos-->
                 <p:dataTable 
                     id="tabela_docs"
-                    value="#{administradorMB.documentos}"
+                    value="#{administradorMB.documentoModel.documentos}"
                     var="linha"
                     emptyMessage="Não há documentos.">
                     <!-- Cabeçalho-->
                     <f:facet name="header">
-                        <p:outputLabel value="Tabela vazia" rendered="#{administradorMB.tipo == null}"/>
+                        <p:outputLabel value="Tabela vazia" rendered="#{administradorMB.documentoModel.tipo == null}"/>
                     </f:facet>
                     <!-- Id-->
                     <h:inputHidden value="#{linha.id}"
                                    converter="objectIdConverter"/>
                     <!-- Colunas-->
-                    <p:columns value="#{administradorMB.tipo.campos}" 
+                    <p:columns value="#{administradorMB.documentoModel.tipo.campos}" 
                                var="coluna">
                         <f:facet name="header">
                             <p:outputLabel value="#{coluna.nome}"/>
@@ -227,7 +228,7 @@
                             converter="#{administradorMB.converters[coluna.tipoDeDado]}"/>
                     </p:columns>
                     <!-- Editar -->
-                    <p:column rendered="#{administradorMB.tipo != null}"
+                    <p:column rendered="#{administradorMB.documentoModel.tipo != null}"
                               style="text-align: center">
                         <f:facet name="header">
                             <p:outputLabel value="Editar"/>
@@ -241,7 +242,7 @@
                     </p:column>
                     <!-- Excluir -->
                     <p:column style="text-align: center" 
-                              rendered="#{administradorMB.tipo != null}">
+                              rendered="#{administradorMB.documentoModel.tipo != null}">
                         <f:facet name="header">
                             <p:outputLabel value="Excluir"/>
                         </f:facet>
@@ -250,7 +251,7 @@
                             oncomplete="confirmExcluirDoc.show()">
                             <f:setPropertyActionListener 
                                 value="#{linha}" 
-                                target="#{administradorMB.docAux}"/>
+                                target="#{administradorMB.documentoModel.docAux}"/>
                         </p:commandButton>
                     </p:column>
                     <!-- Imagem -->
@@ -262,7 +263,7 @@
                                        action="#{administradorMB.carregarImagens()}"
                                        update=":form_docs:lista_imgs">
                             <f:setPropertyActionListener value="#{linha}"
-                                                         target="#{administradorMB.docAux}"/>
+                                                         target="#{administradorMB.documentoModel.docAux}"/>
                             <p:graphicImage value="/imgs/jpeg.png" width="32" height="32"/>
                         </p:commandLink>
                     </p:column>
@@ -285,8 +286,8 @@
                         value="Sim"
                         styleClass="ui-confirmdialog-yes"
                         oncomplete="confirmExcluirDoc.hide()"
-                        action="#{administradorMB.excluirDocumento}"
-                        update=":form_docs:tabela_docs :form_docs:msgs"/>
+                        action="#{administradorMB.excluirDocumento()}"
+                        update=":form_docs:tabela_docs :form_docs:msgs :form_docs:paginacao"/>
                     <p:commandButton 
                         value="Não" 
                         type="button"
@@ -323,7 +324,8 @@
                       modal="true"
                       width="90%"
                       height="600" 
-                      resizable="false">
+                      resizable="false"
+                      styleClass="disable-scroll">
 
                 <p:layout>
                     <p:layoutUnit position="west" 
@@ -332,7 +334,7 @@
                                   resizable="true" 
                                   collapsible="true">
                         <p:dataTable id="lista_imgs" 
-                                     value="#{administradorMB.imagens}" 
+                                     value="#{administradorMB.imagemModel.imagens}" 
                                      var="img"
                                      resizableColumns="true" 
                                      emptyMessage="Não há imagens">
@@ -340,14 +342,14 @@
                                 <p:commandLink value="#{img.nome}" 
                                                update=":form_docs:imagem">
                                     <f:setPropertyActionListener value="#{img}"
-                                                                 target="#{administradorMB.imagem}"/>
+                                                                 target="#{administradorMB.imagemModel.imagem}"/>
                                 </p:commandLink>
                             </p:column>
                             <p:column>
                                 <p:commandButton icon="ui-icon-close"
                                                  oncomplete="confirmApagarImagem.show()">
                                     <f:setPropertyActionListener value="#{img}"
-                                                                 target="#{administradorMB.imagemAux}"/>
+                                                                 target="#{administradorMB.imagemModel.imagemAux}"/>
                                 </p:commandButton>
                             </p:column>
                         </p:dataTable>
@@ -356,8 +358,8 @@
                     </p:layoutUnit>
                     <p:layoutUnit position="center" size="75%">
                         <p:graphicImage id="imagem" value="#{administradorMB.imagemStreamedContent()}"
-                                        width="#{administradorMB.imagem.width}" 
-                                        height="#{administradorMB.imagem.height}"/>
+                                        width="#{administradorMB.imagemModel.imagem.width}" 
+                                        height="#{administradorMB.imagemModel.imagem.height}"/>
                     </p:layoutUnit>
                 </p:layout>
                 <p:ajax event="close" 
@@ -382,8 +384,8 @@
                               invalidFileMessage="Arquivo inválido. Use apenas imagens .jpg e .png"
                               invalidSizeMessage="Imagem grande demais. Máximo 10 MB."
                               sizeLimit="10485760"
-                              update=":form_docs:lista_imgs">
-
+                              update=":form_docs:lista_imgs"
+                              showButtons="true">
                     Escolha as imagens
                 </p:fileUpload>
             </p:dialog>

@@ -6,7 +6,7 @@ import java.io.Serializable;
  *
  * @author Rummenigge
  */
-public class PaginacaoCtrl implements Serializable {
+public class Paginacao implements Serializable {
 
     private int cont;
     private int offset;
@@ -14,7 +14,7 @@ public class PaginacaoCtrl implements Serializable {
     private String pagina;
     private Object entidade;
 
-    public PaginacaoCtrl() {
+    public Paginacao() {
     }
 
     public int getOffset() {

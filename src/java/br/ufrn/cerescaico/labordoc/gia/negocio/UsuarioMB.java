@@ -1,9 +1,7 @@
 package br.ufrn.cerescaico.labordoc.gia.negocio;
 
-import br.ufrn.cerescaico.labordoc.gia.modelo.*;
 import br.ufrn.cerescaico.labordoc.gia.util.*;
 import java.io.Serializable;
-import java.util.ArrayList;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.*;
 import javax.faces.event.ActionEvent;
@@ -22,9 +20,9 @@ public class UsuarioMB extends AbstractUsuarioMB implements Serializable {
 
     public void editarConta() {
         try {
-            usuarioDao.editar(dono);
-            Util.addMsg(null, "Dados editados com sucesso.", 
-                    FacesMessage.SEVERITY_INFO);
+//            usuarioDao.editar(dono);
+//            Util.addMsg(null, "Dados editados com sucesso.", 
+//                    FacesMessage.SEVERITY_INFO);
         } catch (Exception e) {
             Util.addMsg(null, e.getMessage(), FacesMessage.SEVERITY_ERROR);
         }
@@ -32,9 +30,9 @@ public class UsuarioMB extends AbstractUsuarioMB implements Serializable {
 
     public String excluirConta() {
         try {
-            usuarioDao.excluir(dono);
-            Util.addMsg(null, "Conta excluída com sucesso.", 
-                    FacesMessage.SEVERITY_INFO);
+//            usuarioDao.excluir(dono);
+//            Util.addMsg(null, "Conta excluída com sucesso.", 
+//                    FacesMessage.SEVERITY_INFO);
             return sairDoSistema();
         } catch (Exception e) {
             Util.addMsg(null, e.getMessage(), FacesMessage.SEVERITY_ERROR);
@@ -43,28 +41,28 @@ public class UsuarioMB extends AbstractUsuarioMB implements Serializable {
     }
     
     public void iniciarDocumentos() {
-        documento = new Documento();
-        documentos = new ArrayList<Documento>();
-        paginacaoCtrl = new PaginacaoCtrl();
+//        documento = new Documento();
+//        documentos = new ArrayList<Documento>();
+//        paginacaoCtrl = new Paginacao();
     }
 
     public void pesquisarDocumentos() {
         try {
-            documento = new Documento();
-            documentos.clear();
-            if (tipo == null) {
-                return;
-            }
-            documento.setTipo(tipo);
-            for (Campo c : tipo.getCampos()) {
-                documento.getCampos().put(c.getNome(), c.getValor());
-            }
-            paginacaoCtrl.setCont(
-                    documentoDao.contar(documento, 
-                    Consts.CRITERIA_DOCUMENTO_CONJUNTIVA));
-            paginacaoCtrl.setEntidade(documento);
-            paginacaoCtrl.primeira();
-            realizarPesquisaDocumentos();
+//            documento = new Documento();
+//            documentos.clear();
+//            if (tipo == null) {
+//                return;
+//            }
+//            documento.setTipo(tipo);
+//            for (Campo c : tipo.getCampos()) {
+//                documento.getCampos().put(c.getNome(), c.getValor());
+//            }
+//            paginacaoCtrl.setCont(
+//                    documentoDao.contar(documento, 
+//                    Consts.CRITERIA_DOCUMENTO_CONJUNTIVA));
+//            paginacaoCtrl.setEntidade(documento);
+//            paginacaoCtrl.primeira();
+//            realizarPesquisaDocumentos();
         } catch (Exception e) {
             Util.addMsg(null, e.getMessage(), FacesMessage.SEVERITY_WARN);
         }
@@ -72,11 +70,11 @@ public class UsuarioMB extends AbstractUsuarioMB implements Serializable {
     
     public void realizarPesquisaDocumentos() {
         try {
-            documentos = documentoDao.pesquisar(
-                    (Documento) paginacaoCtrl.getEntidade(),
-                    paginacaoCtrl.getOffset(),
-                    paginacaoCtrl.getLimit(),
-                    Consts.CRITERIA_DOCUMENTO_CONJUNTIVA);
+//            documentos = documentoDao.pesquisar(
+//                    (Documento) paginacaoCtrl.getEntidade(),
+//                    paginacaoCtrl.getOffset(),
+//                    paginacaoCtrl.getLimit(),
+//                    Consts.CRITERIA_DOCUMENTO_CONJUNTIVA);
         } catch (Exception e) {
             Util.addMsg(null, e.getMessage(), FacesMessage.SEVERITY_ERROR);
         }

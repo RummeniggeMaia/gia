@@ -4,7 +4,7 @@
  */
 package br.ufrn.cerescaico.labordoc.gia.converter;
 
-import br.ufrn.cerescaico.labordoc.gia.negocio.PaginacaoCtrl;
+import br.ufrn.cerescaico.labordoc.gia.negocio.Paginacao;
 import java.io.Serializable;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -16,9 +16,9 @@ import javax.faces.convert.Converter;
  */
 public class PaginacaoConverter implements Converter, Serializable {
 
-    private PaginacaoCtrl pc;
+    private Paginacao pc;
 
-    public PaginacaoConverter(PaginacaoCtrl pc) {
+    public PaginacaoConverter(Paginacao pc) {
         this.pc = pc;
     }
 

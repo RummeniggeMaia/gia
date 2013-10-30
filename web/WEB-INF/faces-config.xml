@@ -39,9 +39,9 @@
     <navigation-rule>
         <from-view-id>/visitante/cadastro_usuarios.xhtml</from-view-id>
         <navigation-case>
-            <from-outcome>usuario_criado</from-outcome>
-            <to-view-id>/visitante/usuario_criado.xhtml</to-view-id>
-        </navigation-case> 
+            <from-outcome>voltar</from-outcome>
+            <to-view-id>/visitante/login.xhtml</to-view-id>
+        </navigation-case>
     </navigation-rule>
     <!--Páginas dos usuários-->
     <navigation-rule>

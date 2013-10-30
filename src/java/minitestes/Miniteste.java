@@ -4,7 +4,7 @@
  */
 package minitestes;
 
-import br.ufrn.cerescaico.labordoc.gia.negocio.PaginacaoCtrl;
+import br.ufrn.cerescaico.labordoc.gia.negocio.Paginacao;
 import java.io.File;
 import java.io.FileReader;
 import java.io.PrintWriter;
@@ -99,7 +99,7 @@ public class Miniteste {
     }
 
     public static void main(String[] asd) throws Exception {
-        PaginacaoCtrl pc = new PaginacaoCtrl();
+        Paginacao pc = new Paginacao();
         pc.setLimit(3);
         String p = pc.getPagina();
         pc.setCont(7);

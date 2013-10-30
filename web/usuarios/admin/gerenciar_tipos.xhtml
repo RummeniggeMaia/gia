@@ -21,11 +21,11 @@
             }
         </style>
     </h:head>
-    <h:body onload="#{administradorMB.iniciarTipos()}">
+    <h:body>
         <h:form id="form_tipos">
             <p:toolbar>
                 <p:toolbarGroup align="right">
-                    <p:menuButton value="#{administradorMB.dono.nome}">
+                    <p:menuButton value="#{administradorMB.usuarioModel.dono.nome}">
                         <p:menuitem value="configurações" icon="ui-icon-gear"
                                     action="config"/>
                         <p:menuitem value="sair" icon="ui-icon-extlink"
@@ -39,17 +39,18 @@
             </p:toolbar>
             <p:panel header="Gerenciamento dos tipos de documentos">
                 <!-- Controle -->
-                <p:panelGrid columns="4" id="grid_menu" styleClass="semBorda">
+                <p:panelGrid columns="5" id="grid_menu" styleClass="semBorda">
                     <p:outputLabel value="Novo tipo: "/>
-                    <p:inputText 
-                        value="#{administradorMB.tipo.nome}"
-                        size="50">
+                    <p:inputText id="campo_nome"
+                                 value="#{administradorMB.tipoModel.tipo.nome}"
+                                 size="50">
                         <p:ajax event="blur" process="@this"/>
                     </p:inputText>
+                    <p:message for="campo_nome" id="msg_nome"/>
                     <p:commandButton 
                         update=":form_tipos:tabela_campos"
                         value="Inserir novo campo"
-                        action="#{administradorMB.inserirCampo}">
+                        action="#{administradorMB.inserirCampo()}">
                     </p:commandButton>
                     <p:commandButton 
                         update=":form_tipos:tabela_campos"
@@ -61,9 +62,10 @@
                 <!-- Campos a serem exibidos -->
                 <p:dataTable 
                     id="tabela_campos"
-                    value="#{administradorMB.tipo.campos}"
+                    value="#{administradorMB.tipoModel.tipo.campos}"
                     var="campoAtual"
                     emptyMessage="Insira um novo campo">
+                    
                     <h:inputHidden 
                         value="#{campoAtual.id}" 
                         converter="objectIdConverter"/>
@@ -80,9 +82,6 @@
                     </p:column>
                     <p:column>
                         <p:selectOneMenu value="#{campoAtual.tipoDeDado}">
-                            <f:selectItem 
-                                itemLabel="Selecione..." 
-                                itemValue="#{null}"/>
                             <f:selectItem itemLabel="Texto" itemValue="text"/>
                             <f:selectItem itemLabel="Data" itemValue="data"/>
                             <f:selectItem itemLabel="Número" itemValue="nume"/>
@@ -91,23 +90,22 @@
                         </p:selectOneMenu>
                     </p:column>
                     <p:column style="text-align: center">
-                        <p:commandButton value="x" 
+                        <p:commandButton icon="ui-icon-close"
                                          action="#{administradorMB.deletarCampo()}"
-                                         update=":form_tipos:tabela_campos"
-                                         >
+                                         update=":form_tipos:tabela_campos">
                             <f:setPropertyActionListener 
                                 value="#{campoAtual}"
-                                target="#{administradorMB.campo}"/>
+                                target="#{administradorMB.tipoModel.campo}"/>
                         </p:commandButton>
                     </p:column>
                 </p:dataTable>
                 <br />
                 <p:panelGrid id="grid_botoes" columns="2" styleClass="semBorda">
-                    <p:commandButton 
+                    <p:commandButton id="bot_cadastrar"
                         value="Cadastrar tipo"
                         update=":form_tipos:tabela_campos :form_tipos:paginacao"
-                        action="#{administradorMB.criarTipoDeDocumento()}"
-                        rendered="#{!administradorMB.editarTipo}">
+                        action="#{administradorMB.criarTipo()}"
+                        rendered="#{!administradorMB.tipoModel.editarTipo}">
                         <p:effect type="slide" event="load">
                             <f:param name="mode" value="'show'"/>
                         </p:effect>
@@ -115,7 +113,7 @@
                     <p:commandButton value="Pesquisar tipos"
                                      update=":form_tipos:tabela_tipos :form_tipos:paginacao"
                                      action="#{administradorMB.pesquisarTipos()}"
-                                     rendered="#{!administradorMB.editarTipo}">
+                                     rendered="#{!administradorMB.tipoModel.editarTipo}">
                         <p:effect type="drop" event="load">
                             <f:param name="mode" value="'show'"/>
                         </p:effect>
@@ -123,7 +121,7 @@
                     <p:commandButton value="Editar tipo"
                                      update=":form_tipos:tabela_tipos :form_tipos:grid_botoes"
                                      action="#{administradorMB.editarTipo()}"
-                                     rendered="#{administradorMB.editarTipo}">
+                                     rendered="#{administradorMB.tipoModel.editarTipo}">
                         <p:effect type="drop" event="load">
                             <f:param name="mode" value="'show'"/>
                         </p:effect>
@@ -131,76 +129,77 @@
                     <p:commandButton value="Cancelar edição"
                                      update=":form_tipos:grid_botoes :form_tipos:grid_menu :form_tipos:tabela_campos"
                                      action="#{administradorMB.cancelarEditarTipo()}"
-                                     rendered="#{administradorMB.editarTipo}">
+                                     rendered="#{administradorMB.tipoModel.editarTipo}">
                         <p:effect type="drop" event="load">
                             <f:param name="mode" value="'show'"/>
                         </p:effect>
                     </p:commandButton>
                 </p:panelGrid>
                 <br />
+                <!-- Paginação -->
                 <p:panel id="paginacao"
-                         styleClass="ui-paginator ui-widget-header ui-corner-top">
+                         styleClass="ui-paginator ui-paginator-top ui-widget-header ui-corner-top">
                     <p:outputLabel style="margin-right: 20px;"
-                                   value="(#{administradorMB.paginacaoCtrl.totalLidos()} de #{administradorMB.paginacaoCtrl.cont})"/>
+                                   value="(#{administradorMB.tipoModel.paginacao.totalLidos()} 
+                                   de #{administradorMB.tipoModel.paginacao.cont})"/>
                     <p:commandButton id="primeira"
                                      icon="ui-icon ui-icon-seek-first"
                                      styleClass="botPag"
-                                     actionListener="#{administradorMB.paginar}"
-                                     disabled="#{!administradorMB.paginacaoCtrl.podeVoltar()}"
+                                     actionListener="#{administradorMB.tipoModel.paginacao.primeira()}"
+                                     disabled="#{!administradorMB.tipoModel.paginacao.podeVoltar()}"
                                      action="#{administradorMB.realizarPesquisaTipos()}"
                                      update=":form_tipos:paginacao :form_tipos:tabela_tipos"
                                      process="@this"/>
                     <p:commandButton id="anterior" 
                                      icon="ui-icon ui-icon-seek-prev"
                                      styleClass="botPag"
-                                     actionListener="#{administradorMB.paginar}"
-                                     disabled="#{!administradorMB.paginacaoCtrl.podeVoltar()}"
+                                     actionListener="#{administradorMB.tipoModel.paginacao.anterior()}"
+                                     disabled="#{!administradorMB.tipoModel.paginacao.podeVoltar()}"
                                      action="#{administradorMB.realizarPesquisaTipos()}"
                                      update=":form_tipos:paginacao :form_tipos:tabela_tipos"
                                      process="@this"/>
                     <p:inputText id="pular"
                                  style="margin: -10px 5px -10px 5px;text-align: center"
-                                 value="#{administradorMB.paginacaoCtrl.pagina}"
+                                 value="#{administradorMB.tipoModel.paginacao.pagina}"
                                  onkeypress="if (event.keyCode == 13) {this.blur();return false;}">
                         <p:ajax event="blur" 
                                 process="@this" 
                                 update=":form_tipos:paginacao :form_tipos:tabela_tipos"
-                                listener="#{administradorMB.realizarPesquisaUsuarios()}"/>
+                                listener="#{administradorMB.realizarPesquisaTipos()}"/>
                     </p:inputText>
                     <p:commandButton id="proxima"
                                      icon="ui-icon ui-icon-seek-next"
                                      styleClass="botPag"
-                                     actionListener="#{administradorMB.paginar}"
-                                     disabled="#{!administradorMB.paginacaoCtrl.podeSeguir()}"
-                                     action="#{administradorMB.realizarPesquisaUsuarios()}"
+                                     actionListener="#{administradorMB.tipoModel.paginacao.proxima()}"
+                                     disabled="#{!administradorMB.tipoModel.paginacao.podeSeguir()}"
+                                     action="#{administradorMB.realizarPesquisaTipos()}"
                                      update=":form_tipos:paginacao :form_tipos:tabela_tipos"
                                      process="@this"/>
                     <p:commandButton id="ultima"
                                      icon="ui-icon ui-icon-seek-end"
                                      styleClass="botPag"
-                                     actionListener="#{administradorMB.paginar}"
-                                     disabled="#{!administradorMB.paginacaoCtrl.podeSeguir()}"
-                                     action="#{administradorMB.realizarPesquisaUsuarios()}"
+                                     actionListener="#{administradorMB.tipoModel.paginacao.ultima()}"
+                                     disabled="#{!administradorMB.tipoModel.paginacao.podeSeguir()}"
+                                     action="#{administradorMB.realizarPesquisaTipos()}"
                                      update=":form_tipos:paginacao :form_tipos:tabela_tipos"
                                      process="@this"/>
 
-                    <p:selectOneMenu id="limit_tipo"
-                                     value="#{administradorMB.paginacaoCtrl.limit}"
+                    <p:selectOneMenu id="limit"
+                                     value="#{administradorMB.tipoModel.paginacao.limit}"
                                      converter="#{administradorMB.converters['nume']}"
-                                     style="margin: -10px 0px -10px 20px;width: 75px"
-                                     >
-                        <f:selectItem itemValue="5" itemLabel="5"/>
+                                     style="margin: -10px 0px -10px 20px;width: 75px">
+                        <f:selectItem itemValue="5" itemLabel="5"/>  
                         <f:selectItem itemValue="10" itemLabel="10"/>
                         <f:selectItem itemValue="15" itemLabel="15"/>
                         <p:ajax update=":form_tipos:paginacao :form_tipos:tabela_tipos"
                                 event="change"
-                                listener="#{administradorMB.limitAlterado}"/>
+                                listener="#{administradorMB.tipoLimitAlterado}"/>
                     </p:selectOneMenu>
                 </p:panel>
                 <!-- Tabela tipos -->
                 <p:dataTable 
                     id="tabela_tipos"
-                    value="#{administradorMB.tipos}" 
+                    value="#{administradorMB.tipoModel.tipos}" 
                     var="tipoAtual">
 
                     <p:column>
@@ -219,10 +218,10 @@
                             oncomplete="tipoDialog.show()">
                             <f:setPropertyActionListener 
                                 value="#{tipoAtual}"
-                                target="#{administradorMB.tipoAux}"/>
+                                target="#{administradorMB.tipoModel.tipoAux}"/>
                         </p:commandLink>
                     </p:column>
-                    <p:column>
+                    <p:column style="text-align: center">
                         <f:facet name="header">
                             <p:outputLabel value="Editar"/>
                         </f:facet>
@@ -232,7 +231,7 @@
                             action="#{administradorMB.iniciarEdidarTipo()}">
                             <f:setPropertyActionListener 
                                 value="#{tipoAtual}"
-                                target="#{administradorMB.tipo}"/>
+                                target="#{administradorMB.tipoModel.tipo}"/>
                         </p:commandLink>
                     </p:column>
                     <p:column style="text-align: center">
@@ -244,7 +243,7 @@
                             oncomplete="confirmExcluirTipo.show()">
                             <f:setPropertyActionListener 
                                 value="#{tipoAtual}" 
-                                target="#{administradorMB.tipoAux}"/>
+                                target="#{administradorMB.tipoModel.tipoAux}"/>
                         </p:commandButton>
                     </p:column>
                 </p:dataTable>
@@ -257,7 +256,7 @@
 
                     <p:dataTable
                         id="tabela_detalhe"
-                        value="#{administradorMB.tipoAux.campos}"
+                        value="#{administradorMB.tipoModel.tipoAux.campos}"
                         var="campoDialog">
                         <p:column>
                             <f:facet name="header">
@@ -297,8 +296,8 @@
                             value="Sim"
                             styleClass="ui-confirmdialog-yes"
                             oncomplete="confirmExcluirTipo.hide()"
-                            action="#{administradorMB.excluirTipo}"
-                            update=":form_tipos:tabela_tipos"/>
+                            action="#{administradorMB.excluirTipo()}"
+                            update=":form_tipos:tabela_tipos :form_tipos:paginacao"/>
                         <p:commandButton 
                             value="Não" 
                             type="button"
