@@ -23,6 +23,15 @@
     </h:head>
     <h:body>
         <h:form id="form_tipos">
+            <p:ajaxStatus 
+                style="position:fixed;right:5px;bottom:5px;z-index: 9999">
+                <f:facet name="start">  
+                    <p:graphicImage value="/imgs/livro.gif"/>  
+                </f:facet>
+                <f:facet name="complete">  
+                    <h:outputText value="" />  
+                </f:facet>  
+            </p:ajaxStatus>
             <p:toolbar>
                 <p:toolbarGroup align="right">
                     <p:menuButton value="#{administradorMB.usuarioModel.dono.nome}">
@@ -43,8 +52,10 @@
                     <p:outputLabel value="Novo tipo: "/>
                     <p:inputText id="campo_nome"
                                  value="#{administradorMB.tipoModel.tipo.nome}"
-                                 size="50">
-                        <p:ajax event="blur" process="@this"/>
+                                 size="50"
+                                 disabled="#{administradorMB.tipoModel.editarTipo}">
+                        <p:ajax event="blur" process="@this" 
+                                listener="#{administradorMB.contemTipo()}"/>
                     </p:inputText>
                     <p:message for="campo_nome" id="msg_nome"/>
                     <p:commandButton 
@@ -257,7 +268,8 @@
                     <p:dataTable
                         id="tabela_detalhe"
                         value="#{administradorMB.tipoModel.tipoAux.campos}"
-                        var="campoDialog">
+                        var="campoDialog"
+                        emptyMessage="Não há campos neste tipo de documento.">
                         <p:column>
                             <f:facet name="header">
                                 <p:outputLabel value="Nome"/>
@@ -305,8 +317,6 @@
                             onclick="confirmExcluirTipo.hide()"/>
                     </p:panel>
                 </p:confirmDialog>
-                <p:growl id="mensagens" autoUpdate="true" sticky="true" 
-                         showDetail="true"/>
             </p:panel>
             <p:confirmDialog message="Deseja sair do sistema?"
                              header="Sair do sistema GIA"

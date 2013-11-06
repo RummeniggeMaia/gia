@@ -3,6 +3,7 @@ package br.ufrn.cerescaico.labordoc.gia.negocio;
 import br.ufrn.cerescaico.labordoc.gia.dao.UsuarioDao;
 import br.ufrn.cerescaico.labordoc.gia.modelo.Usuario;
 import br.ufrn.cerescaico.labordoc.gia.util.Consts;
+import br.ufrn.cerescaico.labordoc.gia.validator.UsuarioValidator;
 import java.util.List;
 
 /**
@@ -13,6 +14,7 @@ public class UsuarioCtrl {
 
     private UsuarioDao usuarioDao;
     private UsuarioModel model;
+    private UsuarioValidator usuarioValidator = new UsuarioValidator();
 
     public UsuarioCtrl() throws Exception {
         usuarioDao = new UsuarioDao();
@@ -45,6 +47,14 @@ public class UsuarioCtrl {
         this.model = model;
     }
 
+    public UsuarioValidator getUsuarioValidator() {
+        return usuarioValidator;
+    }
+
+    public void setUsuarioValidator(UsuarioValidator usuarioValidator) {
+        this.usuarioValidator = usuarioValidator;
+    }
+
     public void editarUsuario() throws Exception {
         usuarioDao.editar(model.getUsuario());
         model.setUsuario(new Usuario());
@@ -71,12 +81,13 @@ public class UsuarioCtrl {
         aux.setMatricula(model.getUsuario().getMatricula());
         aux.setNome(model.getUsuario().getNome());
         aux.setRole(model.getUsuario().getRole());
+        aux.setDataNascimento(model.getUsuario().getDataNascimento());
+        aux.setSexo(model.getUsuario().getSexo());
         model.getPaginacao().setEntidade(aux);
         model.getPaginacao().setCont(
                 (int) usuarioDao.contar(model.getUsuario(),
                 Consts.CRITERIA_USUARIO_CONJUNTIVA));
         iniciarPaginacao();
-        model.getUsuarios().remove(model.getDono());
     }
 
     public void realizarPesquisaUsuarios() throws Exception {

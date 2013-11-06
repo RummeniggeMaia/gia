@@ -23,7 +23,6 @@ public abstract class AbstractUsuarioMB {
     protected ImagemCtrl imagemCtrl;
     //controle
     protected Map<String, Converter> converters;
-    protected Paginacao paginacaoCtrl = new Paginacao();
 
     public AbstractUsuarioMB() {
         try {
@@ -55,14 +54,6 @@ public abstract class AbstractUsuarioMB {
         } catch (Exception ex) {
             Util.addMsg(null, ex.getMessage(), FacesMessage.SEVERITY_FATAL);
         }
-    }
-
-    public Paginacao getPaginacaoCtrl() {
-        return paginacaoCtrl;
-    }
-
-    public void setPaginacaoCtrl(Paginacao pesquisaCtrl) {
-        this.paginacaoCtrl = pesquisaCtrl;
     }
 
     public Map<String, Converter> getConverters() {

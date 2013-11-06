@@ -127,4 +127,12 @@ public class Paginacao implements Serializable {
         }
         return 0;
     }
+    
+    public void resetar() {
+        cont = 0;
+        offset = 0;
+        limit = 1;
+        pagina = "";
+        entidade = null;
+    }
 } 

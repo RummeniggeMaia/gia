@@ -131,9 +131,17 @@ public class Consts implements Serializable {
      */
     public static final String CAMPO_TIPO = "tipo";
     /**
+     * String: "Sexo"
+     */
+    public static final String CAMPO_SEXO = "sexo";
+    /**
      * String: "matricula"
      */
     public static final String CAMPO_MATRICULA = "matricula";
+    /**
+     * String: "matricula"
+     */
+    public static final String CAMPO_DATA_NASC = "dataNascimento";
     /**
      * String: "usuario_logado"
      */

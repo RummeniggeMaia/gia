@@ -2,6 +2,8 @@ package br.ufrn.cerescaico.labordoc.gia.negocio;
 
 import br.ufrn.cerescaico.labordoc.gia.modelo.*;
 import br.ufrn.cerescaico.labordoc.gia.util.Util;
+import br.ufrn.cerescaico.labordoc.gia.validator.UsuarioValidator;
+import br.ufrn.cerescaico.labordoc.gia.validator.ValidatorResult;
 import java.io.*;
 import java.util.*;
 import javax.faces.application.FacesMessage;
@@ -22,49 +24,6 @@ public class AdministradorMB extends AbstractUsuarioMB
 
     public AdministradorMB() {
         super();
-    }
-
-    public StreamedContent imagemStreamedContent() {
-        return imagemCtrl.getStreamedContent();
-    }
-
-    public void carregarImagens() {
-        try {
-            imagemCtrl.carregarImagens(documentoModel.getDocAux());
-        } catch (Exception e) {
-            Util.addMsg(null, e.getMessage(), FacesMessage.SEVERITY_ERROR);
-        }
-    }
-
-    public void limparImagens(AjaxBehaviorEvent abe) {
-        imagemCtrl.limparImagens();
-    }
-
-    public void handleFileUpload(FileUploadEvent fue) {
-        try {
-            Imagem nova = new Imagem();
-            UploadedFile uf = fue.getFile();
-            nova.setNome(uf.getFileName());
-            nova.setContentType(uf.getContentType());
-            nova.setConteudo(uf.getContents());
-            imagemCtrl.salvarImagem(nova);
-            documentoCtrl.getDocumentoDao()
-                    .editarImagens(documentoModel.getDocAux());
-            documentoModel.getDocAux().getImagens().add(uf.getFileName());
-        } catch (Exception e) {
-            Util.addMsg(null, e.getMessage(), FacesMessage.SEVERITY_ERROR);
-        }
-    }
-
-    public void deletarImagem() {
-        try {
-            String img = imagemCtrl.getModel().getImagemAux().getNome();
-            imagemCtrl.deletarImagem();
-            documentoCtrl.removerImagem(img);
-            
-        } catch (Exception e) {
-            Util.addMsg(null, e.getMessage(), FacesMessage.SEVERITY_ERROR);
-        }
     }
 
 //Documentos expert
@@ -158,6 +117,11 @@ public class AdministradorMB extends AbstractUsuarioMB
             Util.addMsg(null, ex.getMessage(), FacesMessage.SEVERITY_ERROR);
         }
     }
+    
+    public void limparDocs(AjaxBehaviorEvent e) {
+        documentoModel.getPaginacao().resetar();
+        documentoModel.getDocumentos().clear();
+    }
 //Tipos expert
 
     public void criarTipo() {
@@ -232,7 +196,12 @@ public class AdministradorMB extends AbstractUsuarioMB
     }
 
     public void contemTipo() {
-        tipoCtrl.contemTipo(null);
+        if (tipoCtrl.contemTipo()) {
+            Util.addMsg(
+                    "form_tipos:campo_nome", 
+                    "Já existe este tipo de documento.", 
+                    FacesMessage.SEVERITY_WARN);
+        }
     }
 
     public void inserirCampo() {
@@ -250,6 +219,9 @@ public class AdministradorMB extends AbstractUsuarioMB
 
     public void editarUsuario() {
         try {
+            if (!usuarioValido()) {
+                return;
+            }
             usuarioCtrl.editarUsuario();
             Util.addMsg(null, "Usuario editado com sucesso.",
                     FacesMessage.SEVERITY_INFO);
@@ -306,6 +278,87 @@ public class AdministradorMB extends AbstractUsuarioMB
             usuarioCtrl.iniciarPaginacao();
         } catch (Exception ex) {
             Util.addMsg(null, ex.getMessage(), FacesMessage.SEVERITY_WARN);
+        }
+    }
+    
+    private boolean usuarioValido() {
+        boolean valido = true;
+        UsuarioValidator usuarioValidator = usuarioCtrl.getUsuarioValidator();
+        ValidatorResult vr = null;
+        vr = usuarioValidator.validarNome(usuarioModel.getUsuario().getNome());
+        if (!vr.isValido()) {
+            Util.addMsg(
+                    "form_usuarios:campo_nome",
+                    vr.getCausa(),
+                    FacesMessage.SEVERITY_ERROR);
+            valido = false;
+        }
+        vr = usuarioValidator.validarEmail(usuarioModel.getUsuario().getEmail());
+        if (!vr.isValido()) {
+            Util.addMsg(
+                    "form_usuarios:campo_email",
+                    vr.getCausa(),
+                    FacesMessage.SEVERITY_ERROR);
+            valido = false;
+        }
+        vr = usuarioValidator.validarCpf(usuarioModel.getUsuario().getCpf());
+        if (!vr.isValido()) {
+            Util.addMsg(
+                    "form_usuarios:campo_cpf",
+                    vr.getCausa(),
+                    FacesMessage.SEVERITY_ERROR);
+            valido = false;
+        }
+        if (usuarioModel.getUsuario().getDataNascimento() == null) {
+            Util.addMsg(
+                    "form_usuarios:campo_data_nasc",
+                    "Data inválida.",
+                    FacesMessage.SEVERITY_ERROR);
+            valido = false;
+        }
+        return valido;
+    }
+    
+    //Expert imagens
+    public StreamedContent imagemStreamedContent() {
+        return imagemCtrl.getStreamedContent();
+    }
+
+    public void carregarImagens() {
+        try {
+            imagemCtrl.carregarImagens(documentoModel.getDocAux());
+        } catch (Exception e) {
+            Util.addMsg(null, e.getMessage(), FacesMessage.SEVERITY_ERROR);
+        }
+    }
+
+    public void limparImagens(AjaxBehaviorEvent abe) {
+        imagemCtrl.limparImagens();
+    }
+
+    public void handleFileUpload(FileUploadEvent fue) {
+        try {
+            Imagem nova = new Imagem();
+            UploadedFile uf = fue.getFile();
+            nova.setNome(uf.getFileName());
+            nova.setContentType(uf.getContentType());
+            nova.setConteudo(uf.getContents());
+            imagemCtrl.salvarImagem(nova);
+            documentoCtrl.getDocumentoDao()
+                    .editarImagens(documentoModel.getDocAux());
+            documentoModel.getDocAux().getImagens().add(uf.getFileName());
+        } catch (Exception e) {
+            Util.addMsg(null, e.getMessage(), FacesMessage.SEVERITY_ERROR);
+        }
+    }
+
+    public void deletarImagem() {
+        try {
+            String img = imagemCtrl.getModel().getImagemAux().getNome();
+            imagemCtrl.deletarImagem();
+            documentoCtrl.removerImagem(img);
+        } catch (Exception e) {
+            Util.addMsg(null, e.getMessage(), FacesMessage.SEVERITY_ERROR);
         }
     }
 }

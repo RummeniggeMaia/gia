@@ -115,6 +115,13 @@ public class TipoCtrl {
         realizarPesquisaTipos();
     }
 
-    public void contemTipo(String nome) {
+    public boolean contemTipo() {
+        try {
+            Tipo t = tipoDao.pesquisarUm(
+                    model.getTipo(), Consts.CRITERIA_TIPO_NOME);
+            return t != null;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

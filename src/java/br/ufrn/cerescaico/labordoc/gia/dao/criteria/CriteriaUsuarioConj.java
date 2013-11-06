@@ -22,7 +22,7 @@ public class CriteriaUsuarioConj
         List<Criteria> criterias = new ArrayList<Criteria>();
         if (entity.getNome() != null && !entity.getNome().isEmpty()) {
             criterias.add(query.criteria(Consts.CAMPO_NOME)
-                    .equal(entity.getNome()));
+                    .contains(entity.getNome()));
         }
         if (entity.getEmail() != null && !entity.getEmail().isEmpty()) {
             criterias.add(query.criteria(Consts.CAMPO_EMAIL)
@@ -39,6 +39,14 @@ public class CriteriaUsuarioConj
         if (entity.getRole() != null && !entity.getRole().isEmpty()) {
             criterias.add(query.criteria(Consts.CAMPO_ROLE)
                     .equal(entity.getRole()));
+        }
+        if (entity.getSexo() != null && !entity.getSexo().isEmpty()) {
+            criterias.add(query.criteria(Consts.CAMPO_SEXO)
+                    .equal(entity.getSexo()));
+        }
+        if (entity.getDataNascimento() != null) {
+            criterias.add(query.criteria(Consts.CAMPO_DATA_NASC)
+                    .equal(entity.getDataNascimento()));
         }
         Criteria[] vet = new Criteria[criterias.size()];
         for (int i = 0; i < vet.length; i++) {

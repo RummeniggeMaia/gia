@@ -19,17 +19,30 @@
             .ui-widget {
                 font-size: 100% !important;
             }
+            .ui-message-info, .ui-message-warn, .ui-message-error, .ui-message-fatal {
+                background-color: transparent;
+                border: 0px
+            }
         </style>
     </h:head>
     <h:body>
         <h:form id="form_usuarios">
+            <p:ajaxStatus 
+                style="position:fixed;right:5px;bottom:5px;z-index: 9999">
+                <f:facet name="start">  
+                    <p:graphicImage value="/imgs/livro.gif"/>  
+                </f:facet>
+                <f:facet name="complete">  
+                    <h:outputText value="" />  
+                </f:facet>  
+            </p:ajaxStatus>
             <p:toolbar>
                 <p:toolbarGroup align="right">
                     <p:menuButton value="#{administradorMB.usuarioModel.dono.nome}">
                         <p:menuitem value="configurações" icon="ui-icon-gear"
                                     action="config"/>
                         <p:menuitem value="sair" icon="ui-icon-extlink"
-                                    action="#{administradorMB.sairDoSistema()}"/>
+                                    onclick="confirmSair.show()"/>
                     </p:menuButton>
                 </p:toolbarGroup>
                 <p:toolbarGroup align="left">
@@ -41,41 +54,92 @@
                 id="grid_usuario"
                 header="Gerenciamento de usuários"
                 styleClass="semBorda">
+                
                 <h:inputHidden value="#{administradorMB.usuarioModel.usuario.id}"
                                converter="objectIdConverter"/>
-                <p:panelGrid columns="2">
+                <p:panelGrid id="dados_usuario" columns="3" styleClass="semBorda">
+
                     <p:outputLabel value="Nome:"/>
-                    <p:inputText value="#{administradorMB.usuarioModel.usuario.nome}" />
-                    <p:outputLabel value="E-Mail:"/>
-                    <p:inputText value="#{administradorMB.usuarioModel.usuario.email}"/>
+                    <p:inputText id="campo_nome"
+                                 value="#{administradorMB.usuarioModel.usuario.nome}"
+                                 size="50">
+                        <p:watermark value="nome e sobrenome" for="campo_nome"/>
+                    </p:inputText>
+                    <p:message for="campo_nome"/>
+
+                    <p:outputLabel value="E-mail:"/>
+                    <p:inputText id="campo_email"
+                                 value="#{administradorMB.usuarioModel.usuario.email}"
+                                 size="50"
+                                 validatorMessage="Email inválido.">
+                        <p:watermark value="exemplo@meuemail.com" 
+                                     for="campo_email"/>
+                    </p:inputText>
+                    <p:message for="campo_email"/>
+
                     <p:outputLabel value="CPF:"/>
-                    <p:inputText value="#{administradorMB.usuarioModel.usuario.cpf}"/>
+                    <p:inputMask id="campo_cpf"
+                                 value="#{administradorMB.usuarioModel.usuario.cpf}" 
+                                 mask="999.999.999-99"
+                                 validatorMessage="CPF inválido. Preencha o campo completamente">
+                        <p:watermark value="___.___.___-__" for="campo_cpf"/>
+                    </p:inputMask>
+                    <p:message for="campo_cpf"/>
+
                     <p:outputLabel value="Matricula:"/>
-                    <p:inputText value="#{administradorMB.usuarioModel.usuario.matricula}"/>
-                    <p:outputLabel value="Nascimento:"/>
-                    <p:inputText value="#{administradorMB.usuarioModel.usuario.dataNascimento}"
-                                 converter="#{administradorMB.converters['data']}"/>
+                    <p:inputMask id="campo_matricula"
+                                 value="#{administradorMB.usuarioModel.usuario.matricula}"
+                                 mask="9999999999">
+                        <p:watermark value="matrícula" for="campo_matricula"/>
+                    </p:inputMask>
+                    <p:message for="campo_matricula"/>
+
+                    <p:outputLabel value="Data de nascimento:"/>
+                    <p:calendar id="campo_data_nasc"
+                                mindate="01/01/1800" 
+                                effect="drop"
+                                locale="pt_BR"
+                                navigator="true"
+                                title="Data de nascimento"
+                                pattern="dd/MM/yyyy"
+                                value="#{administradorMB.usuarioModel.usuario.dataNascimento}"
+                                converter="#{administradorMB.converters['data']}"
+                                showOtherMonths="true"
+                                yearRange="c-120:c+0"
+                                showOn="both"
+                                mode="popup">
+                        <p:watermark value="01/01/1970" 
+                                     for="campo_data_nasc"/>
+                    </p:calendar>
+                    <p:message for="campo_data_nasc"/>
+
                     <p:outputLabel value="Sexo:"/>
-                    <p:selectOneMenu value="#{administradorMB.usuarioModel.usuario.sexo}">
+                    <p:selectOneMenu id="combo_sexo"
+                                     value="#{administradorMB.usuarioModel.usuario.sexo}">
+                        <f:selectItem itemValue="#{null}" 
+                                      itemLabel="Selecione uma opção..."/>
                         <f:selectItem itemValue="M" itemLabel="Masculino"/>
                         <f:selectItem itemValue="F" itemLabel="Feminino"/>
                     </p:selectOneMenu>
+                    <p:message for="combo_sexo"/>
                     <p:outputLabel value="Funcionalidade:"/>
                     <p:selectOneMenu 
+                        id="select_funcionalidade"
                         value="#{administradorMB.usuarioModel.usuario.role}">
                         <f:selectItem itemValue="#{null}" 
-                                      itemLabel="Selecione..."
+                                      itemLabel="Selecione uma opção..."
                                       noSelectionOption="true"/>
                         <f:selectItem itemValue="role_user" 
                                       itemLabel="Usuário"/>
                         <f:selectItem itemValue="role_admin" 
                                       itemLabel="Administrador"/>
                     </p:selectOneMenu>
+                    <p:message for="select_funcionalidade"/>
                 </p:panelGrid>
                 <br />
                 <p:panelGrid id="grid_botoes" columns="2">
                     <p:commandButton value="Pesquisar usuários"
-                                     update=":form_usuarios:tabela_usuario :form_usuarios:msgs :form_usuarios:paginacao"
+                                     update=":form_usuarios:tabela_usuario :form_usuarios:paginacao"
                                      action="#{administradorMB.pesquisarUsuarios()}"
                                      rendered="#{!administradorMB.usuarioModel.editarUsuario}">
                         <p:effect type="drop" event="load">
@@ -83,14 +147,14 @@
                         </p:effect>
                     </p:commandButton>
                     <p:commandButton value="Editar usuário"
-                                     update=":form_usuarios:tabela_usuario :form_usuarios:grid_botoes :form_usuarios:grid_usuario :form_usuarios:msgs"
+                                     update=":form_usuarios:tabela_usuario :form_usuarios:grid_botoes :form_usuarios:grid_usuario"
                                      action="#{administradorMB.editarUsuario()}"
                                      rendered="#{administradorMB.usuarioModel.editarUsuario}">
                         <p:effect type="drop" event="load">
                             <f:param name="mode" value="'show'"/>
                         </p:effect>
                     </p:commandButton>
-                    <p:commandButton value="Cancelar"
+                    <p:commandButton value="Cancelar edição"
                                      update=":form_usuarios:grid_botoes :form_usuarios:grid_usuario"
                                      action="#{administradorMB.cancelarEditarUsuario()}"
                                      rendered="#{administradorMB.usuarioModel.editarUsuario}">
@@ -163,8 +227,7 @@
                 <p:dataTable id="tabela_usuario"
                              value="#{administradorMB.usuarioModel.usuarios}"
                              var="usuarioAtual" 
-                             emptyMessage="Não há usuários"
-                             resizableColumns="true">
+                             emptyMessage="Não há usuários">
                     <p:column>
                         <f:facet name="header">
                             <p:outputLabel value="Nome"/>
@@ -240,6 +303,7 @@
                     </p:column>
                 </p:dataTable>
             </p:panel>
+            <p:growl sticky="true" autoUpdate="true"/>
             <p:confirmDialog
                 message="Deseja excluir este usuário?"
                 header="Excluir usuário"
@@ -254,7 +318,7 @@
                         styleClass="ui-confirmdialog-yes"
                         oncomplete="confirmExcluirUsuario.hide()"
                         action="#{administradorMB.excluirUsuario()}"
-                        update=":form_usuarios:tabela_usuario :form_usuarios:msgs :form_usuarios:paginacao"/>
+                        update=":form_usuarios:tabela_usuario :form_usuarios:paginacao"/>
                     <p:commandButton 
                         value="Não" 
                         type="button"
@@ -262,7 +326,26 @@
                         onclick="confirmExcluirUsuario.hide()"/>
                 </p:panel>
             </p:confirmDialog>
-            <p:growl id="msgs" sticky="true" autoUpdate="true" globalOnly="true"/>
+            <p:confirmDialog message="Deseja sair do sistema?"
+                             header="Sair do sistema GIA"
+                             widgetVar="confirmSair"
+                             showEffect="explode"
+                             hideEffect="puff"
+                             appendToBody="true">
+                <p:panel 
+                    style="border: none;text-align: center">
+                    <p:commandButton 
+                        value="Sim"
+                        styleClass="ui-confirmdialog-yes"
+                        oncomplete="confirmSair.hide()"
+                        action="#{administradorMB.sairDoSistema()}"/>
+                    <p:commandButton 
+                        value="Não" 
+                        type="button"
+                        styleClass="ui-confirmdialog-no"
+                        onclick="confirmSair.hide()"/>
+                </p:panel>
+            </p:confirmDialog>
         </h:form>
     </h:body>
 </html>

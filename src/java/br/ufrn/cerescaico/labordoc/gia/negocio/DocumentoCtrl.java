@@ -11,7 +11,7 @@ import java.util.List;
 import javax.faces.application.FacesMessage;
 
 /**
- * Util.addMsg(null, e.getMessage(), FacesMessage.SEVERITY_ERROR);
+ * 
  *
  * @author Rummenigge
  */

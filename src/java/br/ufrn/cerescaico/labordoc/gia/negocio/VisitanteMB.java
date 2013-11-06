@@ -121,6 +121,8 @@ public class VisitanteMB implements Serializable {
                     FacesMessage.SEVERITY_INFO);
         } catch (Exception me) {
             contemLogin(null);
+            Util.addMsg(null, me.getMessage(), 
+                    FacesMessage.SEVERITY_ERROR);
         }
     }
 
@@ -218,6 +220,13 @@ public class VisitanteMB implements Serializable {
             Util.addMsg(
                     "form_criar_conta:campo_cpf",
                     vr.getCausa(),
+                    FacesMessage.SEVERITY_ERROR);
+            valido = false;
+        }
+        if (usuario.getDataNascimento() == null) {
+            Util.addMsg(
+                    "form_criar_conta:campo_data_nasc",
+                    "Data inválida.",
                     FacesMessage.SEVERITY_ERROR);
             valido = false;
         }

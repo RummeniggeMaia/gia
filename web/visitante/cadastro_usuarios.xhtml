@@ -28,7 +28,7 @@
                 </p:toolbarGroup>
             </p:toolbar>
             <p:panel header="Criar conta no sistema GIA" >
-                <p:panelGrid columns="3" styleClass="semBorda">
+                <p:panelGrid id="dados_usuario" columns="3" styleClass="semBorda">
 
                     <p:outputLabel value="Login:"/>
                     <p:inputText id="campo_login" 
@@ -102,12 +102,16 @@
                     <p:calendar id="campo_data_nasc"
                                 mindate="01/01/1800" 
                                 effect="drop"
-                                locale="pt"
+                                locale="pt_BR"
                                 navigator="true"
                                 title="Data de nascimento"
                                 pattern="dd/MM/yyyy"
                                 value="#{visitanteMB.usuario.dataNascimento}"
-                                converter="#{visitanteMB.dataConverter}">
+                                converter="#{visitanteMB.dataConverter}"
+                                showOtherMonths="true"
+                                yearRange="c-120:c+0"
+                                showOn="both"
+                                mode="popup">
                         <p:watermark value="#{visitanteMB.data}" 
                                      for="campo_data_nasc"/>
                     </p:calendar>
@@ -125,19 +129,12 @@
 
                     <p:commandButton id="bot_criar_conta"
                                      value="Criar conta"
-                                     action="#{visitanteMB.criarUsuario()}"
-                                     oncomplete="dlg.show()"/>
+                                     actionListener="#{visitanteMB.criarUsuario()}"
+                                     update=":form_criar_conta:dados_usuario"/>
                 </p:panelGrid>
             </p:panel>
             <p:growl sticky="true" autoUpdate="true"/>
             <p:defaultCommand target="bot_criar_conta"/>
-            <p:dialog widgetVar="dlg"
-                      width="300"
-                      height="400">
-
-                    <p:outputLabel value="ok"/>
-
-            </p:dialog>
         </h:form>
     </h:body>
 </html>
