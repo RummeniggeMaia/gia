@@ -166,10 +166,11 @@ public class UsuarioMB extends AbstractUsuarioMB
             nova.setNome(uf.getFileName());
             nova.setContentType(uf.getContentType());
             nova.setConteudo(uf.getContents());
+            nova.setDocumento(documentoModel.getDocAux());
             imagemCtrl.salvarImagem(nova);
-            documentoCtrl.getDocumentoDao()
-                    .editarImagens(documentoModel.getDocAux());
-            documentoModel.getDocAux().getImagens().add(uf.getFileName());
+//            documentoCtrl.getDocumentoDao()
+//                    .editarImagens(documentoModel.getDocAux());
+//            documentoModel.getDocAux().getImagens().add(uf.getFileName());
         } catch (Exception e) {
             Util.addMsg(null, e.getMessage(), FacesMessage.SEVERITY_ERROR);
         }
@@ -177,9 +178,9 @@ public class UsuarioMB extends AbstractUsuarioMB
 
     public void deletarImagem() {
         try {
-            String img = imagemCtrl.getModel().getImagemAux().getNome();
+//            String img = imagemCtrl.getModel().getImagemAux().getNome();
             imagemCtrl.deletarImagem();
-            documentoCtrl.removerImagem(img);
+//            documentoCtrl.removerImagem(img);
             
         } catch (Exception e) {
             Util.addMsg(null, e.getMessage(), FacesMessage.SEVERITY_ERROR);

@@ -35,7 +35,8 @@ public class CriteriaDocumentoConj
             if (valor != null) {
                 if (valor instanceof String) {
                     if (!((String) valor).isEmpty()) {
-                        Pattern p = Pattern.compile(".*" + valor + ".*");
+                        Pattern p = Pattern.compile(".*" + valor + ".*", 
+                                Pattern.CASE_INSENSITIVE);
                         lista.add(new BasicDBObject(key, p));
                     }
                 } else {

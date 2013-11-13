@@ -76,7 +76,7 @@
                     value="#{administradorMB.tipoModel.tipo.campos}"
                     var="campoAtual"
                     emptyMessage="Insira um novo campo">
-                    
+
                     <h:inputHidden 
                         value="#{campoAtual.id}" 
                         converter="objectIdConverter"/>
@@ -113,15 +113,16 @@
                 <br />
                 <p:panelGrid id="grid_botoes" columns="2" styleClass="semBorda">
                     <p:commandButton id="bot_cadastrar"
-                        value="Cadastrar tipo"
-                        update=":form_tipos:tabela_campos :form_tipos:paginacao"
-                        action="#{administradorMB.criarTipo()}"
-                        rendered="#{!administradorMB.tipoModel.editarTipo}">
+                                     value="Cadastrar tipo"
+                                     update=":form_tipos:tabela_campos :form_tipos:paginacao"
+                                     action="#{administradorMB.criarTipo()}"
+                                     rendered="#{!administradorMB.tipoModel.editarTipo}">
                         <p:effect type="slide" event="load">
                             <f:param name="mode" value="'show'"/>
                         </p:effect>
                     </p:commandButton>
-                    <p:commandButton value="Pesquisar tipos"
+                    <p:commandButton id="bot_pesq"
+                                     value="Pesquisar tipos"
                                      update=":form_tipos:tabela_tipos :form_tipos:paginacao"
                                      action="#{administradorMB.pesquisarTipos()}"
                                      rendered="#{!administradorMB.tipoModel.editarTipo}">
@@ -258,66 +259,69 @@
                         </p:commandButton>
                     </p:column>
                 </p:dataTable>
-                <!-- dialogos -->
-                <p:dialog
-                    header="Campos" 
-                    widgetVar="tipoDialog"
-                    showEffect="explode" 
-                    hideEffect="puff">
-
-                    <p:dataTable
-                        id="tabela_detalhe"
-                        value="#{administradorMB.tipoModel.tipoAux.campos}"
-                        var="campoDialog"
-                        emptyMessage="Não há campos neste tipo de documento.">
-                        <p:column>
-                            <f:facet name="header">
-                                <p:outputLabel value="Nome"/>
-                            </f:facet>
-                            <p:outputLabel value="#{campoDialog.nome}"/>
-                        </p:column>
-                        <p:column>
-                            <f:facet name="header">
-                                <p:outputLabel value="Tipo de dado"/>
-                            </f:facet>
-                            <p:outputLabel 
-                                value="Número" 
-                                rendered="#{campoDialog.tipoDeDado eq 'nume'}"/>
-                            <p:outputLabel 
-                                value="Número real" 
-                                rendered="#{campoDialog.tipoDeDado eq 'real'}"/>
-                            <p:outputLabel 
-                                value="Texto" 
-                                rendered="#{campoDialog.tipoDeDado eq 'text'}"/>
-                            <p:outputLabel 
-                                value="Data" 
-                                rendered="#{campoDialog.tipoDeDado eq 'data'}"/>
-                        </p:column>
-                    </p:dataTable>
-                </p:dialog> 
-                <p:confirmDialog
-                    message="Deseja excluir este tipo de documento?"
-                    header="Excluir tipo de documento"
-                    widgetVar="confirmExcluirTipo"
-                    showEffect="explode"
-                    hideEffect="puff"
-                    appendToBody="true">
-                    <p:panel 
-                        style="border: none;text-align: center">
-                        <p:commandButton 
-                            value="Sim"
-                            styleClass="ui-confirmdialog-yes"
-                            oncomplete="confirmExcluirTipo.hide()"
-                            action="#{administradorMB.excluirTipo()}"
-                            update=":form_tipos:tabela_tipos :form_tipos:paginacao"/>
-                        <p:commandButton 
-                            value="Não" 
-                            type="button"
-                            styleClass="ui-confirmdialog-no"
-                            onclick="confirmExcluirTipo.hide()"/>
-                    </p:panel>
-                </p:confirmDialog>
             </p:panel>
+            <p:defaultCommand target="bot_pesq"/>
+            <p:growl autoUpdate="true" sticky="true"/>
+            <!-- dialogos -->
+            <p:dialog
+                header="Campos" 
+                widgetVar="tipoDialog"
+                showEffect="explode" 
+                hideEffect="puff">
+
+                <p:dataTable
+                    id="tabela_detalhe"
+                    value="#{administradorMB.tipoModel.tipoAux.campos}"
+                    var="campoDialog"
+                    emptyMessage="Não há campos neste tipo de documento.">
+                    <p:column>
+                        <f:facet name="header">
+                            <p:outputLabel value="Nome"/>
+                        </f:facet>
+                        <p:outputLabel value="#{campoDialog.nome}"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <p:outputLabel value="Tipo de dado"/>
+                        </f:facet>
+                        <p:outputLabel 
+                            value="Número" 
+                            rendered="#{campoDialog.tipoDeDado eq 'nume'}"/>
+                        <p:outputLabel 
+                            value="Número real" 
+                            rendered="#{campoDialog.tipoDeDado eq 'real'}"/>
+                        <p:outputLabel 
+                            value="Texto" 
+                            rendered="#{campoDialog.tipoDeDado eq 'text'}"/>
+                        <p:outputLabel 
+                            value="Data" 
+                            rendered="#{campoDialog.tipoDeDado eq 'data'}"/>
+                    </p:column>
+                </p:dataTable>
+            </p:dialog> 
+            <p:confirmDialog
+                message="Deseja excluir este tipo de documento?"
+                header="Excluir tipo de documento"
+                widgetVar="confirmExcluirTipo"
+                showEffect="explode"
+                hideEffect="puff"
+                appendToBody="true">
+                <p:panel 
+                    style="border: none;text-align: center">
+                    <p:commandButton 
+                        value="Sim"
+                        styleClass="ui-confirmdialog-yes"
+                        oncomplete="confirmExcluirTipo.hide()"
+                        action="#{administradorMB.excluirTipo()}"
+                        update=":form_tipos:tabela_tipos :form_tipos:paginacao"/>
+                    <p:commandButton 
+                        value="Não" 
+                        type="button"
+                        styleClass="ui-confirmdialog-no"
+                        onclick="confirmExcluirTipo.hide()"/>
+                </p:panel>
+            </p:confirmDialog>
+
             <p:confirmDialog message="Deseja sair do sistema?"
                              header="Sair do sistema GIA"
                              widgetVar="confirmSair"
@@ -338,7 +342,6 @@
                         onclick="confirmSair.hide()"/>
                 </p:panel>
             </p:confirmDialog>
-            <p:growl autoUpdate="true" sticky="true"/>
         </h:form>
     </h:body>
 </html>

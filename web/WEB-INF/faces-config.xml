@@ -73,6 +73,10 @@
             <from-outcome>voltar</from-outcome>
             <to-view-id>/usuarios/admin/home.xhtml</to-view-id>
         </navigation-case>
+        <navigation-case>
+            <from-outcome>imagens</from-outcome>
+            <to-view-id>/usuarios/admin/gerenciar_imagens.xhtml</to-view-id>
+        </navigation-case>
     </navigation-rule>
     <navigation-rule>
         <from-view-id>/usuarios/admin/gerenciar_tipos.xhtml</from-view-id>

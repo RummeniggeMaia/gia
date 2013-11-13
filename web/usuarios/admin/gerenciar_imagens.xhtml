@@ -1,0 +1,101 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>Gerenciamento de imagens</title>
+        <style>
+            .ui-widget {
+                font-size: 14px !important;
+            }
+        </style>
+    </h:head>
+    <h:body>
+        <h:form id="form_imagens">
+            <p:layout>
+                <p:layoutUnit position="west" 
+                              size="25%" 
+                              header="Links das imagens"
+                              resizable="true" 
+                              collapsible="true">
+                    
+                    <p:dataTable id="lista_imgs" 
+                                 value="#{administradorMB.imagemModel.imagens}" 
+                                 var="img"
+                                 resizableColumns="true" 
+                                 emptyMessage="Não há imagens">
+                        <p:column width="85%">
+                            <p:commandLink value="#{img.nome}" 
+                                           update=":form_imagens:imagem">
+                                <f:setPropertyActionListener value="#{img}"
+                                                             target="#{administradorMB.imagemModel.imagem}"/>
+                            </p:commandLink>
+                        </p:column>
+                        <p:column>
+                            <p:commandButton icon="ui-icon-close"
+                                             oncomplete="confirmApagarImagem.show()">
+                                <f:setPropertyActionListener value="#{img}"
+                                                             target="#{administradorMB.imagemModel.imagemAux}"/>
+                            </p:commandButton>
+                        </p:column>
+                    </p:dataTable>
+                    <p:commandButton value="Carregar imagens..."
+                                     onclick="dialogUpload.show()"/>
+                </p:layoutUnit>
+                <p:layoutUnit position="center" size="75%">
+                    <p:graphicImage id="imagem" value="#{administradorMB.imagemStreamedContent()}"
+                                    width="#{administradorMB.imagemModel.imagem.width}" 
+                                    height="#{administradorMB.imagemModel.imagem.height}"
+                                    style="border: 0px"/>
+                </p:layoutUnit>
+            </p:layout>
+            <p:dialog widgetVar="dialogUpload"
+                      header="Carregar Imagens"
+                      width="60%"
+                      height="400"
+                      modal="true"
+                      showEffect="explode"
+                      hideEffect="puff">
+
+                <p:fileUpload multiple="true" 
+                              fileUploadListener="#{administradorMB.handleFileUpload}"
+                              label="Escolher..."
+                              cancelLabel="Cancelar"
+                              uploadLabel="Carregar"
+                              allowTypes="/(\.|\/)(jpe?g|png)$/"
+                              mode="advanced"
+                              invalidFileMessage="Arquivo inválido. Use apenas imagens .jpg e .png"
+                              invalidSizeMessage="Imagem grande demais. Máximo 10 MB."
+                              sizeLimit="10485760"
+                              update=":form_imagens:lista_imgs"
+                              showButtons="true">
+                    Escolha as imagens
+                </p:fileUpload>
+            </p:dialog>
+            <p:confirmDialog message="Deseja apagar esta imagem?"
+                             header="Deletar iamgem"
+                             widgetVar="confirmApagarImagem"
+                             showEffect="explode"
+                             hideEffect="puff"
+                             appendToBody="true">
+                <p:panel 
+                    style="border: none;text-align: center">
+                    <p:commandButton 
+                        value="Sim"
+                        styleClass="ui-confirmdialog-yes"
+                        oncomplete="confirmApagarImagem.hide()"
+                        action="#{administradorMB.deletarImagem()}"
+                        update=":form_imagens:lista_imgs"/>
+                    <p:commandButton 
+                        value="Não" 
+                        type="button"
+                        styleClass="ui-confirmdialog-no"
+                        onclick="confirmApagarImagem.hide()"/>
+                </p:panel>
+            </p:confirmDialog>
+        </h:form>
+    </h:body>
+</html>
+

@@ -25,7 +25,7 @@
         <h:form id="form_docs">
             <p:ajaxStatus 
                 style="position:fixed;right:5px;bottom:5px;z-index: 9999">
-                <f:facet name="start">  
+                <f:facet name="start">
                     <p:graphicImage value="/imgs/livro.gif"/>  
                 </f:facet>
                 <f:facet name="complete">  
@@ -101,7 +101,7 @@
                                     value="#{campoAtual.valor}"
                                     converter="#{usuarioMB.converters[campoAtual.tipoDeDado]}"
                                     showOtherMonths="true"
-                                    yearRange="c-1000:c+0"
+                                    yearRange="c-1000:c+1000"
                                     showOn="both"
                                     mode="popup"
                                     rendered="#{campoAtual.tipoDeDado eq 'data'}">
@@ -215,7 +215,7 @@
                     id="tabela_docs"
                     value="#{administradorMB.documentoModel.documentos}"
                     var="linha"
-                    emptyMessage="Não há documentos.">
+                    emptyMessage="Faça uma pesquisa no acervo.">
                     <!-- Cabeçalho-->
                     <f:facet name="header">
                         <p:outputLabel value="Tabela vazia" rendered="#{administradorMB.documentoModel.tipo == null}"/>
@@ -244,7 +244,7 @@
                                        update=":form_docs:select_tipo :form_docs:grid_campos :form_docs:grid_botoes"
                                        actionListener="#{administradorMB.carregarDocumento}">
                             <f:attribute name="documento" value="#{linha}"/>
-                            <p:graphicImage value="/imgs/24.png" width="32" height="32"/>
+                            <p:graphicImage value="/imgs/24.png"/>
                         </p:commandLink>
                     </p:column>
                     <!-- Excluir -->
@@ -267,17 +267,18 @@
                         <f:facet name="header">
                             <p:outputLabel value="Imagens"/>
                         </f:facet>
-                        <p:commandLink oncomplete="dialogImagens.show()"
-                                       action="#{administradorMB.carregarImagens()}"
-                                       update=":form_docs:lista_imgs">
+                        <p:commandLink  oncomplete="dialogImagens.show()"
+                                        action="#{administradorMB.carregarImagens()}"
+                                        update=":form_docs:lista_imgs :form_docs:dlg_img">
                             <f:setPropertyActionListener value="#{linha}"
                                                          target="#{administradorMB.documentoModel.docAux}"/>
-                            <p:graphicImage value="/imgs/jpeg.png" width="32" height="32"/>
+                            <p:graphicImage value="/imgs/jpeg.png"/>
                         </p:commandLink>
                     </p:column>
                 </p:dataTable>
             </p:panel>
             <p:growl sticky="true" autoUpdate="true"/>
+            <p:defaultCommand target="bot_pesq"/>
             <!-- Dialogs -->
             <!-- Confirm excluir documento -->
             <p:confirmDialog
@@ -332,7 +333,9 @@
                       width="90%"
                       height="600" 
                       resizable="false"
-                      styleClass="disable-scroll">
+                      id="dlg_img"
+                      rendered="#{administradorMB.imagemModel.exibirDialog}"
+                      style="z-index: 9997">
 
                 <p:layout>
                     <p:layoutUnit position="west" 
@@ -345,6 +348,8 @@
                                      var="img"
                                      resizableColumns="true" 
                                      emptyMessage="Não há imagens">
+                            <h:inputHidden value="#{img.id}"
+                                           converter="objectIdConverter"/>
                             <p:column width="85%">
                                 <p:commandLink value="#{img.nome}" 
                                                update=":form_docs:imagem">
@@ -364,13 +369,15 @@
                                          onclick="dialogUpload.show()"/>
                     </p:layoutUnit>
                     <p:layoutUnit position="center" size="75%">
-                        <p:graphicImage id="imagem" value="#{administradorMB.imagemStreamedContent()}"
+                        <p:graphicImage id="imagem" 
+                                        value="#{administradorMB.imagemStreamedContent()}"
                                         width="#{administradorMB.imagemModel.imagem.width}" 
-                                        height="#{administradorMB.imagemModel.imagem.height}"/>
+                                        height="#{administradorMB.imagemModel.imagem.height}"
+                                        cache="false"/>
                     </p:layoutUnit>
                 </p:layout>
                 <p:ajax event="close" 
-                        update=":form_docs:paginacao :form_docs:tabela_docs"
+                        update=":form_docs:paginacao :form_docs:tabela_docs @this"
                         listener="#{administradorMB.limparImagens}"/>
             </p:dialog>
             <p:dialog widgetVar="dialogUpload"
@@ -379,7 +386,8 @@
                       height="400"
                       modal="true"
                       showEffect="explode"
-                      hideEffect="puff">
+                      hideEffect="puff"
+                      style="z-index: 9998">
 
                 <p:fileUpload multiple="true" 
                               fileUploadListener="#{administradorMB.handleFileUpload}"

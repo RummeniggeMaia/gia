@@ -14,15 +14,25 @@ import java.util.List;
 public class CriteriaUsuarioConj
         implements CriteriaStrategyIF<Usuario, Query<Usuario>> {
 
+    private Usuario dono;
+    
+    public CriteriaUsuarioConj(Usuario dono) {
+        this.dono = dono;
+    }
+    
     @Override
     public void operationCriteria(Usuario entity, Query<Usuario> query) {
         if (entity == null) {
             return;
         }
         List<Criteria> criterias = new ArrayList<Criteria>();
+        if (entity.getId() != null) {
+            criterias.add(query.criteria(Consts._ID)
+                    .notEqual(dono.getId()));
+        }
         if (entity.getNome() != null && !entity.getNome().isEmpty()) {
             criterias.add(query.criteria(Consts.CAMPO_NOME)
-                    .contains(entity.getNome()));
+                    .containsIgnoreCase(entity.getNome()));
         }
         if (entity.getEmail() != null && !entity.getEmail().isEmpty()) {
             criterias.add(query.criteria(Consts.CAMPO_EMAIL)

@@ -4,6 +4,7 @@ import br.ufrn.cerescaico.labordoc.gia.modelo.*;
 import br.ufrn.cerescaico.labordoc.gia.util.Util;
 import br.ufrn.cerescaico.labordoc.gia.validator.UsuarioValidator;
 import br.ufrn.cerescaico.labordoc.gia.validator.ValidatorResult;
+import com.mongodb.MongoException;
 import java.io.*;
 import java.util.*;
 import javax.faces.application.FacesMessage;
@@ -21,7 +22,6 @@ import org.primefaces.model.*;
 public class AdministradorMB extends AbstractUsuarioMB
         implements Serializable {
 
-
     public AdministradorMB() {
         super();
     }
@@ -29,6 +29,11 @@ public class AdministradorMB extends AbstractUsuarioMB
 //Documentos expert
     public void criarDocumento() {
         try {
+            if (documentoModel.getTipo() == null) {
+                Util.addMsg(null, "Documento deve ter um tipo.",
+                    FacesMessage.SEVERITY_ERROR);
+                return;
+            }
             documentoCtrl.criarDocumento();
             Util.addMsg(null, "Documento cadastrado com sucesso.",
                     FacesMessage.SEVERITY_INFO);
@@ -117,7 +122,7 @@ public class AdministradorMB extends AbstractUsuarioMB
             Util.addMsg(null, ex.getMessage(), FacesMessage.SEVERITY_ERROR);
         }
     }
-    
+
     public void limparDocs(AjaxBehaviorEvent e) {
         documentoModel.getPaginacao().resetar();
         documentoModel.getDocumentos().clear();
@@ -130,7 +135,13 @@ public class AdministradorMB extends AbstractUsuarioMB
             Util.addMsg(null, "Tipo de documento criado com sucesso.",
                     FacesMessage.SEVERITY_INFO);
         } catch (Exception e) {
-            Util.addMsg(null, e.getMessage(), FacesMessage.SEVERITY_ERROR);
+            if (((MongoException.DuplicateKey) e).getCode() == 11000) {
+                Util.addMsg("form_tipos:campo_nome", 
+                        "Já existe um tipo de documento com esse nome.", 
+                        FacesMessage.SEVERITY_ERROR);
+            } else {
+                Util.addMsg(null, e.getMessage(), FacesMessage.SEVERITY_ERROR);
+            }
         }
     }
 
@@ -198,8 +209,8 @@ public class AdministradorMB extends AbstractUsuarioMB
     public void contemTipo() {
         if (tipoCtrl.contemTipo()) {
             Util.addMsg(
-                    "form_tipos:campo_nome", 
-                    "Já existe este tipo de documento.", 
+                    "form_tipos:campo_nome",
+                    "Já existe este tipo de documento.",
                     FacesMessage.SEVERITY_WARN);
         }
     }
@@ -280,7 +291,7 @@ public class AdministradorMB extends AbstractUsuarioMB
             Util.addMsg(null, ex.getMessage(), FacesMessage.SEVERITY_WARN);
         }
     }
-    
+
     private boolean usuarioValido() {
         boolean valido = true;
         UsuarioValidator usuarioValidator = usuarioCtrl.getUsuarioValidator();
@@ -318,7 +329,7 @@ public class AdministradorMB extends AbstractUsuarioMB
         }
         return valido;
     }
-    
+
     //Expert imagens
     public StreamedContent imagemStreamedContent() {
         return imagemCtrl.getStreamedContent();
@@ -343,10 +354,8 @@ public class AdministradorMB extends AbstractUsuarioMB
             nova.setNome(uf.getFileName());
             nova.setContentType(uf.getContentType());
             nova.setConteudo(uf.getContents());
+            nova.setDocumento(documentoModel.getDocAux());
             imagemCtrl.salvarImagem(nova);
-            documentoCtrl.getDocumentoDao()
-                    .editarImagens(documentoModel.getDocAux());
-            documentoModel.getDocAux().getImagens().add(uf.getFileName());
         } catch (Exception e) {
             Util.addMsg(null, e.getMessage(), FacesMessage.SEVERITY_ERROR);
         }
@@ -354,9 +363,7 @@ public class AdministradorMB extends AbstractUsuarioMB
 
     public void deletarImagem() {
         try {
-            String img = imagemCtrl.getModel().getImagemAux().getNome();
             imagemCtrl.deletarImagem();
-            documentoCtrl.removerImagem(img);
         } catch (Exception e) {
             Util.addMsg(null, e.getMessage(), FacesMessage.SEVERITY_ERROR);
         }

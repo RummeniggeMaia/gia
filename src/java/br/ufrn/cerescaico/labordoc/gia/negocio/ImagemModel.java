@@ -1,6 +1,5 @@
 package br.ufrn.cerescaico.labordoc.gia.negocio;
 
-import br.ufrn.cerescaico.labordoc.gia.dao.ImagemDao;
 import br.ufrn.cerescaico.labordoc.gia.modelo.Imagem;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +13,7 @@ public class ImagemModel {
     private Imagem imagem = new Imagem("1024", "600");
     private Imagem imagemAux;
     private List<Imagem> imagens = new ArrayList<Imagem>();
+    private boolean exibirDialog = true;
 
     public ImagemModel() {
     }
@@ -40,5 +40,13 @@ public class ImagemModel {
 
     public void setImagens(List<Imagem> imagens) {
         this.imagens = imagens;
+    }
+
+    public boolean isExibirDialog() {
+        return exibirDialog;
+    }
+
+    public void setExibirDialog(boolean exibirDialog) {
+        this.exibirDialog = exibirDialog;
     }
 }

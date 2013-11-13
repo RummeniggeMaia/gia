@@ -51,7 +51,7 @@
                     disabled="#{usuarioMB.documentoModel.editarDocumento}">
 
                     <f:selectItem 
-                        itemLabel="Selecione..."
+                        itemLabel="Selecione um tipo de documento..."
                         itemValue="#{null}"
                         noSelectionOption="true"/>
                     <f:selectItems 
@@ -177,7 +177,7 @@
                     id="tabela_docs"
                     value="#{usuarioMB.documentoModel.documentos}"
                     var="linha"
-                    emptyMessage="Não há documentos.">
+                    emptyMessage="Faça uma pesquisa no acervo.">
                     <!-- Cabeçalho-->
                     <f:facet name="header">
                         <p:outputLabel value="Tabela vazia" rendered="#{usuarioMB.documentoModel.tipo == null}"/>
@@ -201,8 +201,8 @@
                             <p:outputLabel value="Imagens"/>
                         </f:facet>
                         <p:commandLink oncomplete="dialogImagens.show()"
-                                       action="#{usuarioMB.carregarImagens()}"
-                                       update=":form_docs:lista_imgs">
+                                       actionListener="#{usuarioMB.carregarImagens()}"
+                                       update=":form_docs:lista_imgs :form_docs:dlg_img">
                             <f:setPropertyActionListener value="#{linha}"
                                                          target="#{usuarioMB.documentoModel.docAux}"/>
                             <p:graphicImage value="/imgs/jpeg.png" width="32" height="32"/>
@@ -210,8 +210,8 @@
                     </p:column>
                 </p:dataTable>
             </p:panel>
-
             <p:growl sticky="true" autoUpdate="true"/>
+            <p:defaultCommand target="bot_pesq"/>
             <!-- Dialogs -->
             <!-- Confirm sair do sistema -->
             <p:confirmDialog message="Deseja sair do sistema?"
@@ -243,7 +243,9 @@
                       width="90%"
                       height="600" 
                       resizable="false"
-                      styleClass="disable-scroll">
+                      styleClass="disable-scroll"
+                      rendered="#{usuarioMB.imagemModel.exibirDialog}"
+                      id="dlg_img">
 
                 <p:layout>
                     <p:layoutUnit position="west" 

@@ -3,16 +3,22 @@ package br.ufrn.cerescaico.labordoc.gia.negocio;
 import br.ufrn.cerescaico.labordoc.gia.converter.CampoVazioConverter;
 import br.ufrn.cerescaico.labordoc.gia.converter.DataConverter;
 import br.ufrn.cerescaico.labordoc.gia.dao.UsuarioDao;
+import br.ufrn.cerescaico.labordoc.gia.dao.criteria.CriteriaUsuarioConj;
 import br.ufrn.cerescaico.labordoc.gia.modelo.*;
 import br.ufrn.cerescaico.labordoc.gia.util.*;
 import br.ufrn.cerescaico.labordoc.gia.validator.*;
 import com.mongodb.MongoException;
 import java.io.IOException;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 import java.net.UnknownHostException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.*;
 import javax.faces.convert.Converter;
@@ -115,19 +121,29 @@ public class VisitanteMB implements Serializable {
                 return;
             }
             usuario.setRole(Usuario.ROLE_USER);
+            criptografar(usuario);
             usuarioDao.criar(usuario);
             usuario = new Usuario();
             Util.addMsg(null, "Conta criada com sucesso.",
                     FacesMessage.SEVERITY_INFO);
         } catch (Exception me) {
             contemLogin(null);
-            Util.addMsg(null, me.getMessage(), 
-                    FacesMessage.SEVERITY_ERROR);
+            if (((MongoException.DuplicateKey) me).getCode() == 11000) {
+                if (me.getMessage().indexOf("$cpf") != -1) {
+                    Util.addMsg("form_criar_conta:campo_cpf",
+                        "Já existe alguém com esse cpf.",
+                        FacesMessage.SEVERITY_ERROR);
+                }
+            } else {
+                Util.addMsg(null, me.getMessage(),
+                        FacesMessage.SEVERITY_ERROR);
+            }
         }
     }
 
     public String entrarNoSistema() {
         try {
+            criptografar(usuario);
             Usuario aux = usuarioDao
                     .pesquisarUm(usuario, Consts.CRITERIA_AUTENTICAR);
             usuario = new Usuario();
@@ -135,6 +151,7 @@ public class VisitanteMB implements Serializable {
                 Map<String, Object> sessionMap = Util.getSessionMap();
                 sessionMap.put(Consts.USUARIO_LOGADO, aux);
                 String role = aux.getRole();
+                usuarioDao.setBuscaConjutiva(new CriteriaUsuarioConj(aux));
                 return role;
             }
             throw new Exception("Login ou senha não constam no sistema.");
@@ -151,7 +168,7 @@ public class VisitanteMB implements Serializable {
             if (u != null) {
                 Util.addMsg("form_criar_conta:campo_login",
                         "Já existe alguém com esse login, tente outro.",
-                        FacesMessage.SEVERITY_WARN);
+                        FacesMessage.SEVERITY_ERROR);
             } else {
                 ValidatorResult vr = usuarioValidator
                         .validarLogin(usuario.getLogin());
@@ -231,5 +248,22 @@ public class VisitanteMB implements Serializable {
             valido = false;
         }
         return valido;
+    }
+    
+    private void criptografar(Usuario e) {
+        try {
+            MessageDigest messageDigest = MessageDigest.getInstance("SHA-1");
+            messageDigest.reset();
+            String loginSenha = e.getLogin() + e.getSenha();
+            messageDigest.update(loginSenha.getBytes("UTF-8"));
+            e.setSenha(new String(
+                    messageDigest.digest(loginSenha.getBytes("UTF-8"))));
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(
+                    UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(
+                    UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

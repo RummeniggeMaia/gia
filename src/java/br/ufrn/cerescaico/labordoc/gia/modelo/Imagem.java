@@ -1,6 +1,7 @@
 package br.ufrn.cerescaico.labordoc.gia.modelo;
 
 import java.io.Serializable;
+import org.bson.types.ObjectId;
 
 /**
  *
@@ -8,11 +9,13 @@ import java.io.Serializable;
  */
 public class Imagem implements Serializable {
 
+    private ObjectId id = new ObjectId();
     private String nome;
     private String contentType;
     private String width;
     private String height;
     private byte[] conteudo;
+    private Documento documento;
 
     public Imagem() {
     }
@@ -69,5 +72,21 @@ public class Imagem implements Serializable {
 
     public void setConteudo(byte[] conteudo) {
         this.conteudo = conteudo;
+    }
+
+    public Documento getDocumento() {
+        return documento;
+    }
+
+    public void setDocumento(Documento documento) {
+        this.documento = documento;
+    }
+
+    public ObjectId getId() {
+        return id;
+    }
+
+    public void setId(ObjectId id) {
+        this.id = id;
     }
 }

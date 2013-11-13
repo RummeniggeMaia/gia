@@ -16,7 +16,6 @@ public class Documento extends Entidade implements Serializable {
     private Tipo tipo = new Tipo();
     @Transient
     private Map<String, Object> campos = new HashMap<String, Object>();
-    private List<String> imagens = new ArrayList<String>();
 
     public Documento() {
     }
@@ -40,14 +39,6 @@ public class Documento extends Entidade implements Serializable {
 
     public void setTipo(Tipo tipo) {
         this.tipo = tipo;
-    }
-
-    public List<String> getImagens() {
-        return imagens;
-    }
-
-    public void setImagens(List<String> imagens) {
-        this.imagens = imagens;
     }
 
     @Override

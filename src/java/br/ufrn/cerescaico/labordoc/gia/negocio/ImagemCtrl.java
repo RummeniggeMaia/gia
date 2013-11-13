@@ -75,9 +75,11 @@ public class ImagemCtrl {
 
     public void carregarImagens(Documento doc) {
         try {
-            List<Imagem> imagens = imagemDao.pesquisarImagens(
-                    doc.getImagens());
+            Imagem i = new Imagem();
+            i.setDocumento(doc);
+            List<Imagem> imagens = imagemDao.pesquisarImagens(i);
             model.setImagens(imagens);
+            model.setExibirDialog(true);
         } catch (Exception e) {
             Util.addMsg(null, e.getMessage(), FacesMessage.SEVERITY_ERROR);
         }
@@ -85,6 +87,7 @@ public class ImagemCtrl {
 
     public void limparImagens() {
         model.getImagens().clear();
-        model.setImagem(new Imagem("1024", "600"));
+        model.setImagem(new Imagem("800", "600"));
+        model.setExibirDialog(false);
     }
 }

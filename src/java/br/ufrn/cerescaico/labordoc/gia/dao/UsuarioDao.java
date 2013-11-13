@@ -22,7 +22,7 @@ public class UsuarioDao extends MongoDao<Usuario> implements Serializable {
     private CriteriaUsuario buscaUsuario = new CriteriaUsuario();
     private CriteriaUsuarioId buscaUsuarioId =
             new CriteriaUsuarioId();
-    private CriteriaUsuarioConj buscaConjutiva = new CriteriaUsuarioConj();
+    private CriteriaUsuarioConj buscaConjutiva = new CriteriaUsuarioConj(null);
     private CriteriaAutentica autenticaCriteria = new CriteriaAutentica();
     private CriteriaUsuarioLogin buscaLogin =
             new CriteriaUsuarioLogin();
@@ -36,6 +36,7 @@ public class UsuarioDao extends MongoDao<Usuario> implements Serializable {
     @Override
     public Object criar(Usuario e) throws Exception {
         e.setId(null);
+//        criptografar(e);
         return super.criar(e);
     }
 
@@ -95,5 +96,9 @@ public class UsuarioDao extends MongoDao<Usuario> implements Serializable {
             Logger.getLogger(
                     UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    public void setBuscaConjutiva(CriteriaUsuarioConj buscaConjutiva) {
+        this.buscaConjutiva = buscaConjutiva;
     }
 }

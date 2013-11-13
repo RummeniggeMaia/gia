@@ -147,8 +147,8 @@ public class DocumentoCtrl implements Serializable {
         realizarPesquisaDocumentos();
     }
     
-    public void removerImagem(String img) {
-        model.getDocAux().getImagens().remove(img);
-        documentoDao.editarImagens(model.getDocAux());
-    }
+//    public void removerImagem(String img) {
+//        model.getDocAux().getImagens().remove(img);
+//        documentoDao.editarImagens(model.getDocAux());
+//    }
 }

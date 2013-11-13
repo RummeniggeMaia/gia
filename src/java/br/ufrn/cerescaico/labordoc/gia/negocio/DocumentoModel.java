@@ -25,7 +25,6 @@ public class DocumentoModel implements Serializable {
         documentos = new ArrayList<Documento>();
         docAux = new Documento();
         editarDocumento = false;
-        tipo = new Tipo();
         tipos = new ArrayList<Tipo>();
         paginacao = new Paginacao();
     }

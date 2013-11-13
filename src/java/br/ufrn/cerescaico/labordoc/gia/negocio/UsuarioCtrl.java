@@ -4,7 +4,12 @@ import br.ufrn.cerescaico.labordoc.gia.dao.UsuarioDao;
 import br.ufrn.cerescaico.labordoc.gia.modelo.Usuario;
 import br.ufrn.cerescaico.labordoc.gia.util.Consts;
 import br.ufrn.cerescaico.labordoc.gia.validator.UsuarioValidator;
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -91,23 +96,23 @@ public class UsuarioCtrl {
     }
 
     public void realizarPesquisaUsuarios() throws Exception {
-        List<Usuario > usuarios = usuarioDao.pesquisar(
+        List<Usuario> usuarios = usuarioDao.pesquisar(
                 (Usuario) model.getPaginacao().getEntidade(),
                 model.getPaginacao().getOffset(),
                 model.getPaginacao().getLimit(),
                 Consts.CRITERIA_USUARIO_CONJUNTIVA);
         model.setUsuarios(usuarios);
     }
-    
+
     public void iniciarEdidarUsuario() {
         model.setEditarUsuario(true);
     }
-    
+
     public void cancelarEditarUsuario() {
         model.setUsuario(new Usuario());
         model.setEditarUsuario(false);
     }
-    
+
     public void iniciarPaginacao() throws Exception {
         model.getPaginacao().primeira();
         realizarPesquisaUsuarios();
