@@ -2,6 +2,7 @@ package br.ufrn.cerescaico.labordoc.gia.negocio;
 
 import br.ufrn.cerescaico.labordoc.gia.modelo.*;
 import br.ufrn.cerescaico.labordoc.gia.util.Util;
+import br.ufrn.cerescaico.labordoc.gia.validator.TipoValidator;
 import br.ufrn.cerescaico.labordoc.gia.validator.UsuarioValidator;
 import br.ufrn.cerescaico.labordoc.gia.validator.ValidatorResult;
 import com.mongodb.MongoException;
@@ -31,7 +32,7 @@ public class AdministradorMB extends AbstractUsuarioMB
         try {
             if (documentoModel.getTipo() == null) {
                 Util.addMsg(null, "Documento deve ter um tipo.",
-                    FacesMessage.SEVERITY_ERROR);
+                        FacesMessage.SEVERITY_ERROR);
                 return;
             }
             documentoCtrl.criarDocumento();
@@ -131,13 +132,17 @@ public class AdministradorMB extends AbstractUsuarioMB
 
     public void criarTipo() {
         try {
+            if (!tipoValido()) {
+                return;
+            }
             tipoCtrl.criarTipo();
             Util.addMsg(null, "Tipo de documento criado com sucesso.",
                     FacesMessage.SEVERITY_INFO);
         } catch (Exception e) {
-            if (((MongoException.DuplicateKey) e).getCode() == 11000) {
-                Util.addMsg("form_tipos:campo_nome", 
-                        "Já existe um tipo de documento com esse nome.", 
+            if (e instanceof MongoException.DuplicateKey
+                    && ((MongoException.DuplicateKey) e).getCode() == 11000) {
+                Util.addMsg("form_tipos:campo_nome",
+                        "Já existe um tipo de documento com esse nome.",
                         FacesMessage.SEVERITY_ERROR);
             } else {
                 Util.addMsg(null, e.getMessage(), FacesMessage.SEVERITY_ERROR);
@@ -147,11 +152,21 @@ public class AdministradorMB extends AbstractUsuarioMB
 
     public void editarTipo() {
         try {
+            if (!tipoValido()) {
+                return;
+            }
             tipoCtrl.editarTipo();
             Util.addMsg(null, "Tipo de documento editado com sucesso.",
                     FacesMessage.SEVERITY_INFO);
         } catch (Exception e) {
-            Util.addMsg(null, e.getMessage(), FacesMessage.SEVERITY_ERROR);
+            if (e instanceof MongoException.DuplicateKey
+                    && ((MongoException.DuplicateKey) e).getCode() == 11000) {
+                Util.addMsg("form_tipos:campo_nome",
+                        "Já existe um tipo de documento com esse nome.",
+                        FacesMessage.SEVERITY_ERROR);
+            } else {
+                Util.addMsg(null, e.getMessage(), FacesMessage.SEVERITY_ERROR);
+            }
         }
     }
 
@@ -225,6 +240,20 @@ public class AdministradorMB extends AbstractUsuarioMB
 
     public void deletarCampo() {
         tipoCtrl.deletarCampo();
+    }
+
+    public boolean tipoValido() {
+        boolean valido = true;
+        TipoValidator tv = tipoCtrl.getTipoValidator();
+        ValidatorResult vr = tv.validarNome(tipoModel.getTipo().getNome());
+        if (!vr.isValido()) {
+            Util.addMsg(
+                    "form_tipos:campo_nome",
+                    vr.getCausa(),
+                    FacesMessage.SEVERITY_ERROR);
+            valido = false;
+        }
+        return valido;
     }
 //Expert usuarios
 

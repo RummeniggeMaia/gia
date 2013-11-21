@@ -128,7 +128,8 @@ public class VisitanteMB implements Serializable {
                     FacesMessage.SEVERITY_INFO);
         } catch (Exception me) {
             contemLogin(null);
-            if (((MongoException.DuplicateKey) me).getCode() == 11000) {
+            if (me instanceof MongoException.DuplicateKey && 
+                    ((MongoException.DuplicateKey) me).getCode() == 11000) {
                 if (me.getMessage().indexOf("$cpf") != -1) {
                     Util.addMsg("form_criar_conta:campo_cpf",
                         "Já existe alguém com esse cpf.",

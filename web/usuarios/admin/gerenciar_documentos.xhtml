@@ -20,6 +20,7 @@
                 font-size: 14px !important;
             }
         </style>
+        
     </h:head>
     <h:body onload="#{administradorMB.preencherDocTipos()}">
         <h:form id="form_docs">
@@ -339,7 +340,7 @@
 
                 <p:layout>
                     <p:layoutUnit position="west" 
-                                  size="25%" 
+                                  size="30%" 
                                   header="Links das imagens"
                                   resizable="true" 
                                   collapsible="true">
@@ -350,12 +351,20 @@
                                      emptyMessage="Não há imagens">
                             <h:inputHidden value="#{img.id}"
                                            converter="objectIdConverter"/>
-                            <p:column width="85%">
+                            <p:column width="70%">
                                 <p:commandLink value="#{img.nome}" 
                                                update=":form_docs:imagem">
                                     <f:setPropertyActionListener value="#{img}"
                                                                  target="#{administradorMB.imagemModel.imagem}"/>
                                 </p:commandLink>
+                            </p:column>
+                            <p:column>
+                                <p:commandButton value="B"
+                                                 ajax="false">
+                                    <f:setPropertyActionListener value="#{img}"
+                                                                 target="#{administradorMB.imagemModel.imagem}"/>
+                                    <p:fileDownload value="#{administradorMB.imagemStreamedContent()}"/>
+                                </p:commandButton>
                             </p:column>
                             <p:column>
                                 <p:commandButton icon="ui-icon-close"
@@ -365,7 +374,7 @@
                                 </p:commandButton>
                             </p:column>
                         </p:dataTable>
-                        <p:commandButton value="Carregar imagens..."
+                        <p:commandButton value="Carregar novas imagens..."
                                          onclick="dialogUpload.show()"/>
                     </p:layoutUnit>
                     <p:layoutUnit position="center" size="75%">

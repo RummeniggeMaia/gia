@@ -4,6 +4,7 @@ import br.ufrn.cerescaico.labordoc.gia.dao.TipoDao;
 import br.ufrn.cerescaico.labordoc.gia.modelo.Campo;
 import br.ufrn.cerescaico.labordoc.gia.modelo.Tipo;
 import br.ufrn.cerescaico.labordoc.gia.util.Consts;
+import br.ufrn.cerescaico.labordoc.gia.validator.TipoValidator;
 import java.util.List;
 
 /**
@@ -14,6 +15,7 @@ public class TipoCtrl {
 
     private TipoModel model;
     private TipoDao tipoDao;
+    private TipoValidator tipoValidator = new TipoValidator();
 
     public TipoCtrl() throws Exception {
         model = new TipoModel();
@@ -49,6 +51,14 @@ public class TipoCtrl {
     public void criarTipo() throws Exception {
         tipoDao.criar(model.getTipo());
         model.setTipo(new Tipo());
+    }
+
+    public TipoValidator getTipoValidator() {
+        return tipoValidator;
+    }
+
+    public void setTipoValidator(TipoValidator tipoValidator) {
+        this.tipoValidator = tipoValidator;
     }
 
     public void excluirTipo() throws Exception {
@@ -118,7 +128,7 @@ public class TipoCtrl {
     public boolean contemTipo() {
         try {
             Tipo t = tipoDao.pesquisarUm(
-                    model.getTipo(), Consts.CRITERIA_TIPO_NOME);
+                    model.getTipo(), Consts.CRITERIA_TIPO_NOME_UNICO);
             return t != null;
         } catch (Exception e) {
             return false;

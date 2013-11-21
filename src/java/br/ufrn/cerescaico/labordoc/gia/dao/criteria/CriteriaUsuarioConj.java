@@ -63,5 +63,6 @@ public class CriteriaUsuarioConj
             vet[i] = criterias.get(i);
         }
         query.and(vet);
+        query.order("nome");
     }
 }

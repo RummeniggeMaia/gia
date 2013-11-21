@@ -37,6 +37,7 @@ public class Consts implements Serializable {
     public static final Integer CRITERIA_DOCUMENTO_CONJUNTIVA = 8;
     public static final Integer CRITERIA_USUARIO_LOGIN = 9;
     public static final Integer CRITERIA_TIPO_NOME = 10;
+    public static final Integer CRITERIA_TIPO_NOME_UNICO = 11;
     //Tipos de dados
     /**
      * String: nume

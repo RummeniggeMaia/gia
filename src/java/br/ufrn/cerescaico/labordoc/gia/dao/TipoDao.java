@@ -24,6 +24,8 @@ public class TipoDao extends MongoDao<Tipo>
     private NullCriteria nullCriteria = new NullCriteria();
     private CriteriaStrategyIF<Tipo, Query<Tipo>> buscaNome =
             new CriteriaTipoNome();
+    private CriteriaStrategyIF<Tipo, Query<Tipo>> buscaNomeUnico =
+            new CriteriaTipoNomeUnico();
 
     public TipoDao() throws UnknownHostException {
         super();
@@ -52,7 +54,9 @@ public class TipoDao extends MongoDao<Tipo>
     }
     
     private void mudarCriteria(Integer criteria) {
-        if (criteria == Consts.CRITERIA_TIPO_NOME)  {
+        if (criteria == Consts.CRITERIA_TIPO_NOME_UNICO) {
+            criteriaStrategyIF = buscaNomeUnico;
+        } else if (criteria == Consts.CRITERIA_TIPO_NOME) {
             criteriaStrategyIF = buscaNome;
         } else {
             criteriaStrategyIF = nullCriteria;
